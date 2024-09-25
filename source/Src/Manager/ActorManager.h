@@ -36,7 +36,7 @@ public:
 	void DmageBossSpMoveCollision(void);
 	void DmageBossBeamCollision(void);
 	void InitUI(void);
-	const bool& IsGameSet(void)const;
+	const bool& IsDeadAnyPlayer(void)const;
 
 private:
 
@@ -64,7 +64,8 @@ private:
 	//一人用モード敵
 	std::unique_ptr<BossEnemy> bossEnemy_;
 
-	bool gameSet_;
+	//どちらかのプレイヤーが死んだかどうかを判定
+	bool isDeadAnyPlayer_;
 
 	int loserNum_;
 
@@ -79,7 +80,7 @@ private:
 
 	bool StageOut(const VECTOR& pos);
 
-	void GameSet(void);
+	void ChangeStateGameSet(void);
 
 	bool IsEqual(int playerNum, int damageNum);
 };

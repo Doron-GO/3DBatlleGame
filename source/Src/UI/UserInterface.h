@@ -61,7 +61,7 @@ private:
 	int fontBullets_;
 
 	//プレイヤーが勝利したか敗北したかの判定
-	bool& IsWin_;
+	bool& isWin_;
 
 	//勝利、敗北画像の座標
 	VECTOR victoryOrDefeatPos_;
@@ -76,7 +76,7 @@ private:
 	double boostGaugeCaseScale_;
 
 	//HPの座標
-	VECTOR HpGaugePos_;
+	VECTOR hpGaugePos_;
 
 	//残弾表示画像の座標
 	VECTOR numberOfBulletsPos_;

@@ -1,6 +1,7 @@
 #pragma once
 #include<DxLib.h>
 #include<vector>
+#include<map>
 #include "Scene.h"
 #include"../Input/Input.h"
 
@@ -19,10 +20,12 @@ class GameScene :
 
 public:
 
+    // プレイヤー番号
     enum class PLAYER_NUM
     {
         P_1,
         P_2,
+        MAX,
     };
 
     GameScene(SceneManager& manager, int playMode, Transitor& transit, Input& input);
@@ -33,7 +36,8 @@ public:
 
 private:
 
-    enum class IMG_H
+    //読み込み画像の種類
+    enum class IMG_TYPE
     {
         ONE_MOR_FIGHT,
         BACK_TO_TITLE,
@@ -44,42 +48,47 @@ private:
         FIGHT
     };
 
-    enum class SELECT
+    // 再戦モード
+    enum class REMATCH_MODE
     {
         BACK_TO_TITLE,
         ONE_MORE_FIGHT
     };
 
-    static constexpr int SINGLE_PLEY_MODE = 0;
 
     ResourceManager& resMng_;
 
-    void (GameScene::* _draw)();
-    //カメラのポインタ
-    //std::unique_ptr<Camera> camera_;
+    void (GameScene::* draw_)();
 
-    //プレイヤーのポインタ
+    //ステージ
     std::unique_ptr<Stage> stage_;
 
     //プレイヤーマネージャー
-    std::unique_ptr<ActorManager>ActorManager_;
+    std::unique_ptr<ActorManager>actorManager_;
 
+    //プレイモード(シングル、対戦)
     int playMode_;
-    int selectNum_;
 
+    //再戦モード
+    int rematchMode_;
+
+    //ゲームコントローラタイプ(PS、XBOX想定)
     JOYPAD_TYPE joyPadType_;
 
     //UI
     std::vector<UserInterface>userInterface_;
 
+    //プレイヤーごとの描画スクリーン
     std::vector<int>cameraScreens_;
 
+    //統合描画スクリーン
     int integrationScreen_;
 
-    std::vector<VECTOR> screenPos_;
+    //描画スクリーンの座標
+    std::map<PLAYER_NUM, VECTOR> screenPos_;
 
     //画像ハンドル
-    std::map<IMG_H, int> imgH_;
+    std::map<IMG_TYPE, int> imgH_;
 
     //スタート計測変数
     float startCount_;
@@ -93,11 +102,19 @@ private:
     void ChangeGameScene();
     void ChangeTitleScene();
 
-    bool IsStart(void);
+    //ゲーム開始時のカウントダウン終了判定
+    bool IsGameStart(void);
+    bool IsGameSet(void);
 
-    void GameUI(void);
-    void StartUI(void);
-    void GameSetUI(void);
+    //UI描画
+    void DrawUI(void);
+
+    //ゲームステート時に表示されるUI
+    void DrawUIStart(void);
+
+    //ゲーム終了時に表示されるUI
+    void DrawUIGameSet(void);
+
     bool SelectCursor(void);
     bool SelectDecide(void);
     void TitleOrGame(void);

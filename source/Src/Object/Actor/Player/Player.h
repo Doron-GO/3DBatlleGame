@@ -267,8 +267,6 @@ private:
 
 	bool isHorming_;
 
-	void (Player::* _update)(void);
-
 	//敵のステート情報
 	const STATE* enemyState_;
 

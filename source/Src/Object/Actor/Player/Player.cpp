@@ -105,12 +105,10 @@ state_(nullptr),input_(std::make_unique<Input>(padNum_)),camera_(std::make_uniqu
 	ChangeState(std::make_unique<IdleState>(*this));
 	if (playMode_ == PLAY_MODE::SINGLE_MODE)
 	{
-		_update = &Player::UpdateSIngleMode;
 		offsetEnemy_ = OFFSET_BOSS_ENEMY;
 	}
 	else
 	{
-		_update = &Player::UpdateBattleMode;
 		offsetEnemy_ = OFFSET_ENEMY;
 	}	
 	InitParameter();
@@ -213,9 +211,11 @@ void Player::UpdateBattleMode(void)
 	//ブーストゲージ回復
 	RecoverBoostGauge();
 
-	//現在の敵の状態を調べる
-	EnemyState();
-
+	if (playMode_ == PLAY_MODE::BATTLE_MODE)
+	{
+		//現在の敵の状態を調べる
+		EnemyState();
+	}
 	//現在のステートのアップデート
 	state_->Update();
 
@@ -299,7 +299,50 @@ void Player::Update()
 	//コントローラ入力の更新
 	input_->Update();
 	
-	(this->*_update)();
+	//カメラに敵の座標を渡す
+	camera_->SetTargetPos(*enemyPos_);
+
+	//ブーストゲージ回復
+	RecoverBoostGauge();
+
+	if (playMode_ == PLAY_MODE::BATTLE_MODE)
+	{
+		//現在の敵の状態を調べる
+		EnemyState();
+	}
+	//現在のステートのアップデート
+	state_->Update();
+
+	//無敵時間があればそれを減らしていく
+	if (!IsSafeTimeSufficient())
+	{
+		CountSafeTime(deltaTime_ * 50.0f);
+	}
+
+	//行動不能時間計測
+	CountCombatStanTime();
+
+	//敵との距離に応じてホーミングの有無を決める
+	Range();
+
+	// アニメーション再生
+	roboAnimeController_->Update();
+
+	//エフェクト再生
+	effectManager_->Update();
+
+	//地面との当たり判定
+	CollisionGravity();
+
+	//座標移動、モデル回転などの更新
+	TransformUpdate();
+
+	//各武器のアップデート
+	WeaponUpdate();
+
+	//自分の体力が０なら敗北状態に変える
+	IsDead();
+
 }
 
 void Player::TransformUpdate(void)

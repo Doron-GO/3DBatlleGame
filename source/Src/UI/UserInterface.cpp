@@ -48,7 +48,7 @@
 UserInterface::UserInterface(ResourceManager& resMng, const VECTOR* enemyPos, float& distance,
 	float& boostGauge, float& hpGauge, const float& enemyHp, bool& IsWin_, const int& numnberofBullets, int SinglPlay):
 	resMng_(resMng), enemyPos_(enemyPos), enemyDistance_(distance), 
-	boostGauge_(boostGauge), hpGauge_(hpGauge),enemyHpGauge_(enemyHp), IsWin_(IsWin_), numnberofBullets_(numnberofBullets)
+	boostGauge_(boostGauge), hpGauge_(hpGauge),enemyHpGauge_(enemyHp), isWin_(IsWin_), numnberofBullets_(numnberofBullets)
 {
 	singlePlay_ = SinglPlay;
 	InitImage();
@@ -93,7 +93,7 @@ void UserInterface::InitImage(void)
 
 	if (singlePlay_ == 0)
 	{
-		HpGaugePos_ = HP_GAUGE_POS_SINGLE;
+		hpGaugePos_ = HP_GAUGE_POS_SINGLE;
 		victoryOrDefeatPos_ = SINGLEMODE_IMG_POS;
 		boostGaugePos_ = BOOST_GAUGE_IMG_POS_SINGLE;
 		boostGaugeCaseScale_ = BOOST_GAUGE_CASE_SCALE_SINGLE;
@@ -106,7 +106,7 @@ void UserInterface::InitImage(void)
 	}
 	else
 	{
-		HpGaugePos_ = HP_GAUGE_POS_MULTI;
+		hpGaugePos_ = HP_GAUGE_POS_MULTI;
 		victoryOrDefeatPos_ = MULTI_MODE_IMG_POS;
 		boostGaugePos_ = BOOST_GAUGE_IMG_POS_MULTI;
 		boostGaugeCaseScale_ = BOOST_GAUGE_CASE_SCALE_MULTI;
@@ -157,8 +157,8 @@ void UserInterface::DrawNumnberOfBullets(void)
 
 void UserInterface::DrawHPGauge(void)
 {	
-	int PosX = static_cast<int>(HpGaugePos_.x);
-	int PosY = static_cast<int>(HpGaugePos_.y);
+	int PosX = static_cast<int>(hpGaugePos_.x);
+	int PosY = static_cast<int>(hpGaugePos_.y);
 
 	DrawFormatStringToHandle(PosX, PosY, 0xff0000, fontHp_, "%d", static_cast<int>(hpGauge_));
 }
@@ -167,7 +167,7 @@ void UserInterface::VictoryOrDefeat(void)
 {
 	int posX = static_cast<int>(victoryOrDefeatPos_.x);
 	int posY = static_cast<int>(victoryOrDefeatPos_.y);
-	if (IsWin_)
+	if (isWin_)
 	{
 		DrawRotaGraph2(posX, posY, 140, 100, 2.0, 0.0, uiImgH_[IMG_H::WIN], true, false);
 	}

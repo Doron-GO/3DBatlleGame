@@ -12,11 +12,11 @@
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-	int xx=0;
-	int yy=0;
-	GetWindowSize(&xx, &yy);
 
-	SetGraphMode(1600, 1000, 32);			//640×480ドットの32bitカラーに設定
+#pragma region DxLib初期化
+
+	//640×480ドットの32bitカラーに設定
+	SetGraphMode(1600, 1000, 32);
 	SetWindowSizeChangeEnableFlag(true);
 
 	ChangeWindowMode(true);
@@ -27,12 +27,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	{
 		return -1;
 	}
-	if (Effekseer_Init(8000)==-1)
+
+#pragma endregion
+
+#pragma region Effekseer初期化
+
+	if (Effekseer_Init(8000) == -1)
 	{
 		return -1;
 	}
 	SetChangeScreenModeGraphicsSystemResetFlag(false);
 	Effekseer_SetGraphicsDeviceLostCallbackFunctions();
+
+#pragma endregion
+
 	int padnum = 1;
 	SceneManager sceneManager;
 	IrisTransitor irisTransitor;
@@ -40,6 +48,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	Input input(padnum);
 	sceneManager.ChangeScene(std::make_shared<TitleScene>(sceneManager,irisTransitor, input));
 	DeltaTime::GetInstsnce().SetStart();
+
+	// ゲームループ
 	while (ProcessMessage() ==0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
 	{		
 		_dbgDraw();
@@ -49,8 +59,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		ScreenFlip();
 
 	}
+
+	// 後始末
 	Effkseer_End();
 	DxLib_End();
+	
 	return 0;
 
 }

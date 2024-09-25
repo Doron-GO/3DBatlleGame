@@ -18,7 +18,7 @@ ActorManager::ActorManager(int numberofPlayers)
 		_draw = &ActorManager::DrawBattleMode;
 	}
 	InitUI();
-	gameSet_ = false;
+	isDeadAnyPlayer_ = false;
 }
 
 void ActorManager::InitBattleMode(int numberofPlayers)
@@ -116,7 +116,7 @@ void ActorManager::DrawCamera(int playerType)
 
 void ActorManager::DrawUI(int playerType)
 {
-	userInterface_[playerType]->Draw(gameSet_);
+	userInterface_[playerType]->Draw(isDeadAnyPlayer_);
 }
 
 void ActorManager::AddClliders(Collider* collider)
@@ -293,14 +293,14 @@ void ActorManager::InitUI(void)
 	}
 }
 
-const bool& ActorManager::IsGameSet(void)const
+const bool& ActorManager::IsDeadAnyPlayer(void)const
 {
-	return gameSet_;
+	return isDeadAnyPlayer_;
 }
 
 void ActorManager::IsWin(void)
 {
-	if (gameSet_)
+	if (isDeadAnyPlayer_)
 	{
 		return;
 	}
@@ -311,15 +311,15 @@ void ActorManager::IsWin(void)
 		{
 			loserNum_ = player->GetPlayerNum() ;
 			winnerNum_ = 1 - loserNum_;
-			GameSet();
-			gameSet_ = true;
+			ChangeStateGameSet();
+			isDeadAnyPlayer_ = true;
 		}
 	}
 }
 
 void ActorManager::IsSingleModeWin(void)
 {
-	if (gameSet_)
+	if (isDeadAnyPlayer_)
 	{
 		return;
 	}
@@ -328,11 +328,11 @@ void ActorManager::IsSingleModeWin(void)
 	if (0.0f >= players_[SINGLE_PLAY]->GetPlayerHP() || StageOut(players_[SINGLE_PLAY]->GetPlayerPos()))
 	{
 		players_[SINGLE_PLAY]->Lose();
-		gameSet_ = true;
+		isDeadAnyPlayer_ = true;
 	}
 	else if(0.0f >= bossEnemy_->GetPlayerHP())
 	{
-		gameSet_ = true;
+		isDeadAnyPlayer_ = true;
 		players_[SINGLE_PLAY]->Win();
 		bossEnemy_->ChangeDeathState();
 	}
@@ -350,7 +350,7 @@ bool ActorManager::StageOut(const VECTOR& pos)
 	return false;
 }
 
-void ActorManager::GameSet(void)
+void ActorManager::ChangeStateGameSet(void)
 {
 	players_[loserNum_]->Lose();
 	players_[winnerNum_]->Win();
