@@ -9,17 +9,17 @@
 #include"Src/Scene/TitleScene.h"
 #include"Src/Object/Time/DeltaTime.h"
 
-
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
 
 #pragma region DxLib初期化
 
-	//640×480ドットの32bitカラーに設定
 	SetGraphMode(1600, 1000, 32);
+	//ウィンドウサイズを変更できるようにする
 	SetWindowSizeChangeEnableFlag(true);
 
 	ChangeWindowMode(true);
+
 	_dbgSetup(1200, 800, 256);
 	SetDrawScreen(DX_SCREEN_BACK);
 	SetUseDirect3DVersion(DX_DIRECT3D_11);
@@ -41,20 +41,36 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 #pragma endregion
 
-	int padnum = 1;
+	//操作するコントローラ番号
+	int padNum = 1;
+
+	//シーンマネージャーの生成
 	SceneManager sceneManager;
+
+	//トラんじったーの生成
 	IrisTransitor irisTransitor;
+
+	//リソースマネージャーを生成
 	ResourceManager::CreateInstance();
-	Input input(padnum);
+	//インプットの生成
+	Input input(padNum);
+
+	//初期シーンはタイトルシーンに設定
 	sceneManager.ChangeScene(std::make_shared<TitleScene>(sceneManager,irisTransitor, input));
+
+	//デルタタイムの計測スタート
 	DeltaTime::GetInstsnce().SetStart();
 
 	// ゲームループ
 	while (ProcessMessage() ==0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
 	{		
 		_dbgDraw();
+		//デルタタイムの更新
 		DeltaTime::GetInstsnce().Update();
+		
+		//現在のシーンの更新
 		sceneManager.Update();
+		//現在のシーンの描画
 		sceneManager.Draw();
 		ScreenFlip();
 

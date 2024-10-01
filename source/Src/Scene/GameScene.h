@@ -88,7 +88,7 @@ private:
     std::map<PLAYER_NUM, VECTOR> screenPos_;
 
     //画像ハンドル
-    std::map<IMG_TYPE, int> imgH_;
+    std::map<IMG_TYPE, int> imgType_;
 
     //スタート計測変数
     float startCount_;
@@ -105,15 +105,6 @@ private:
     //ゲーム開始時のカウントダウン終了判定
     bool IsGameStart(void);
     bool IsGameSet(void);
-
-    //UI描画
-    void DrawUI(void);
-
-    //ゲームステート時に表示されるUI
-    void DrawUIStart(void);
-
-    //ゲーム終了時に表示されるUI
-    void DrawUIGameSet(void);
 
     bool SelectCursor(void);
     bool SelectDecide(void);

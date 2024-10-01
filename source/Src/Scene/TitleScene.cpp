@@ -118,7 +118,7 @@ void TitleScene::Draw()
 	if (!startFlag_)
 	{
 		DrawRotaGraph2(TITLE_LOGO_POS_X, TITLE_LOGO_POS_Y,
-			TITLE_LOGO_CENTER_X, TITLE_LOGO_CENTER_Y, TITLE_LOGO_SCALE, 0.0, imgH_[IMG_H::TITLE_LOGO], true, false);
+			TITLE_LOGO_CENTER_X, TITLE_LOGO_CENTER_Y, TITLE_LOGO_SCALE, 0.0, imgType_[IMG_H::TITLE_LOGO], true, false);
 	}
 	else
 	{
@@ -136,17 +136,18 @@ void TitleScene::ChangeGameScene(void)
 void TitleScene::DrawPleaseButton(void)
 {
 	JOYPAD_TYPE type = input_.GetJPadType();
+	//PSコントローラーなら×ボタン表記
 	if (JOYPAD_TYPE::DUAL_SHOCK_4 == type || JOYPAD_TYPE::DUAL_SENSE == type)
 	{
 		DrawRotaGraph2(PLEASE_CROSS_BUTTON_POS_X, PLEASE_CROSS_BUTTON_POS_Y,
 			PLEASE_CROSS_BUTTON_CENTER_X, PLEASE_CROSS_BUTTON_CENTER_Y,
-			PLEASE_CROSS_BUTTON_SCALE, 0.0, imgH_[IMG_H::PLEASE_CROSS], true, false);
+			PLEASE_CROSS_BUTTON_SCALE, 0.0, imgType_[IMG_H::PLEASE_CROSS], true, false);
 	}
-	else
+	else//XBOXコントローラーならAボタン表記
 	{
 		DrawRotaGraph2(PLEASE_A_BUTTON_POS_X, PLEASE_CROSS_BUTTON_POS_Y,
 			PLEASE_A_BUTTON_CENTER_X, PLEASE_A_BUTTON_CENTER_Y,
-			PLEASE_A_BUTTON_SCALE, 0.0, imgH_[IMG_H::PLEASE_A], true, false);
+			PLEASE_A_BUTTON_SCALE, 0.0, imgType_[IMG_H::PLEASE_A], true, false);
 	}
 }
 
@@ -154,17 +155,20 @@ void TitleScene::DrawModeSelect(void)
 {
 	//シングルモード選択画像
 	DrawRotaGraph2(SINGLE_MODE_POS_X, SINGLE_MODE_POS_Y,
-		SINGLE_MODE_CENTER_X, SINGLE_MODE_CENTER_Y, SINGLE_MODE_SCALE, 0.0, imgH_[IMG_H::SINGLE_MODE], true, false);
+		SINGLE_MODE_CENTER_X, SINGLE_MODE_CENTER_Y, SINGLE_MODE_SCALE, 0.0, imgType_[IMG_H::SINGLE_MODE], true, false);
 
+	//対戦モード選択画像
 	DrawRotaGraph2(MULTI_PLAY_POS_X, MULTI_PLAY_POS_Y,
-		MULTI_PLAY_CENTER_X, MULTI_PLAY_CENTER_Y, MULTI_PLAY_SCALE, 0.0, imgH_[IMG_H::MULTI_PLAY], true, false);
-
+		MULTI_PLAY_CENTER_X, MULTI_PLAY_CENTER_Y, MULTI_PLAY_SCALE, 0.0, imgType_[IMG_H::MULTI_PLAY], true, false);
+	
+	//カーソル選択画像
 	DrawRotaGraph2(TRIANGLE_POS_X, TRIANGLE_POS_Y + (TRIANGLE_OFFSET * selectNum_),
-		TRIANGLE_CENTER_X, TRIANGLE_CENTER_Y, TRIANGLE_SCALE, 0.0, imgH_[IMG_H::TRIANGLE], true, false);
+		TRIANGLE_CENTER_X, TRIANGLE_CENTER_Y, TRIANGLE_SCALE, 0.0, imgType_[IMG_H::TRIANGLE], true, false);
 }
 
 bool TitleScene::ButtonPush(void)
 {
+
 	JOYPAD_TYPE type = input_.GetJPadType();
 	//プレステコンなら×ボタン
 	if (JOYPAD_TYPE::DUAL_SHOCK_4 == type || JOYPAD_TYPE::DUAL_SENSE == type)
@@ -182,9 +186,12 @@ bool TitleScene::ButtonPush(void)
 			return true;
 		}
 	}
-	//その他ならプレステコンでいう×ボタンの場所のボタン
 	else
 	{	
+		if (input_.IsTriggerd("b"))
+		{
+			return true;
+		}
 	}
 	return false;
 
@@ -192,10 +199,12 @@ bool TitleScene::ButtonPush(void)
 
 bool TitleScene::SelectCursor(void)
 {
+	//上ボタンか十字キー上を押したら、カーソルを上に動かす
 	if (input_.IsTriggerd("up") && selectNum_ > static_cast<int>(GAME_MODE::SINGLE))
 	{
 		selectNum_--;
 	}
+	//下ボタンか十字キー下を押したら、カーソルを上に動かす
 	else if (input_.IsTriggerd("down") && selectNum_ < static_cast<int>(GAME_MODE::MULTI))
 	{
 		selectNum_++;
@@ -208,6 +217,7 @@ bool TitleScene::SelectCursor(void)
 
 bool TitleScene::SelectDecide(void)
 {
+	//決定ボタンが押されたら、ゲームシーンに移行
 	if (SelectCursor())
 	{
 		ChangeGameScene();
@@ -218,36 +228,52 @@ bool TitleScene::SelectDecide(void)
 
 void TitleScene::InitImage(void)
 {
-	imgH_.emplace(IMG_H::TITLE_LOGO, resMng_.Load(ResourceManager::SRC::TIRLE_LOGO_IMAGE).handleId_);
-	imgH_.emplace(IMG_H::PLEASE_A, resMng_.Load(ResourceManager::SRC::PLEASE_A).handleId_);
-	imgH_.emplace(IMG_H::PLEASE_CROSS, resMng_.Load(ResourceManager::SRC::PLEASE_CROSS).handleId_);
-	imgH_.emplace(IMG_H::SINGLE_MODE, resMng_.Load(ResourceManager::SRC::SINGLE_PLAY_LOGO).handleId_);
-	imgH_.emplace(IMG_H::MULTI_PLAY, resMng_.Load(ResourceManager::SRC::MULTI_PLAY_LOGO).handleId_);
-	imgH_.emplace(IMG_H::TRIANGLE, resMng_.Load(ResourceManager::SRC::TRIANGLE).handleId_);
+	//画像読み込み
+	imgType_.emplace(IMG_H::TITLE_LOGO, resMng_.Load(ResourceManager::SRC::TIRLE_LOGO_IMAGE).handleId_);
+	imgType_.emplace(IMG_H::PLEASE_A, resMng_.Load(ResourceManager::SRC::PLEASE_A).handleId_);
+	imgType_.emplace(IMG_H::PLEASE_CROSS, resMng_.Load(ResourceManager::SRC::PLEASE_CROSS).handleId_);
+	imgType_.emplace(IMG_H::SINGLE_MODE, resMng_.Load(ResourceManager::SRC::SINGLE_PLAY_LOGO).handleId_);
+	imgType_.emplace(IMG_H::MULTI_PLAY, resMng_.Load(ResourceManager::SRC::MULTI_PLAY_LOGO).handleId_);
+	imgType_.emplace(IMG_H::TRIANGLE, resMng_.Load(ResourceManager::SRC::TRIANGLE).handleId_);
 }
 
 void TitleScene::InitModel(void)
 {
 	//手前ロボットの初期設定
+	//モデルの読み込み
 	frontTransform_.SetModel(resMng_.LoadModelDuplicate(ResourceManager::SRC::PLAYER));
+	//モデルの大きさ
 	frontTransform_.scl = AsoUtility::VECTOR_ONE;
+	//モデルの座標
 	frontTransform_.pos = FRONT_ROBOT_POS;
+	//モデルの回転
 	frontTransform_.quaRot = Quaternion();
+	//モデルのローカル回転
 	frontTransform_.quaRotLocal =
 		Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(160.0f), 0.0f });
+	//モデルの設定を更新
 	frontTransform_.Update();
+	//モデルのポーズを読み込み、設定
 	std::string model = PATH_ANIMATION_PLAYER + "Win.mv1";
 	int animModel = MV1LoadModel(model.c_str());
 	MV1AttachAnim(frontTransform_.modelId, 0, animModel);
+	//ビームサーベルの生成
 	beamSabers_.emplace_back(std::make_unique<BeamSaber>(0, frontTransform_));
 
 	//奥ロボットの初期設定
+	//モデルの読み込み
 	backTransform_.SetModel(resMng_.LoadModelDuplicate(ResourceManager::SRC::PLAYER));
+	//モデルの大きさ
 	backTransform_.scl = AsoUtility::VECTOR_ONE;
+	//モデルの座標
 	backTransform_.pos = BACK_ROBOT_POS;
+	//モデルの回転
 	backTransform_.quaRot = Quaternion();
+	//モデルの設定を更新
 	backTransform_.Update();
+	//モデルのポーズを読み込み、設定
 	MV1AttachAnim(backTransform_.modelId, 0, animModel);
+	//ビームサーベルの生成
 	beamSabers_.emplace_back(std::make_unique<BeamSaber>(0, backTransform_));
 
 	for (auto& beamSaber : beamSabers_)
@@ -259,6 +285,7 @@ void TitleScene::InitModel(void)
 
 void TitleScene::InitCamera(void)
 {
+	//カメラ設定
 	camera_->ChangeMode(Camera::MODE::FIXED_POINT);
 	camera_->SetTargetPos(CAMERA_TARGET_POS);
 	camera_->SetCameraPos(CAMERA_POS);

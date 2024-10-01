@@ -39,11 +39,12 @@ private:
         MULTI
     };
 
-    int padNum_;
-
+    //モードセレクト
     int selectNum_;
 
+    //タイトル画面から選択画面に行く下かを判定
     bool startFlag_;
+    
     // シングルトン参照
     ResourceManager& resMng_;
 
@@ -63,24 +64,33 @@ private:
    std::vector< std::unique_ptr<BeamSaber>> beamSabers_;
 
 
-    //画像ハンドル
-    std::map<IMG_H, int> imgH_;
+    //画像タイプ配列
+    std::map<IMG_H, int> imgType_;
+
+    //ゲームシーンに移行
     void ChangeGameScene(void);
 
+    //「ボタンを押して」表示
     void DrawPleaseButton(void);
 
+    //モードセレクト画像描画
     void DrawModeSelect(void);
 
+    //決定ボタン処理(XBOXコンでもPSコンでも同じ場所のボタンにするため)
     bool ButtonPush(void);
 
+    //モード選択用のカーソル
     bool SelectCursor(void);
 
+    //モードを選択してゲームシーンに移行する
     bool SelectDecide(void);
 
+    //画像の読み込み
     void InitImage(void);
 
+    //モデルの初期設定
     void InitModel(void);
-
+    //カメラの初期設定
     void InitCamera(void);
 
 };

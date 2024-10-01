@@ -85,13 +85,13 @@ resMng_(ResourceManager::GetInstance())
 {
 	sceneTransitor_.Start();
 	playMode_ = playMode;
-	imgH_.emplace(IMG_TYPE::BACK_TO_TITLE, resMng_.Load(ResourceManager::SRC::BACK_TO_TITLE).handleId_);
-	imgH_.emplace(IMG_TYPE::ONE_MOR_FIGHT, resMng_.Load(ResourceManager::SRC::ONE_MOR_FIGHT).handleId_);
-	imgH_.emplace(IMG_TYPE::PLEASE_A, resMng_.Load(ResourceManager::SRC::PLEASE_A).handleId_);
-	imgH_.emplace(IMG_TYPE::PLEASE_CROSS, resMng_.Load(ResourceManager::SRC::PLEASE_CROSS).handleId_);
-	imgH_.emplace(IMG_TYPE::TRIANGLE, resMng_.Load(ResourceManager::SRC::TRIANGLE).handleId_);
-	imgH_.emplace(IMG_TYPE::READY, resMng_.Load(ResourceManager::SRC::READY_IMAGE).handleId_);
-	imgH_.emplace(IMG_TYPE::FIGHT, resMng_.Load(ResourceManager::SRC::FIGHT_IMAGE).handleId_);
+	imgType_.emplace(IMG_TYPE::BACK_TO_TITLE, resMng_.Load(ResourceManager::SRC::BACK_TO_TITLE).handleId_);
+	imgType_.emplace(IMG_TYPE::ONE_MOR_FIGHT, resMng_.Load(ResourceManager::SRC::ONE_MOR_FIGHT).handleId_);
+	imgType_.emplace(IMG_TYPE::PLEASE_A, resMng_.Load(ResourceManager::SRC::PLEASE_A).handleId_);
+	imgType_.emplace(IMG_TYPE::PLEASE_CROSS, resMng_.Load(ResourceManager::SRC::PLEASE_CROSS).handleId_);
+	imgType_.emplace(IMG_TYPE::TRIANGLE, resMng_.Load(ResourceManager::SRC::TRIANGLE).handleId_);
+	imgType_.emplace(IMG_TYPE::READY, resMng_.Load(ResourceManager::SRC::READY_IMAGE).handleId_);
+	imgType_.emplace(IMG_TYPE::FIGHT, resMng_.Load(ResourceManager::SRC::FIGHT_IMAGE).handleId_);
 
 	rematchMode_ = 0;
 
@@ -188,11 +188,12 @@ void GameScene::DrawSIngleMode(void)
 	actorManager_->DrawUI(SINGLE_PLAY_MODE);
 	UpdateEffekseer3D();
 	DrawEffekseer3D();
-	DrawUI();
+	//DrawUI();
 }
 void GameScene::DrawBattleMode(void)
 {
-	for (int idx = 0; idx < 2; idx++)
+	int maxIdx = static_cast<int>(PLAYER_NUM::MAX);
+	for (int idx = 0; idx < maxIdx; idx++)
 	{
 		SetDrawScreen(cameraScreens_[idx]);
 		// 画面を初期化
@@ -206,7 +207,6 @@ void GameScene::DrawBattleMode(void)
 	}
 	SetDrawScreen(integrationScreen_);
 
-	int maxIdx = static_cast<int>(PLAYER_NUM::MAX);
 	for (int idx = 0; idx < maxIdx; idx++)
 	{
 		//透過処理は後で見直す
@@ -216,20 +216,19 @@ void GameScene::DrawBattleMode(void)
 			static_cast<int>(screenPos_[key].y),
 			cameraScreens_[idx], false);
 	}
-
 	//二分割されている画面の真ん中に線を引く
 	DrawLine(
-		static_cast<int>(screenPos_[PLAYER_NUM::P_1].x), 
+		static_cast<int>(screenPos_[PLAYER_NUM::P_2].x), 
 		0, 
-		static_cast<int>(screenPos_[PLAYER_NUM::P_1].x), LINE_THICKNES, 0x000000, true);
+		static_cast<int>(screenPos_[PLAYER_NUM::P_2].x), LINE_THICKNES, 0x000000, true);
 
 	SetDrawScreen(DX_SCREEN_BACK);
 
 	//プレイヤーごとに分割されたスクリーンをまとめて描画
 	DrawGraph(0, 0, integrationScreen_, true);
 
-	//UI描画
-	DrawUI();
+	//共通UI描画(ゲームスタートなど)
+	actorManager_->DrawCommonUI(startCount_,IsGameSet(),rematchMode_);
 
 }
 void GameScene::ChangeGameScene(void)
@@ -261,61 +260,6 @@ bool GameScene::IsGameStart(void)
 bool GameScene::IsGameSet(void)
 {
 	return actorManager_->IsDeadAnyPlayer();
-}
-
-void GameScene::DrawUI(void)
-{	
-	DrawUIGameSet();
-	DrawUIStart();
-}
-
-void GameScene::DrawUIStart(void)
-{
-	//ゲームスタート後は描画をしない
-	if (startCount_ >= START_TIME)
-	{
-		return;
-	}
-	if (startCount_ < READY_TIME)
-	{
-		DrawRotaGraph2(READY_POS_X, READY_POS_Y,
-			READY_CENTER_X, READY_CENTER_Y, READY_SCALE, 0.0, imgH_[IMG_TYPE::READY], true, false);
-	}
-	else
-	{
-		DrawRotaGraph2(FIGHT_POS_X, FIGHT_POS_Y,
-			FIGHT_CENTER_X, FIGHT_CENTER_Y, FIGHT_SCALE, 0.0, imgH_[IMG_TYPE::FIGHT], true, false);
-	}
-	
-}
-
-void GameScene::DrawUIGameSet(void)
-{
-	if (!IsGameSet())
-	{
-		return;
-	}
-
-	DrawRotaGraph2(BACK_TO_TITLE_POS_X, BACK_TO_TITLE_POS_Y,
-		BACK_TO_TITLE_CENTER_X, BACK_TO_TITLE_CENTER_Y, BACK_TO_TITLE_SCALE, 0.0, imgH_[IMG_TYPE::BACK_TO_TITLE], true, false);
-
-	DrawRotaGraph2(ONE_MOR_FIGHT_POS_X, ONE_MOR_FIGHT_POS_Y,
-		ONE_MOR_FIGHT_CENTER_X, ONE_MOR_FIGHT_CENTER_Y, ONE_MOR_FIGHT_SCALE, 0.0, imgH_[IMG_TYPE::ONE_MOR_FIGHT], true, false);
-
-	//接続されたコントローラがPsなら×ボタン表記
-	if (JOYPAD_TYPE::DUAL_SHOCK_4 == joyPadType_ || JOYPAD_TYPE::DUAL_SENSE == joyPadType_)
-	{
-		DrawRotaGraph2(PLEASE_CROSS_BUTTON_POS_X, PLEASE_CROSS_BUTTON_POS_Y,
-			PLEASE_CROSS_BUTTON_CENTER_X, PLEASE_CROSS_BUTTON_CENTER_Y, PLEASE_CROSS_BUTTON_SCALE, 0.0, imgH_[IMG_TYPE::PLEASE_CROSS], true, false);
-	}//それ以外ならXボックス表記
-	else
-	{
-		DrawRotaGraph2(PLEASE_A_BUTTON_POS_X, PLEASE_A_BUTTON_POS_Y,
-			PLEASE_A_BUTTON_CENTER_X, PLEASE_A_BUTTON_CENTER_Y, PLEASE_A_BUTTON_SCALE, 0.0, imgH_[IMG_TYPE::PLEASE_A], true, false);
-	}
-	DrawRotaGraph2(TRIANGLE_POS_X, TRIANGLE_POS_Y + (TRIANGLE_OFFSET * rematchMode_ ),
-		TRIANGLE_CENTER_X, TRIANGLE_CENTER_Y, TRIANGLE_SCALE, 0.0, imgH_[IMG_TYPE::TRIANGLE], true, false);
-
 }
 
 bool GameScene::SelectCursor(void)

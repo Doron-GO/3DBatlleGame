@@ -26,7 +26,12 @@ public:
 	void DrawDebug(int playerType);
 	void DrawAnimeDebug(int playerType);
 	void DrawCamera(int playerType);
+	//残弾数やHPゲージ等の表示
 	void DrawUI(int playerType);
+
+	//ゲームスタートなどの共通UI
+	void DrawCommonUI(const float&startCount, const bool& isGameSet,const float& rematchMode);
+
 	void AddClliders(Collider* collider);
 	void SetEnemyInfo(void);
 	void SetBossEnemyInfo(void);

@@ -134,7 +134,8 @@ void Player::MakeObjects(void)
 	beamSaber_ = std::make_unique <BeamSaber>(playerNum_,transform_);
 	capsule_ = std::make_unique<CollisionCapsule>(transform_, CAPSULE_TOP, CAPSULE_DOWN, CAPSULE_RADIUS);
 	userInterface_ = std::make_unique<UserInterface>(resMng_, enemyPos_, enemyDistance_, boostGauge_,
-		playerHp_, *enemyHp_,isWin_, beamRifle_->GetNumnberOfBullets() , static_cast<int> (playMode_));
+		playerHp_, *enemyHp_,isWin_, beamRifle_->GetNumnberOfBullets() , static_cast<int> (playMode_),playerNum_, input_->GetJPadType());
+
 	effectManager_ = std::make_unique<EffectManager>(transform_);
 }
 
@@ -419,6 +420,7 @@ void Player::Draw(void)
 	beamRifle_->Draw();
 	beamSaber_->Draw();
 }
+
 
 void Player::PlayEffect(STATE state)
 {

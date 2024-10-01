@@ -1,4 +1,5 @@
 #pragma once
+#include"../Input/Input.h"
 #include<map>
 
 class ResourceManager;
@@ -8,16 +9,20 @@ class UserInterface
 public:
 
 	UserInterface(ResourceManager& resMng, const VECTOR* enemyPos,float& distance,
-		float& boostGauge, float& hpGauge, const float& enemyHp, bool& IsWin, const int& numnberofBullets,int SinglPlay);
+		float& boostGauge, float& hpGauge, const float& enemyHp, bool& IsWin,
+		const int& numnberofBullets,int playMode,int playerType,const JOYPAD_TYPE& joyPadType);
 
 	~UserInterface();
-	void Update(void);
 
 	void Draw(bool& gameSet);
 
+	//共通UI(ゲームスタート等)
+	void DrawCommonUI(const float& startCount, const bool& isGameSet, const float& rematchMode);
+
 private:
 
-	enum class IMG_H
+	//画像タイプ
+	enum class IMG_TYPE
 	{
 		BOOST_GAUGE,
 		BOOST_GAUGE_CASE,
@@ -26,14 +31,22 @@ private:
 		LOSE,
 		TARGERT,
 		TARGET_RED,
-		RIFLE_IMAGE
+		RIFLE_IMAGE,
+		ONE_MOR_FIGHT,
+		BACK_TO_TITLE,
+		PLEASE_CROSS,
+		PLEASE_A,
+		TRIANGLE,
+		READY,
+		FIGHT
+
 	};
 
 	// シングルトン参照
 	ResourceManager& resMng_;
 
 	//UI画像ハンドル
-	std::map<IMG_H,int> uiImgH_;
+	std::map<IMG_TYPE,int> uiImgH_;
 
 	//ブーストゲージの数値
 	float& boostGauge_;
@@ -44,15 +57,14 @@ private:
 	//敵HPの数値
  	const float& enemyHpGauge_;
 
- 	 float enemyHpGaugeCause_;
-
 	//残弾数
 	const int& numnberofBullets_;
 
 	//敵との距離
 	float& enemyDistance_;
 
-	int singlePlay_;
+	//プレイモード
+	int playMode_;
 
 	//Hp表示
 	int fontHp_;
@@ -69,6 +81,7 @@ private:
 	//ブーストゲージ画像の座標
 	VECTOR boostGaugePos_;
 
+	//ブーストゲージ画像座標調整用
 	int boostGaugeOffsetX_;
 	int boostGaugeOffsetY_;
 
@@ -81,14 +94,26 @@ private:
 	//残弾表示画像の座標
 	VECTOR numberOfBulletsPos_;
 
-	//残弾表示画像の座標
+	//残弾表示画像の大きさ
 	double numberOfBulletsScale_;
 
+	//プレイヤー１のパッドの種類
+	JOYPAD_TYPE joyPadType_;
+
+	//再戦モード
+	int rematchMode_;
 
 	//敵の座標
 	const VECTOR* enemyPos_;
 
+	//スタート計測変数
+	float startCount_;
+
+	//画像の読み込み
 	void InitImage(void);
+
+	//ゲームスタート表示などの共通UIの初期化
+	void InitCommonUi(void);
 
 	//ブーストゲージの表示
 	void DrawBoostGauge(void);
@@ -107,6 +132,12 @@ private:
 
 	//敵のHP表示
 	void DrawEnemyHp(void);
+
+	//ゲームスタート時の表示
+	void DrawGameUIStart(const float& startCount);
+	
+	//ゲーム終了時の表示
+	void DrawUIGameSet(const bool& isGameSet, const float& rematchMode);
 
 };
 

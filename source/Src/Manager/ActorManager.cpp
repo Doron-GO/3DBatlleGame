@@ -3,6 +3,15 @@
 #include"../Object/Comon/Collider.h"
 #include"../UI/UserInterface.h"
 
+#pragma region Parameter
+
+//プレイヤー１のタイプ
+constexpr int PLAYER_TYPE = 0;
+
+#pragma endregion
+
+
+
 ActorManager::ActorManager(int numberofPlayers)
 {
 	if (numberofPlayers ==0)
@@ -118,6 +127,12 @@ void ActorManager::DrawUI(int playerType)
 {
 	userInterface_[playerType]->Draw(isDeadAnyPlayer_);
 }
+
+void ActorManager::DrawCommonUI(const float& startCount, const bool& isGameSet, const float& rematchMode)
+{
+	userInterface_[PLAYER_TYPE]->DrawCommonUI(startCount, isGameSet, rematchMode);
+}
+
 
 void ActorManager::AddClliders(Collider* collider)
 {
