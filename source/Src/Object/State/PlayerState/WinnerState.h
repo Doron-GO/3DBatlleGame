@@ -9,10 +9,15 @@ class WinnerState :
 public:
 
     WinnerState(Player& player);
-    virtual void Update()override;
+    
 
 
 private:
+
+        //更新
+    virtual void Update()override;
+
+    //プレイヤー情報
     Player& player_;
 
 };

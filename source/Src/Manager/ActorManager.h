@@ -49,14 +49,6 @@ private:
 
 	void (ActorManager::* _draw)();
 
-	static constexpr int PLAYER_NUM_MAX = 2;
-
-	static constexpr int PLAYER_NUM_MIN = 1;
-
-	static constexpr int SINGLE_PLAY = 0;
-
-
-	static constexpr float STAGE_OUT_Y = -1000.0f;
 
 	std::vector< std::unique_ptr<Player>>players_;
 

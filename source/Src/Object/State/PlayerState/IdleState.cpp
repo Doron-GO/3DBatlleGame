@@ -6,7 +6,9 @@
 
 IdleState::IdleState(Player& player):player_(player)
 {
+	//ステートをIDLE状態にする
 	player_.pState_ = Player::STATE::IDLE;
+	//ジャンプ力をにする
 	player_.JumpStop();
 
 }

@@ -8,25 +8,41 @@ public:
     static constexpr float SPEED = 50.0f;
 
     BeamShot(int playerType,const bool& isHorming,int num,int playMode);
-    virtual void Draw(void)override;
-    virtual void Update(VECTOR enemyPos)override;
+
+    //更新
+    virtual void Update(VECTOR enemyPos)override;	
+
+    //描画
+    virtual void Draw(void) override;
+
+    //有効化
     virtual void Activate(void)override;
+
+    //非有効化
     virtual void InActivate(void)override;
+
+    //衝突時処理
     void Hit(void);
+
+    //モデルIDの取得
     virtual const int& GetModelId(void)const override;
 
+    //大ダメージの取得
      const float& GetBigDamage(void)const;
 
+    //非ホーミングでの有効化
     void InActivateHorming();
 
 private:
 
+    //ビームの状態
     enum class BEAM_STATE
     {
         BEAM,
         HIT
     };
 
+    //プレイモード
     enum class PLAY_MODE
     {
         SINGLE_MODE,
@@ -72,21 +88,25 @@ private:
 
     void (BeamShot::* _update)();
 
+    //相手プレイヤーの座標
     VECTOR enemyPos_;
 
+    //追尾するベクトル
     VECTOR hormingVec_;
 
+    //敵座標調整用数値
     float offsetEnemy_;
+
     //ホーミングするかどうかを判定
    const bool& isHorming_;
 
    //弾が生存できる時間を計測
    float deathCount_;
 
-   int testShotNUm_;
-
+   //大ダメージ時のダメージ量
    float bigDamage_;
 
+   //ホーミングする時間の測定用変数
    float hormingCount_;
 
 };

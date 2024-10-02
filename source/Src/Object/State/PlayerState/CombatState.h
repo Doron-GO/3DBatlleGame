@@ -8,11 +8,11 @@ class CombatState :
 {
 public:
 
-    static constexpr float COMBAT_STAN_TIME = 20.0f;//äiì¨çdíºéûä‘
 
     CombatState(Player& player);
 private:
     Player& player_;
+
     virtual void Update()override;
 
 

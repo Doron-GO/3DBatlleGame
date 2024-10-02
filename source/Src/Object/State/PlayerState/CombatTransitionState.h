@@ -17,8 +17,6 @@ private:
     Player& player_;
     virtual void Update()override;
 
-    void CombatDash(void);
-
     VECTOR dashVec_;
     VECTOR& playerPos_;
     VECTOR& movePow_;
@@ -26,6 +24,7 @@ private:
     Quaternion& quarot_;
     float distance_;
 
+    //‘ŠŽè‚Æ‚Ì‹——£‚ðŒv‘ª‚·‚é
     float Distance(void);
 };
 

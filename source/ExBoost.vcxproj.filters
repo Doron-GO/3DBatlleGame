@@ -33,9 +33,6 @@
     <ClCompile Include="Src\Object\Time\DeltaTime.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Object\Time\TimeCount.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Src\_debug\_DebugConOut.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -123,9 +120,6 @@
     <ClCompile Include="Src\Object\Collision\CollisionCapsule.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Object\Collision\CollisionSphere.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Object\State\PlayerState\DamageState.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -142,9 +136,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Src\Object\DamageObject\Saber.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Object\State\PlayerState\FirstComboState.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Src\UI\UserInterface.cpp">
@@ -177,9 +168,6 @@
     <ClCompile Include="Src\Object\State\BossEnemyState\BarrageState.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Object\State\BossEnemyState\EarthQuakeState.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Object\DamageObject\DeathBall.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -201,9 +189,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\Object\Time\DeltaTime.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Object\Time\TimeCount.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\_debug\_DebugConOut.h">
@@ -293,9 +278,6 @@
     <ClInclude Include="Src\Object\Collision\CollisionCapsule.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Object\Collision\CollisionSphere.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Object\State\PlayerState\DamageState.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -312,9 +294,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\Object\DamageObject\Saber.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Object\State\PlayerState\FirstComboState.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\UI\UserInterface.h">
@@ -351,9 +330,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\Object\State\BossEnemyState\BarrageState.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Object\State\BossEnemyState\EarthQuakeState.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\Object\DamageObject\DeathBall.h">

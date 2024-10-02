@@ -97,7 +97,7 @@
 #pragma endregion
 
 
-Player::Player(int playerNum, int playMode):playerNum_(playerNum),
+Player::Player(int playerNum, int playMode):playerType_(playerNum),
 state_(nullptr),input_(std::make_unique<Input>(padNum_)),camera_(std::make_unique<Camera>())
 {
 	playMode_ = static_cast<PLAY_MODE>(playMode);
@@ -130,11 +130,11 @@ void Player::Init(void)
 void Player::MakeObjects(void)
 {
 	roboAnimeController_ = std::make_unique< RobotAnimeController>(transform_.modelId);
-	beamRifle_ = std::make_unique <BeamRifle>(playerNum_, static_cast<int> (playMode_),*this);
-	beamSaber_ = std::make_unique <BeamSaber>(playerNum_,transform_);
+	beamRifle_ = std::make_unique <BeamRifle>(playerType_, static_cast<int> (playMode_),*this);
+	beamSaber_ = std::make_unique <BeamSaber>(playerType_,transform_);
 	capsule_ = std::make_unique<CollisionCapsule>(transform_, CAPSULE_TOP, CAPSULE_DOWN, CAPSULE_RADIUS);
 	userInterface_ = std::make_unique<UserInterface>(resMng_, enemyPos_, enemyDistance_, boostGauge_,
-		playerHp_, *enemyHp_,isWin_, beamRifle_->GetNumnberOfBullets() , static_cast<int> (playMode_),playerNum_, input_->GetJPadType());
+		playerHp_, *enemyHp_,isWin_, beamRifle_->GetNumnberOfBullets() , static_cast<int> (playMode_),playerType_, input_->GetJPadType());
 
 	effectManager_ = std::make_unique<EffectManager>(transform_);
 }
@@ -143,11 +143,11 @@ void Player::InitTransform(void)
 {
 	transform_.SetModel(resMng_.LoadModelDuplicate(ResourceManager::SRC::PLAYER));
 	transform_.scl = AsoUtility::VECTOR_ONE;
-	transform_.pos = { DEFAULT_POS.x, DEFAULT_POS.y, (DEFAULT_POS.z * playerNum_) };
+	transform_.pos = { DEFAULT_POS.x, DEFAULT_POS.y, (DEFAULT_POS.z * playerType_) };
 	transform_.quaRot = Quaternion();
 	transform_.quaRotLocal =
 		Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(180.0f), 0.0f });
-	if (playerNum_ == static_cast<int>(PLAYER_NUM::PLAYER_2))
+	if (playerType_ == static_cast<int>(PLAYER_TYPE::PLAYER_2))
 	{
 		moveQua_ =Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(180.0f), 0.0f });
 		transform_.pos.z += DEFAULT_DISTANCE;
@@ -162,7 +162,7 @@ void Player::InitParameter(void)
 	//初期状態はIdol状態
 	pState_ = STATE::IDLE;
 	//パッドは1始まりなので+1
-	padNum_ = playerNum_ + 1;
+	padNum_ = playerType_ + 1;
 	movePow_ = AsoUtility::VECTOR_ZERO;
 	movedPos_ = AsoUtility::VECTOR_ZERO;
 	dirGravity_ = { 0.0f,-1.0f,0.0f };
@@ -193,7 +193,7 @@ void Player::InitAnimation(void)
 	roboAnimeController_->Add(static_cast<int>(STATE::BOOST_DASH), PATH_ANIMATION_PLAYER + "Hover.mv1", 30.0f, 20.0f);
 	roboAnimeController_->Add(static_cast<int>(STATE::JUMP), PATH_ANIMATION_PLAYER + "Jump.mv1", 50.0f, 100.0f);
 	roboAnimeController_->Add(static_cast<int>(STATE::DAMAGE), PATH_ANIMATION_PLAYER + "Reaction.mv1", 45.0f, 38.0f);
-	roboAnimeController_->Add(static_cast<int>(STATE::COMBAT1), PATH_ANIMATION_PLAYER + "Attack_360_High.mv1", 120.0f, 160.0f);
+	roboAnimeController_->Add(static_cast<int>(STATE::COMBAT), PATH_ANIMATION_PLAYER + "Attack_360_High.mv1", 120.0f, 160.0f);
 	roboAnimeController_->Add(static_cast<int>(STATE::COMBAT_RUN), PATH_ANIMATION_PLAYER + "RunWithSword.mv1", 20.0f, 20.0f);
 	roboAnimeController_->Add(static_cast<int>(STATE::DOWN), PATH_ANIMATION_PLAYER + "Stunned.mv1", 100.0f, 96.0f);
 	roboAnimeController_->Add(static_cast<int>(STATE::WIN), PATH_ANIMATION_PLAYER + "Win.mv1", 60.0f, 170.0f);
@@ -427,11 +427,6 @@ void Player::PlayEffect(STATE state)
 	effectManager_-> Play(static_cast<int>(state));
 }
 
- Camera& Player::GetCamera()const
-{
-	return *camera_;
-}
-
 void Player::CameraDraw()
 {
 	camera_->SetBeforeDraw();
@@ -543,9 +538,9 @@ BeamSaber& Player::GetBeamSaber(void) const
 	return *beamSaber_;
 }
 
-int Player::GetPlayerNum(void) const
+int Player::GetPlayerType(void) const
 {
-	return playerNum_;
+	return playerType_;
 }
 
 float Player::GetDeltaTime(void) const
@@ -586,7 +581,7 @@ void Player::DebugPlayerState()
 	case Player::STATE::FALL:
 		debugString_ = "FALL";
 		break;
-	case Player::STATE::COMBAT1:
+	case Player::STATE::COMBAT:
 		debugString_ = "COMBAT1";
 		break;
 	case Player::STATE::COMBAT_RUN:
@@ -627,7 +622,7 @@ void Player::EnemyState(void)
 	case Player::STATE::FALL:
 		enemyDebugString_ = "FALL";
 		break;
-	case Player::STATE::COMBAT1:
+	case Player::STATE::COMBAT:
 		enemyDebugString_ = "COMBAT1";
 		break;
 	case Player::STATE::COMBAT_RUN:
@@ -671,7 +666,7 @@ void Player::MoveBoodtDash(void)
 
 void Player::RobotAnimDebugDraw(int playerType)
 {
-	if (playerType  == playerNum_)
+	if (playerType  == playerType_)
 	{
 
 		roboAnimeController_->Draw();
@@ -680,7 +675,7 @@ void Player::RobotAnimDebugDraw(int playerType)
 
 void Player::PlayerDebugDraw(int playerType)
 {
-	if (playerType  == playerNum_)
+	if (playerType  == playerType_)
 	{
 		// ほしい値は－1～1なので1000で割る
 		float padX = input_->keyLx_ / 1000.0f;
@@ -719,7 +714,7 @@ void Player::PlayerDebugDraw(int playerType)
 		DrawFormatStringF(0.0f, 370.0f, 0xffffff, "gravityPow_:%f", gravityPow_);
 		DrawFormatStringF(0.0f, 390.0f, 0xffffff, "jumpAdd_:%f", jumpSpeed_);
 		roboAnimeController_->DebugDraw();
-		camera_->Draw();
+		camera_->DrawDebug();
 		float dot = VDot(dirGravity_, jumpPow_);
 		DrawFormatStringF(0.0f, 470.0f, 0xffffff, "jumpdot:%f", dot);
 		DrawFormatStringF(0.0f, 500.0f, 0xffffff, "boostGauge_:%f", boostGauge_);
@@ -1016,17 +1011,6 @@ bool Player::StickAdjustment(VECTOR v1, VECTOR v2)
 	return false;
 }
 
-void Player::InitValue(float& target)
-{
-	target = 0;
-}
-
-
-void Player::AddToGauge(float& gauge, float add)
-{
-	gauge += add;
-}
-
 void Player::ConsumeGauge(float& gauge, float rate)
 {
 	gauge -= rate;
@@ -1238,11 +1222,6 @@ const VECTOR Player::GetEnemyPos(void) const
 const VECTOR& Player::GetPlayerPos(void) const
 {
 	return transform_.pos;
-}
-
-const float& Player::GetOffsetBossEnemy(void) const
-{
-	return offsetEnemy_;
 }
 
 const Input& Player::GetInput() const

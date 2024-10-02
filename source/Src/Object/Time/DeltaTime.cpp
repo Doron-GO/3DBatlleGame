@@ -32,12 +32,10 @@ void DeltaTime::SetStart()
 
 void DeltaTime::Reset()
 {
-	oldTime_ = static_cast<float>(GetNowHiPerformanceCount());
 	elapsedTime_ = 0.0f;
-
 }
 
-DeltaTime::DeltaTime() :oldTime_(0.0f), deltaTime_(0.000001f), elapsedTime_(0.0f)
+DeltaTime::DeltaTime() : deltaTime_(0.000001f), elapsedTime_(0.0f)
 {
 
 }

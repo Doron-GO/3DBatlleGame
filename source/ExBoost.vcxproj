@@ -165,7 +165,6 @@
     <ClCompile Include="Src\Object\Camera\Camera.cpp" />
     <ClCompile Include="Src\Object\Collision\CollisionBase.cpp" />
     <ClCompile Include="Src\Object\Collision\CollisionCapsule.cpp" />
-    <ClCompile Include="Src\Object\Collision\CollisionSphere.cpp" />
     <ClCompile Include="Src\Object\Comon\Collider.cpp" />
     <ClCompile Include="Src\Object\Comon\Transform.cpp" />
     <ClCompile Include="Src\Object\DamageObject\BeamShot.cpp" />
@@ -177,7 +176,6 @@
     <ClCompile Include="Src\Object\Actor\Player\Player.cpp" />
     <ClCompile Include="Src\Object\State\BossEnemyState\BarrageState.cpp" />
     <ClCompile Include="Src\Object\State\BossEnemyState\DeadState.cpp" />
-    <ClCompile Include="Src\Object\State\BossEnemyState\EarthQuakeState.cpp" />
     <ClCompile Include="Src\Object\State\BossEnemyState\WaitState.cpp" />
     <ClCompile Include="Src\Object\State\PlayerState\BoostDashState.cpp" />
     <ClCompile Include="Src\Object\State\PlayerState\BoostState.cpp" />
@@ -186,7 +184,6 @@
     <ClCompile Include="Src\Object\State\PlayerState\DamageState.cpp" />
     <ClCompile Include="Src\Object\State\PlayerState\DownState.cpp" />
     <ClCompile Include="Src\Object\State\PlayerState\FallState.cpp" />
-    <ClCompile Include="Src\Object\State\PlayerState\FirstComboState.cpp" />
     <ClCompile Include="Src\Object\State\PlayerState\JumpState.cpp" />
     <ClCompile Include="Src\Object\State\PlayerState\LoseState.cpp" />
     <ClCompile Include="Src\Object\State\PlayerState\MoveState.cpp" />
@@ -194,7 +191,6 @@
     <ClCompile Include="Src\Object\State\PlayerState\WinnerState.cpp" />
     <ClCompile Include="Src\Object\Stage\Stage.cpp" />
     <ClCompile Include="Src\Object\Time\DeltaTime.cpp" />
-    <ClCompile Include="Src\Object\Time\TimeCount.cpp" />
     <ClCompile Include="Src\Object\Weapon\BeamRifle.cpp" />
     <ClCompile Include="Src\Object\Weapon\BeamSaber.cpp" />
     <ClCompile Include="Src\Scene\GameScene.cpp" />
@@ -225,7 +221,6 @@
     <ClInclude Include="Src\Object\Camera\Camera.h" />
     <ClInclude Include="Src\Object\Collision\CollisionBase.h" />
     <ClInclude Include="Src\Object\Collision\CollisionCapsule.h" />
-    <ClInclude Include="Src\Object\Collision\CollisionSphere.h" />
     <ClInclude Include="Src\Object\Comon\Collider.h" />
     <ClInclude Include="Src\Object\Comon\Transform.h" />
     <ClInclude Include="Src\Object\DamageObject\BeamShot.h" />
@@ -237,7 +232,6 @@
     <ClInclude Include="Src\Object\Actor\Player\Player.h" />
     <ClInclude Include="Src\Object\State\BossEnemyState\BarrageState.h" />
     <ClInclude Include="Src\Object\State\BossEnemyState\DeadState.h" />
-    <ClInclude Include="Src\Object\State\BossEnemyState\EarthQuakeState.h" />
     <ClInclude Include="Src\Object\State\BossEnemyState\WaitState.h" />
     <ClInclude Include="Src\Object\State\PlayerState\BoostDashState.h" />
     <ClInclude Include="Src\Object\State\PlayerState\BoostState.h" />
@@ -246,7 +240,6 @@
     <ClInclude Include="Src\Object\State\PlayerState\DamageState.h" />
     <ClInclude Include="Src\Object\State\PlayerState\DownState.h" />
     <ClInclude Include="Src\Object\State\PlayerState\FallState.h" />
-    <ClInclude Include="Src\Object\State\PlayerState\FirstComboState.h" />
     <ClInclude Include="Src\Object\State\PlayerState\JumpState.h" />
     <ClInclude Include="Src\Object\State\PlayerState\LoseState.h" />
     <ClInclude Include="Src\Object\State\PlayerState\MoveState.h" />
@@ -255,7 +248,6 @@
     <ClInclude Include="Src\Object\State\PlayerState\WinnerState.h" />
     <ClInclude Include="Src\Object\Stage\Stage.h" />
     <ClInclude Include="Src\Object\Time\DeltaTime.h" />
-    <ClInclude Include="Src\Object\Time\TimeCount.h" />
     <ClInclude Include="Src\Object\Weapon\BeamRifle.h" />
     <ClInclude Include="Src\Object\Weapon\BeamSaber.h" />
     <ClInclude Include="Src\Scene\GameScene.h" />

@@ -44,14 +44,15 @@ protected:
 	//カプセル状の当たり判定用
 	std::unique_ptr<CollisionCapsule> capsule_;
 
-
-	virtual void InitAnimation(void);
-
 	//デルタタイム
 	float deltaTime_;
 
 	//プレイヤーHP
 	float playerHp_;
+
+	//アニメーションの設定
+	virtual void InitAnimation(void);
+
 
 };
 

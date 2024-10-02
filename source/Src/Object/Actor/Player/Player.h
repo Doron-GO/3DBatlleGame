@@ -57,7 +57,7 @@ public:
 		BOOST,
 		BOOST_DASH,
 		FALL,
-		COMBAT1,
+		COMBAT,
 		COMBAT_RUN,
 		WIN,
 		LOSE,
@@ -67,40 +67,52 @@ public:
 	Player(int playerNum, int playMode);
 
 	~Player();
+
 	void Init(void);
 
+	//更新
 	void Update();
 
+	//描画
 	void Draw(void);
 
+	//エフェクトの再生
 	void PlayEffect(STATE state);
 
-	Camera& GetCamera()const;
-
+	//ビームライフルの取得
 	BeamRifle &GetBeamRifle(void)const;
 
+	//ビームざーべるの取得
 	BeamSaber&GetBeamSaber(void)const;
 
+	//トランスフォームの取得
 	const Transform& GetTransform(void) const;
 
-	int GetPlayerNum(void)const;
+	//プレイヤータイプの取得
+	int GetPlayerType(void)const;
 
+	//デルタタイムの取得
 	float GetDeltaTime(void)const;
 
+	//スティックの倒れている方向の取得
 	void GetMoveDir(void);
 
+	//スティックの倒れている方向の取得(ブースト時)
 	void GetMoveDirBoostDash(void);
 
+	//着地しているかどうかを判定
 	const bool IsGround(void) const;
 
+	//ホーミング可能かどうかを返す
 	const bool& IsHorming(void) const;
 
+	//敵座標の取得
 	const VECTOR GetEnemyPos(void) const;
 
+	//自分の座標の取得
 	const VECTOR& GetPlayerPos(void) const;
 
-	const float& GetOffsetBossEnemy(void)const;
-	
+	//カメラの描画
 	void CameraDraw();
 
 	//地面との当たり判定
@@ -208,6 +220,7 @@ public:
 	//重力を加算する
 	void CalcGravity();
 
+	//射撃クールタイムのリセット
 	void ResetShotFlame(void);
 
 	//アニメーションコントローラーのパラメータを表示(デバッグ用)
@@ -228,12 +241,16 @@ public:
 	//ブーストゲージの回復を停止させる
 	void StopRechargeBoost(void);
 
+	//死んだかどうかを判定
 	bool IsDead(void);
 
+	//敗北時処理
 	void Lose(void);
-
+	
+	//勝利時処理
 	void Win(void);
 
+	//ステートの取得
 	const STATE& GetState(void);
 
 	//スーパーアーマーを削る
@@ -242,6 +259,7 @@ public:
 	//スーパーアーマーが残っているかどうかを判定
 	bool IsSuperArmor(void);
 
+	//UIを渡す関数
 	 std::unique_ptr<UserInterface> MoveUI(void);
 
 	//回転の設定用変数
@@ -252,7 +270,7 @@ public:
 
 private:
 
-	enum class PLAYER_NUM
+	enum class PLAYER_TYPE
 	{
 		PLAYER_1, 
 		PLAYER_2
@@ -264,7 +282,7 @@ private:
 		BATTLE_MODE
 	};
 
-
+	//ホーミング可能かどうかを判定
 	bool isHorming_;
 
 	//敵のステート情報
@@ -278,8 +296,9 @@ private:
 	//エフェクト再生
 	std::unique_ptr<EffectManager> effectManager_;
 
-	//
+	//トランスフォーム
 	Transform transform_;
+
 	//ビームライフル
 	std::unique_ptr<BeamRifle> beamRifle_;	
 
@@ -319,26 +338,28 @@ private:
 	//ジャンプのスピード
 	float jumpSpeed_;
 
+	//デバッグ用文字列
 	std::string debugString_;
 	std::string enemyDebugString_;
 
 	//左スティック入力をプレイヤーの移動方向と対応させるもの
 	VECTOR padDir_;
 
+	//左スティック入力をプレイヤーの移動方向と対応させるもの(ブースト時)
 	VECTOR padDirBoost_;
-
-	float padX_,padY_;
 
 	//ステージなどの障害物当たり判定用
 	std::vector<Collider*>colliders_;
 
 	//自分がプレイヤー1なのか２かの判断
-	int playerNum_;	
+	int playerType_;	
+
 	//自分がパッド1なのか２かの判断
 	int padNum_;	
 
 	//次射撃できるまでの時間
 	float shotFlame_;
+
 	//射撃可能フラグ
 	bool shotFlag_;	
 
@@ -399,9 +420,10 @@ private:
 	//敵との距離
 	float enemyDistance_;
 
-	//てきHP
+	//敵HP
 	const float* enemyHp_;
 
+	//勝利したかどうかを判定
 	bool isWin_;
 
 	//格闘移行状態時に受け止められる弾の数
@@ -411,16 +433,16 @@ private:
 	/// <returns>true:以上である false:未満である</returns>
 	const bool IsGaugeSufficient(float Gauge, float RequiredGaugeAmount)const;
 
-
 	//プレイヤーの状態によって移動スピード等を変える
 	void DebugPlayerState(void);
 
 	//プレイヤーの状態によって移動スピード等を変える
 	void EnemyState(void);
 
-	//最大
+	//スピードを徐々に加速させる
 	void SpeedAdd(void);
 
+	//自分の向いている方向から敵がいる方向までの角度を計る
 	void CalculateAngleToTarget();
 
 	//上半身の回転を元に戻す関数
@@ -429,11 +451,8 @@ private:
 	//ブーストゲージを回復する
 	void RecoverBoostGauge(void);
 
-	void AddToGauge(float& gauge, float add);
-
+	//ゲージを減らす関数
 	void ConsumeGauge(float& gauge, float rate);
-
-	void InitValue(float& target);
 
 	//行動不能時間計測
 	void CountLandingStanTime(void);

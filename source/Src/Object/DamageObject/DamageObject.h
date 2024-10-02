@@ -19,37 +19,58 @@ public:
 	};
 
 	DamageObject(int playernum);
+	//描画
 	virtual void Draw(void)=0;
+	//更新
 	virtual void Update(VECTOR enemyPos)=0;
+	//有効化
 	virtual void Activate(void);
-	virtual bool IsActive(void);
-	const void SetPos(VECTOR pos);
-	virtual int GetPlayerNum(void)const;
+	//非有効化
 	virtual void InActivate(void);
+
+	//座標の設定
+	const void SetPos(VECTOR pos);
+	//プレイヤータイプの取得
+	virtual int GetPlayerType(void)const;
+	//ダメージ量の取得
 	virtual const float& GetDamage(void)const;
+	//モデルIDの取得
 	virtual const int& GetModelId(void)const;
+	//有効状態かどうかを取得
+	virtual bool IsActive(void);
+
 protected:
 
+	//ヒットエフェクトの大きさ
 	static constexpr VECTOR HIT_EFFECT_SCARE = { 35.0f,35.0f,35.0f };
 
+	//リソースマネージャー
 	ResourceManager& resMng_;
-	DMG_OBJ_TYPE dmgObjType_;
+
+	//トランスフォーム
 	Transform transform_;
 
+	//有効状態化を判定
 	bool activeFlag_ =false;
-	//エフェクト再生
+
+	//エフェクト再生マネージャー
 	std::unique_ptr<EffectManager> effectManager_;
+
+	//ダメージ量
 	float damage_;
+	//クールタイム
 	float coolTime_;
+
+	//デルタタイム
 	float deltaTime_;
 
+	//モデルID
 	int modelId_;
 
-	int playerNum_;
+	//プレイヤータイプ
+	int playerType_;
 
 private:
-
-
 
 };
 

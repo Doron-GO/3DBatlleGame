@@ -9,8 +9,11 @@ public:
 
 
     IdleState(Player& player);
+
 private:
+
     Player& player_;
+    //XV
     virtual void Update()override;
 
 };

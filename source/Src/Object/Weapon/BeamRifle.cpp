@@ -21,50 +21,60 @@
 
 
 BeamRifle::BeamRifle(int playerType, int playMode, Player& player):player_(player),WeaponBase(playerType, player.GetTransform())
-
 {
+	//モデルの読み込み
 	transform_.SetModel(resMng_.LoadModelDuplicate(ResourceManager::SRC::BEAMRIFLE));
-
+	//座標
 	transform_.pos = MV1GetFramePosition(player_.GetTransform().modelId, ATTACH_RIGHT_HAND_FRAME);
+	//大きさ
 	transform_.scl = SCALE;
+	//回転
 	transform_.quaRotLocal =
 		Quaternion::Euler(AsoUtility::Deg2RadF(-90.0f), AsoUtility::Deg2RadF(90.0f), AsoUtility::Deg2RadF(180.0f));
 	transform_.Update();
-
-	MATRIX mat = MGetIdent();
-	Quaternion quaLocal =transform_.quaRotLocal;
-	mat = MMult(quaLocal.ToMatrix(),mat); 
-	MV1SetMatrix(transform_.modelId, MMult(transform_.matScl, mat));
+	
+	//有効か
 	activeFlag_ = true;
+
+	//残弾数を最大に
 	numberofBullets_ = MAX_BULLETS;
+
 	for (int beam = 0; beam < numberofBullets_; beam++)
 	{
 		beams_.emplace_back(std::make_unique<BeamShot>(playerType, player.IsHorming(),beam, playMode));
 	}
+
+	//デルタタイムの初期化
 	deltaTime_ = 0.0f;
+
+	//クールタイムの初期化
 	coolTime_ = RELOAD_COUNT_TIME;
 }
 
 void BeamRifle::Update(void)
 {
+	//デルタタイムの更新
 	deltaTime_ = DeltaTime::GetInstsnce().GetDeltaTime();
+	
+	//座標、回転の同期
 	SyncPosition();
+	
+	//弾の更新
 	for (auto& beam : beams_)
 	{
 		beam->Update(player_.GetEnemyPos());
 	}
+
+	//クールタイムの更新
 	CoolTimeCount();
 }
 
 void BeamRifle::Draw(void)
 {
+	//有効状態ならライフルを描画
 	if (activeFlag_)
 	{
 		MV1DrawModel(transform_.modelId);
-	}
-	for (auto& beam : beams_)
-	{
-		beam->Draw();
 	}
 }
 
@@ -72,13 +82,21 @@ void BeamRifle::Trigger(void)
 {
 	for (auto& beam : beams_)
 	{
+		//弾が有効状態でなく、残弾が残っていたら発射する
 		if (beam->IsActive()||!(numberofBullets_>0))
 		{
 			continue;
-		}
+		}		
+		//クールタイムを設定
 		coolTime_ = 0.0f;
+		
+		//残弾を1減らす
 		numberofBullets_--;
+
+		//座標を設定
 		beam->SetPos(transform_.pos);
+		
+		//弾を有効化
 		beam->Activate();
 		break;
 	}
@@ -88,30 +106,35 @@ void BeamRifle::InActivateHorming(void)
 {
 	for (auto& beam : beams_)
 	{
+		//有効状態でなければ
 		if (!beam->IsActive())
 		{
 			continue;
 		}
+		//ホーミング無しで有効化
 		beam->InActivateHorming();
 	}
 }
 
 const std::vector<std::unique_ptr<BeamShot>>& BeamRifle::GetBeams() const
 {
+	//ビームの配列を返す
 	return beams_;
 }
 
 const int& BeamRifle::GetNumnberOfBullets(void)
 {
+	//残弾数を返す
 	return numberofBullets_;
 }
 
 void BeamRifle::NumnberOfBullets(void)
 {
-
-	int bullets = 5;
+	//残弾数を数える
+	int bullets = MAX_BULLETS;
 	for (auto& beam : beams_)
 	{
+		//有効状態なら1減らす
 		if (beam->IsActive() )
 		{
 			bullets--;

@@ -1,6 +1,5 @@
 #include<EffekseerForDXLib.h>
 #include"../Manager/ResourceManager.h"
-#include"../Object/Time/TimeCount.h"
 #include"../Object/Time/DeltaTime.h"
 #include"../Manager/ActorManager.h"
 #include"../Object/Camera/Camera.h"
@@ -12,10 +11,11 @@
 #include"../Input/Input.h"
 #include "TitleScene.h"
 #include "GameScene.h"
+#include"../../Config.h"
 
 #pragma region Parameter
 
-
+//シングルプレイモード
 constexpr int SINGLE_PLAY_MODE = 0;
 
 //タイトルに戻る画像
@@ -70,9 +70,8 @@ constexpr int  FIGHT_CENTER_Y = 49;
 constexpr int  FIGHT_OFFSET = 200;
 constexpr double  FIGHT_SCALE = 4.5;
 
-constexpr float START_TIME = 3.0f;
-
-constexpr float READY_TIME = 1.5f;
+//ゲームスタート開始秒数
+constexpr float START_TIME_MAX = 3.0f;
 
 //画面分割用の線の太さ
 constexpr int  LINE_THICKNES = 1000;
@@ -84,26 +83,22 @@ GameScene::GameScene(SceneManager& manager, int playMode, Transitor& transit, In
 resMng_(ResourceManager::GetInstance())
 {
 	sceneTransitor_.Start();
+	
+	//タイトルシーンで決まったゲームモードを格納
 	playMode_ = playMode;
-	imgType_.emplace(IMG_TYPE::BACK_TO_TITLE, resMng_.Load(ResourceManager::SRC::BACK_TO_TITLE).handleId_);
-	imgType_.emplace(IMG_TYPE::ONE_MOR_FIGHT, resMng_.Load(ResourceManager::SRC::ONE_MOR_FIGHT).handleId_);
-	imgType_.emplace(IMG_TYPE::PLEASE_A, resMng_.Load(ResourceManager::SRC::PLEASE_A).handleId_);
-	imgType_.emplace(IMG_TYPE::PLEASE_CROSS, resMng_.Load(ResourceManager::SRC::PLEASE_CROSS).handleId_);
-	imgType_.emplace(IMG_TYPE::TRIANGLE, resMng_.Load(ResourceManager::SRC::TRIANGLE).handleId_);
-	imgType_.emplace(IMG_TYPE::READY, resMng_.Load(ResourceManager::SRC::READY_IMAGE).handleId_);
-	imgType_.emplace(IMG_TYPE::FIGHT, resMng_.Load(ResourceManager::SRC::FIGHT_IMAGE).handleId_);
 
+	//再戦モード選択の初期カーソルは「タイトルに戻る」に設定
 	rematchMode_ = 0;
 
+	//ゲームスタート計測変数を初期化
 	startCount_ = 0.0f;
 
 	//プレイヤー１のパッドの種類を取得
 	joyPadType_ = input_.GetJPadType();
 
-	int SCX = static_cast<int>(sceneManager_.SCREEN_SIZE_X);
-	int SCY = static_cast<int>(sceneManager_.SCREEN_SIZE_Y);
-	
 	//プレイヤー１と２の画面を作る
+	int SCX = static_cast<int>(SCREEN_SIZE.x);
+	int SCY = static_cast<int>(SCREEN_SIZE.y);
 	cameraScreens_.emplace_back(MakeScreen(SCX /2, SCY, true));
 	cameraScreens_.emplace_back(MakeScreen(SCX /2, SCY, true));
 
@@ -112,7 +107,7 @@ resMng_(ResourceManager::GetInstance())
 
 	//プレイヤー１と２の画面の座標
 	screenPos_.emplace(PLAYER_NUM::P_1, VECTOR(0, 0));
-	screenPos_.emplace(PLAYER_NUM::P_2, VECTOR(sceneManager_.SCREEN_SIZE_X / 2, 0));
+	screenPos_.emplace(PLAYER_NUM::P_2, VECTOR(SCREEN_SIZE.x / 2, 0));
 
 	//プレイヤーとボスを管理するマネージャ―の生成
 	actorManager_ = std::make_unique<ActorManager>(playMode);
@@ -131,6 +126,10 @@ resMng_(ResourceManager::GetInstance())
 	{
 		draw_ = &GameScene::DrawBattleMode;
 	}
+
+	//画像の読み込み
+	InitImage();
+	
 	//一回アップデートをしておく
 	actorManager_->Update();
 
@@ -179,6 +178,19 @@ void GameScene::Draw()
 	(this->*draw_)();
 	sceneTransitor_.Draw();
 }
+
+void GameScene::InitImage(void)
+{
+	//画像の読み込み
+	imgType_.emplace(IMG_TYPE::BACK_TO_TITLE, resMng_.Load(ResourceManager::SRC::BACK_TO_TITLE).handleId_);
+	imgType_.emplace(IMG_TYPE::ONE_MOR_FIGHT, resMng_.Load(ResourceManager::SRC::ONE_MOR_FIGHT).handleId_);
+	imgType_.emplace(IMG_TYPE::PLEASE_A, resMng_.Load(ResourceManager::SRC::PLEASE_A).handleId_);
+	imgType_.emplace(IMG_TYPE::PLEASE_CROSS, resMng_.Load(ResourceManager::SRC::PLEASE_CROSS).handleId_);
+	imgType_.emplace(IMG_TYPE::TRIANGLE, resMng_.Load(ResourceManager::SRC::TRIANGLE).handleId_);
+	imgType_.emplace(IMG_TYPE::READY, resMng_.Load(ResourceManager::SRC::READY_IMAGE).handleId_);
+	imgType_.emplace(IMG_TYPE::FIGHT, resMng_.Load(ResourceManager::SRC::FIGHT_IMAGE).handleId_);
+}
+
 void GameScene::DrawSIngleMode(void)
 {
 	ClearDrawScreen();
@@ -188,7 +200,8 @@ void GameScene::DrawSIngleMode(void)
 	actorManager_->DrawUI(SINGLE_PLAY_MODE);
 	UpdateEffekseer3D();
 	DrawEffekseer3D();
-	//DrawUI();
+	//共通UI描画(ゲームスタートなど)
+	actorManager_->DrawCommonUI(startCount_, IsGameSet(), rematchMode_);
 }
 void GameScene::DrawBattleMode(void)
 {
@@ -245,13 +258,13 @@ void GameScene::ChangeTitleScene()
 
 bool GameScene::IsGameStart(void)
 {
-	if (startCount_ < START_TIME)
+	if (startCount_ < START_TIME_MAX)
 	{
 		startCount_ += deltaTime_;
 	}
 	else
 	{
-		startCount_ = START_TIME;
+		startCount_ = START_TIME_MAX;
 		return true;
 	}
 	return false;

@@ -23,7 +23,8 @@ public:
 
 private:
 
-    enum class IMG_H
+    //画像タイプ
+    enum class IMG_TYPE
     {
         TITLE_LOGO,
         PLEASE_A,
@@ -33,6 +34,7 @@ private:
         TRIANGLE
     };
 
+    //ゲームモード
     enum class GAME_MODE
     {
         SINGLE,
@@ -65,7 +67,7 @@ private:
 
 
     //画像タイプ配列
-    std::map<IMG_H, int> imgType_;
+    std::map<IMG_TYPE, int> imgType_;
 
     //ゲームシーンに移行
     void ChangeGameScene(void);
@@ -90,6 +92,7 @@ private:
 
     //モデルの初期設定
     void InitModel(void);
+
     //カメラの初期設定
     void InitCamera(void);
 

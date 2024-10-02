@@ -10,12 +10,14 @@ class DamageState :
 public:
 
     DamageState(Player& player);
-    virtual void Update()override;
 
 
 private:
 
     Player& player_;
+
+    virtual void Update()override;
+
     float count_;
 
 };

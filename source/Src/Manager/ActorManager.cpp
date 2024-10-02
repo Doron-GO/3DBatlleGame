@@ -8,6 +8,15 @@
 //プレイヤー１のタイプ
 constexpr int PLAYER_TYPE = 0;
 
+static constexpr int PLAYER_NUM_MAX = 2;
+
+static constexpr int PLAYER_NUM_MIN = 1;
+
+static constexpr int SINGLE_PLAY = 0;
+
+
+static constexpr float STAGE_OUT_Y = -1000.0f;
+
 #pragma endregion
 
 
@@ -192,7 +201,7 @@ void ActorManager::DamegeBeamCollision(void)
 			for (auto& beam : beams)
 			{
 				//プレイヤーと弾のプレイヤータイプが違えば抜ける
-				if (IsEqual(player->GetPlayerNum(), beam->GetPlayerNum()))
+				if (IsEqual(player->GetPlayerType(), beam->GetPlayerType()))
 				{
 					break;
 				}
@@ -243,7 +252,7 @@ void ActorManager::DamegeSwordCollision(void)
 		{
 			auto& saber = sabers->GetBeamSaber().GetSaber();			
 			//プレイヤーと剣のプレイヤータイプが違うもしくは無敵時間が終わってないまたは剣がアクティブ状態でない
-			if (IsEqual(player->GetPlayerNum() , sabers->GetPlayerNum()) ||!(saber.IsActive())
+			if (IsEqual(player->GetPlayerType() , sabers->GetPlayerType()) ||!(saber.IsActive())
 				|| !player->IsSafeTimeSufficient())
 			{	
 				continue;
@@ -324,7 +333,7 @@ void ActorManager::IsWin(void)
 		//体力がゼロになるもしくはステージから落ちたら負けとする
 		if (0.0f>= player->GetPlayerHP() || StageOut(player->GetPlayerPos()))
 		{
-			loserNum_ = player->GetPlayerNum() ;
+			loserNum_ = player->GetPlayerType() ;
 			winnerNum_ = 1 - loserNum_;
 			ChangeStateGameSet();
 			isDeadAnyPlayer_ = true;

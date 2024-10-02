@@ -1,8 +1,8 @@
 #pragma once
+#include"../DamageObject/BeamShot.h"
+#include"WeaponBase.h"
 #include<memory>
 #include<vector>
-#include"WeaponBase.h"
-#include"../DamageObject/BeamShot.h"
 
 class Player;
 
@@ -14,8 +14,9 @@ public:
 
     BeamRifle(int playerType, int playMode,Player& player);
 
+    //更新
     virtual void Update(void)override;
-
+    //描画
     virtual void Draw(void) override;
 
     //弾を発射する
@@ -32,8 +33,10 @@ public:
 
 private:
 
+    //プレイヤー情報
     Player& player_;
 
+    //弾の配列
     std::vector<std::unique_ptr<BeamShot>> beams_;
 
     //弾を一発装填するまでの時間
@@ -42,6 +45,7 @@ private:
     //残弾数
     int numberofBullets_;
 
+    //デルタタイム
     float deltaTime_;
     
     //残弾の計算

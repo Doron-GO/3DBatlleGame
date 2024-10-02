@@ -15,7 +15,6 @@ Camera::Camera()
 	// ÉJÉÅÉâÇÃè„ï˚å¸
 	cameraUp_ = { 0.0f,1.0f,0.0f };
 	syncTransform_ = nullptr;
-	enemyTransform_ = nullptr;
 }
 
 Camera::~Camera()
@@ -24,15 +23,8 @@ Camera::~Camera()
 
 void Camera::Init()
 {
-
 	//èâä˙ê›íË
 	ChangeMode(MODE::FOLLOW);
-	//ChangeMode(MODE::FIXED_POINT);
-}
-
-void Camera::Update()
-{
-
 }
 
 void Camera::SetBeforeDraw(void)
@@ -67,12 +59,10 @@ void Camera::SetBeforeDrawFixedPoint(void)
 
 void Camera::SetBeforeDrawFollow(void)
 {
-
 	SyncEnemyTransform();
-
 }
 
-void Camera::Draw()
+void Camera::DrawDebug()
 {
 
 	//í«è]éãì_
@@ -113,26 +103,6 @@ void Camera::SetTransform(const Transform* transform)
 
 }
 
-void Camera::SetEnemyTransform(const Transform* enemyTransform)
-{
-	enemyTransform_ = enemyTransform;
-}
-
-VECTOR Camera::GetPos(void) const
-{
-	return cameraPos_;
-}
-
-VECTOR Camera::GetAngles(void) const
-{
-	return angles_;
-}
-
-VECTOR Camera::GetTargetPos(void) const
-{
-	return targetPos_;
-}
-
 Quaternion Camera::GetQuaRot(void) const
 {
 	return quaRot_;
@@ -141,17 +111,6 @@ Quaternion Camera::GetQuaRot(void) const
 Quaternion Camera::GetQuaRotOutX(void) const
 {
 	return quaRotOutX_;
-}
-
-VECTOR Camera::GetDir(void) const
-{
-	return VNorm(VSub(targetPos_, cameraPos_));
-}
-
-VECTOR Camera::GetDirvec(VECTOR vec)
-{
-	return  VNorm(VSub(vec, cameraPos_));
-
 }
 
 void Camera::SetTargetPos(VECTOR pos)

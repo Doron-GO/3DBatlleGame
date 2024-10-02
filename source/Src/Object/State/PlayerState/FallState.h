@@ -8,10 +8,11 @@ class FallState :
 {
 public:
 
-
     FallState(Player& player);
+
 private:
     Player& player_;
+
     virtual void Update()override;
 
 };

@@ -1,15 +1,13 @@
 #pragma once
 #include<memory>
 #include<list>
+
 class Input;
 class Scene;
 
 class SceneManager
 {
 public:
-
-	static constexpr float SCREEN_SIZE_X = 1600.0f;
-	static constexpr float SCREEN_SIZE_Y = 1000.0f;
 	
 	/// <summary>
 	/// 先頭の(Updateが呼ばれる)シーンを切り替える
@@ -34,13 +32,17 @@ public:
 	/// </summary>
 	/// <param name="input"></param>
 	//void Update(Input& input);
+	
+	//現在シーンの更新
 	void Update();
+
+	//現在シーンの描画
 	void Draw();
 
 private:
 
-	std::list<std::shared_ptr<Scene>> scenes_;//現在進行中のシーン
-
+	//現在進行中のシーン
+	std::list<std::shared_ptr<Scene>> scenes_;
 
 };
 

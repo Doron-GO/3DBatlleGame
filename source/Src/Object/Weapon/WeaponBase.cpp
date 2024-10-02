@@ -9,11 +9,13 @@ playerTransform_(playerTransform), playerType_(playerType)
 
 void WeaponBase::Activate(void)
 {
+	//—LŒø‰»
 	activeFlag_ = true;
 }
 
 void WeaponBase::InActivate(void)
 {
+	//”ñ—LŒø‰»
 	activeFlag_ = false;
 }
 

@@ -21,19 +21,9 @@ public:
 
 	VECTOR GetPosTop(void) const;
 	VECTOR GetPosDown(void) const;
-	//VECTOR GetRelativePos(const VECTOR& pos) const;
-
-	//// 半径
-	//float GetRadius(void) const;
-	//void SetRadius(float radius);
-
-	//// 高さ
-	//float GetHeight(void) const;
-
 	// カプセルの中心座標
 	VECTOR GetCenter(void) const;
 
-	//bool IsCollision(void)const;
 
 	bool Collision(int modelId);
 
@@ -47,14 +37,16 @@ private:
 	// 相対位置(下側)
 	VECTOR relativePosDown_;
 
-	Quaternion quaRot_;	
-
+	//上座標
 	float top_;
 
+	//下座標
 	float down_;
 
+	//半径
 	float r_;
-	
+
+	//カプセルを同期させる
 	void Sync();
 
 };

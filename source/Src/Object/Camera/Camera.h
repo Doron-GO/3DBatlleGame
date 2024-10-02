@@ -1,7 +1,7 @@
 #pragma once
+#include "../../Common/Quaternion.h"
 #include <vector>
 #include <DxLib.h>
-#include "../../Common/Quaternion.h"
 
 class SceneManager;
 class Transform;
@@ -46,26 +46,36 @@ public:
 	Camera();
 	~Camera();
 
+	//初期設定
 	void Init(void);
-	void Update(void);
+
+	//カメラの更新処理
 	void SetBeforeDraw(void);
+
+	//定点カメラ
 	void SetBeforeDrawFixedPoint(void);
+
+	//追従カメラ
 	void SetBeforeDrawFollow(void);
-	void Draw(void);
 
+	//確認用描画
+	void DrawDebug(void);
+
+	//トランスフォームの設定
 	void SetTransform(const Transform* transform);
-	void SetEnemyTransform(const Transform* enemyTransform);
 
-	VECTOR GetPos(void) const;
-	VECTOR GetAngles(void) const;
-	VECTOR GetTargetPos(void) const;
+	//回転を取得
 	Quaternion GetQuaRot(void) const;
+
+	//X回転を無くした回転を取得
 	Quaternion GetQuaRotOutX(void) const;
-	VECTOR GetDir(void) const;
-	VECTOR GetDirvec(VECTOR vec) ;
+
+	//追従対象座標の設定
 	void SetTargetPos(VECTOR pos);
+	//座標の設定
 	void SetCameraPos(VECTOR pos);
 
+	//モードの変更
 	void ChangeMode(MODE mode);
 
 private:
@@ -78,11 +88,8 @@ private:
 	// Transformの位置と同期を取る
 	void SyncEnemyTransform(void);
 
-
 	// カメラが追従対象とするTransform
 	const Transform* syncTransform_;
-
-	const Transform* enemyTransform_;
 
 	// カメラモード
 	MODE mode_;

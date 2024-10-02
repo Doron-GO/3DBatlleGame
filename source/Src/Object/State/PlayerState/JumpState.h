@@ -8,9 +8,11 @@ class JumpState :
 public:
 
     JumpState(Player& player);
-    virtual void Update()override;
 
 private:
+
+    virtual void Update()override;
+
     Player& player_;
 
 };

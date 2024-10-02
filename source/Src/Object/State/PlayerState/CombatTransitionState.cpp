@@ -25,7 +25,7 @@ CombatTransitionState::CombatTransitionState(Player& player,VECTOR & playerPos, 
 	//移動量を出す
 	movePow_ = VScale(dashNorm, SPEED*(player_.GetDeltaTime()*RATE));
 
-	//ジャンプ力をなくす
+	//ジャンプ力を0にする
 	player_.JumpStop();
 
 	//モデルの向きを相手の方へ回転させる
@@ -50,35 +50,37 @@ CombatTransitionState::CombatTransitionState(Player& player,VECTOR & playerPos, 
 
 void CombatTransitionState::Update()
 {
+	//アニメーションをCOMBAT_RUNにする
 	player_.PlayAnim(static_cast<int>(Player::STATE::COMBAT_RUN), false, true,true);
+	//相手との距離を計測
 	Distance();
+	//距離が一定以下なら
 	if (distance_<=200.0f)
 	{
+		//近接格闘状態に移行
 		player_.ChangeState(std::make_unique<CombatState>(player_));
 		return;
 	}
+	//近接攻撃ボタンが押されていたら
 	if(player_.GetInput().IsTriggerd("combat"))
 	{
+		//近接格闘状態に移行
 		player_.ChangeState(std::make_unique<CombatState>(player_));
 		return;
 	}
+	//ジャンプボタンが二回押されて、ブーストゲージが一定以上あったら
 	else if(player_.GetInput().IsDoublePrassed("jump") && player_.IsBoostGaugeSufficient(player_.MIN_BOOST))
 	{
+		//ビームサーベルを非有効化
 		player_.GetBeamSaber().InActivate();
 		player_.GetBeamRifle().Activate();
+		//ブースト状態に移行
 		player_.ChangeState(std::make_unique<BoostState>(player_));
 		return;
 	}
 	else
 	{
 	}
-
-
-}
-
-void CombatTransitionState::CombatDash(void)
-{
-
 }
 
 float CombatTransitionState::Distance(void)

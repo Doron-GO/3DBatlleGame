@@ -92,9 +92,11 @@
  constexpr int  FIGHT_OFFSET = 200;
  constexpr double  FIGHT_SCALE = 4.5;
 
- constexpr float START_TIME = 3.0f;
+ //ゲームスタート開始秒数
+ constexpr float START_TIME_MAX = 3.0f;
 
- constexpr float READY_TIME = 1.5f;
+ //対戦開始時「READY」画像表示秒数
+ constexpr float READY_TIME_MAX = 1.5f;
 
  //画面分割用の線の太さ
  constexpr int  LINE_THICKNES = 1000;
@@ -373,11 +375,11 @@ void UserInterface::DrawEnemyHp(void)
 void UserInterface::DrawGameUIStart(const float& startCount)
 {
 	//ゲームスタート後は描画をしない
-	if (startCount >= START_TIME)
+	if (startCount >= START_TIME_MAX)
 	{
 		return;
 	}
-	if (startCount < READY_TIME)
+	if (startCount < READY_TIME_MAX)
 	{	//レディ画像表示		
 		DrawRotaGraph2(READY_POS_X, READY_POS_Y,
 			READY_CENTER_X, READY_CENTER_Y, READY_SCALE, 0.0, uiImgH_[IMG_TYPE::READY], true, false);

@@ -3,16 +3,21 @@
 
 DamageObject::DamageObject(int playernum):resMng_(ResourceManager::GetInstance())
 {
-    dmgObjType_ = DMG_OBJ_TYPE::NON;
+    //非有効化
     activeFlag_ = false;
+    //ダメージ量の初期化
     damage_ = 0.0f;
+    //クールタイムの初期化
     coolTime_ = 0.0f;
+    //デルタタイムの初期化
     deltaTime_ = 0.0F;
-    playerNum_ = playernum;
+    //プレイヤータイプの設定
+    playerType_ = playernum;
 }
 
 void DamageObject::Activate(void)
 {
+    //有効化
     activeFlag_ = true;
 }
 
@@ -27,9 +32,9 @@ const void DamageObject::SetPos(VECTOR pos)
 }
 
 
- int DamageObject::GetPlayerNum(void) const
+ int DamageObject::GetPlayerType(void) const
 {
-    return playerNum_;
+    return playerType_;
 }
 
 void DamageObject::InActivate(void)

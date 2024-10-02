@@ -95,6 +95,9 @@ private:
 
     float deltaTime_;
 
+    //‰æ‘œ‚Ì“Ç‚İ‚İ
+    void InitImage(void);
+
     void DrawSIngleMode(void);
 
     void DrawBattleMode(void);

@@ -13,42 +13,50 @@
 
 #pragma region Parameter
 
+//モデルの座標
 constexpr VECTOR  FRONT_ROBOT_POS = { 0.0f, -25.0f, 0.0f };
 constexpr VECTOR  BACK_ROBOT_POS = { 0.0f, -25.0f, 5000.0f };
 
+//カメラ座標
 constexpr VECTOR  CAMERA_POS = { 100.0f, 10.0f, -130.0f };
 constexpr VECTOR  CAMERA_TARGET_POS = { 100.0f, 15.0f, 0.0f };
 
+//タイトルロゴ画像関係の数値(座標、中心座標、大きさ)
 constexpr int  TITLE_LOGO_POS_X = 775;
 constexpr int  TITLE_LOGO_POS_Y = 400;
 constexpr int  TITLE_LOGO_CENTER_X = 320;
 constexpr int  TITLE_LOGO_CENTER_Y = 60;
 constexpr double  TITLE_LOGO_SCALE = 2.5;
 
+//×ボタンを押してね画像の数値(座標、中心座標、大きさ)
 constexpr int  PLEASE_CROSS_BUTTON_POS_X = 800;
 constexpr int  PLEASE_CROSS_BUTTON_POS_Y = 800;
 constexpr int  PLEASE_CROSS_BUTTON_CENTER_X = 480;
 constexpr int  PLEASE_CROSS_BUTTON_CENTER_Y = 52;
 constexpr double  PLEASE_CROSS_BUTTON_SCALE = 1.2;
 
+//Aボタンを押してね画像の数値(座標、中心座標、大きさ)
 constexpr int  PLEASE_A_BUTTON_POS_X = 800;
 constexpr int  PLEASE_A_BUTTON_POS_Y = 800;
 constexpr int  PLEASE_A_BUTTON_CENTER_X = 395;
 constexpr int  PLEASE_A_BUTTON_CENTER_Y = 34;
 constexpr double  PLEASE_A_BUTTON_SCALE = 1.2;
 
+//モード選択画像の数値(座標、中心座標、大きさ)
+//一人用
 constexpr int  SINGLE_MODE_POS_X = 775;
 constexpr int  SINGLE_MODE_POS_Y = 400;
 constexpr int  SINGLE_MODE_CENTER_X = 165;
 constexpr int  SINGLE_MODE_CENTER_Y = 30;
 constexpr double  SINGLE_MODE_SCALE = 2.0;
-
+//二人用
 constexpr int  MULTI_PLAY_POS_X = 775;
 constexpr int  MULTI_PLAY_POS_Y = 600;
 constexpr int  MULTI_PLAY_CENTER_X = 165;
 constexpr int  MULTI_PLAY_CENTER_Y = 52;
 constexpr double  MULTI_PLAY_SCALE = 2.0;
 
+//選択カーソル画像の数値(座標、中心座標、大きさ)
 constexpr int  TRIANGLE_POS_X = 1200;
 constexpr int  TRIANGLE_POS_Y = 400;
 constexpr int  TRIANGLE_CENTER_X = 280;
@@ -62,10 +70,16 @@ TitleScene::TitleScene(SceneManager& manager, Transitor& transit, Input& input) 
 resMng_(ResourceManager::GetInstance()), camera_(std::make_unique<Camera>()),stage_(std::make_unique<Stage>())
 {
 	sceneTransitor_.Start();
+	//モード選択の初期カーソル位置を一人用に設定
 	selectNum_=0;
+	//ボタンを押してねの状態にする(押されたら選択画面へ)
 	startFlag_ = false;
+	
+	//画像の読み込み
 	InitImage();
+	//モデルの読み込み
 	InitModel();
+	//カメラの初期設定
 	InitCamera();
 
 	// Zバッファを有効にする
@@ -92,44 +106,54 @@ TitleScene::~TitleScene()
 void TitleScene::Update()
 {
 	input_.Update();
+	//選択画面でなくモード選択がされていなければ戻る
 	if (startFlag_&&SelectDecide())
 	{
 		return;
 	}
+	//タイトル画面で特定のボタンが押されるとモード選択へ
 	if (!startFlag_ && ButtonPush())
 	{
 		startFlag_ = true;
 	}
+
 	sceneTransitor_.Update();
 }
 
 void TitleScene::Draw()
 {
 	ClearDrawScreen();
+	//カメラの更新
 	camera_->SetBeforeDraw();
+	//ステージの描画
 	stage_->Draw();
+	//手前モデルの描画
 	MV1DrawModel(frontTransform_.modelId);
+	//奥モデルの描画
 	MV1DrawModel(backTransform_.modelId);
+	//ビームサーベルの描画
 	for (auto& beamSaber : beamSabers_)
 	{
 		beamSaber->Draw();
 	}
+	//ボタンを押してね画像描画
 	DrawPleaseButton();
+	//ボタンがなにも押されていなければ、タイトルロゴを描画
 	if (!startFlag_)
 	{
 		DrawRotaGraph2(TITLE_LOGO_POS_X, TITLE_LOGO_POS_Y,
-			TITLE_LOGO_CENTER_X, TITLE_LOGO_CENTER_Y, TITLE_LOGO_SCALE, 0.0, imgType_[IMG_H::TITLE_LOGO], true, false);
+			TITLE_LOGO_CENTER_X, TITLE_LOGO_CENTER_Y, TITLE_LOGO_SCALE, 0.0, imgType_[IMG_TYPE::TITLE_LOGO], true, false);
 	}
-	else
+	else//ボタンが押されていればモードセレクト画像描画
 	{
 		DrawModeSelect();
 	}
-
 	sceneTransitor_.Draw();
 }
 
 void TitleScene::ChangeGameScene(void)
 {
+	//ゲームシーンへ移行
 	sceneManager_.ChangeScene(std::make_shared<GameScene>(sceneManager_, selectNum_,sceneTransitor_,input_));
 }
 
@@ -141,13 +165,13 @@ void TitleScene::DrawPleaseButton(void)
 	{
 		DrawRotaGraph2(PLEASE_CROSS_BUTTON_POS_X, PLEASE_CROSS_BUTTON_POS_Y,
 			PLEASE_CROSS_BUTTON_CENTER_X, PLEASE_CROSS_BUTTON_CENTER_Y,
-			PLEASE_CROSS_BUTTON_SCALE, 0.0, imgType_[IMG_H::PLEASE_CROSS], true, false);
+			PLEASE_CROSS_BUTTON_SCALE, 0.0, imgType_[IMG_TYPE::PLEASE_CROSS], true, false);
 	}
 	else//XBOXコントローラーならAボタン表記
 	{
 		DrawRotaGraph2(PLEASE_A_BUTTON_POS_X, PLEASE_CROSS_BUTTON_POS_Y,
 			PLEASE_A_BUTTON_CENTER_X, PLEASE_A_BUTTON_CENTER_Y,
-			PLEASE_A_BUTTON_SCALE, 0.0, imgType_[IMG_H::PLEASE_A], true, false);
+			PLEASE_A_BUTTON_SCALE, 0.0, imgType_[IMG_TYPE::PLEASE_A], true, false);
 	}
 }
 
@@ -155,15 +179,15 @@ void TitleScene::DrawModeSelect(void)
 {
 	//シングルモード選択画像
 	DrawRotaGraph2(SINGLE_MODE_POS_X, SINGLE_MODE_POS_Y,
-		SINGLE_MODE_CENTER_X, SINGLE_MODE_CENTER_Y, SINGLE_MODE_SCALE, 0.0, imgType_[IMG_H::SINGLE_MODE], true, false);
+		SINGLE_MODE_CENTER_X, SINGLE_MODE_CENTER_Y, SINGLE_MODE_SCALE, 0.0, imgType_[IMG_TYPE::SINGLE_MODE], true, false);
 
 	//対戦モード選択画像
 	DrawRotaGraph2(MULTI_PLAY_POS_X, MULTI_PLAY_POS_Y,
-		MULTI_PLAY_CENTER_X, MULTI_PLAY_CENTER_Y, MULTI_PLAY_SCALE, 0.0, imgType_[IMG_H::MULTI_PLAY], true, false);
+		MULTI_PLAY_CENTER_X, MULTI_PLAY_CENTER_Y, MULTI_PLAY_SCALE, 0.0, imgType_[IMG_TYPE::MULTI_PLAY], true, false);
 	
 	//カーソル選択画像
 	DrawRotaGraph2(TRIANGLE_POS_X, TRIANGLE_POS_Y + (TRIANGLE_OFFSET * selectNum_),
-		TRIANGLE_CENTER_X, TRIANGLE_CENTER_Y, TRIANGLE_SCALE, 0.0, imgType_[IMG_H::TRIANGLE], true, false);
+		TRIANGLE_CENTER_X, TRIANGLE_CENTER_Y, TRIANGLE_SCALE, 0.0, imgType_[IMG_TYPE::TRIANGLE], true, false);
 }
 
 bool TitleScene::ButtonPush(void)
@@ -229,12 +253,12 @@ bool TitleScene::SelectDecide(void)
 void TitleScene::InitImage(void)
 {
 	//画像読み込み
-	imgType_.emplace(IMG_H::TITLE_LOGO, resMng_.Load(ResourceManager::SRC::TIRLE_LOGO_IMAGE).handleId_);
-	imgType_.emplace(IMG_H::PLEASE_A, resMng_.Load(ResourceManager::SRC::PLEASE_A).handleId_);
-	imgType_.emplace(IMG_H::PLEASE_CROSS, resMng_.Load(ResourceManager::SRC::PLEASE_CROSS).handleId_);
-	imgType_.emplace(IMG_H::SINGLE_MODE, resMng_.Load(ResourceManager::SRC::SINGLE_PLAY_LOGO).handleId_);
-	imgType_.emplace(IMG_H::MULTI_PLAY, resMng_.Load(ResourceManager::SRC::MULTI_PLAY_LOGO).handleId_);
-	imgType_.emplace(IMG_H::TRIANGLE, resMng_.Load(ResourceManager::SRC::TRIANGLE).handleId_);
+	imgType_.emplace(IMG_TYPE::TITLE_LOGO, resMng_.Load(ResourceManager::SRC::TIRLE_LOGO_IMAGE).handleId_);
+	imgType_.emplace(IMG_TYPE::PLEASE_A, resMng_.Load(ResourceManager::SRC::PLEASE_A).handleId_);
+	imgType_.emplace(IMG_TYPE::PLEASE_CROSS, resMng_.Load(ResourceManager::SRC::PLEASE_CROSS).handleId_);
+	imgType_.emplace(IMG_TYPE::SINGLE_MODE, resMng_.Load(ResourceManager::SRC::SINGLE_PLAY_LOGO).handleId_);
+	imgType_.emplace(IMG_TYPE::MULTI_PLAY, resMng_.Load(ResourceManager::SRC::MULTI_PLAY_LOGO).handleId_);
+	imgType_.emplace(IMG_TYPE::TRIANGLE, resMng_.Load(ResourceManager::SRC::TRIANGLE).handleId_);
 }
 
 void TitleScene::InitModel(void)
@@ -276,6 +300,7 @@ void TitleScene::InitModel(void)
 	//ビームサーベルの生成
 	beamSabers_.emplace_back(std::make_unique<BeamSaber>(0, backTransform_));
 
+	//ビームサーベルをロボットの手に同期させる
 	for (auto& beamSaber : beamSabers_)
 	{
 		beamSaber->Activate();
