@@ -1,11 +1,13 @@
 #include<DxLib.h>
 #include "RobotAnimeController.h"
 
+static constexpr float BLEND_TIME =0.1f;
+
+
 RobotAnimeController::RobotAnimeController(int modelId)
 {
 	//モデル本体
 	modelId_ = modelId;
-	blendTime_ = 0.1f;
 	deltaTime_ = 0.0f;
 }
 
@@ -42,7 +44,7 @@ void RobotAnimeController::Add(int type, const std::string& path, float speed, f
 {
 	Animation anim;
 	//ロード
-	anim.model_ = MV1LoadModel(path.c_str());
+	anim.modelId_ = MV1LoadModel(path.c_str());
 	//アニメーションタイプをインデックス（新たな要素を末尾に）に追加
 	anim.animIndex_ = type;
 	//スピード
@@ -59,7 +61,7 @@ void RobotAnimeController::Add(int type, const std::string& path, float speed, f
 	else
 	{
 		// 追加
-		animations_[type].model_ = anim.model_;
+		animations_[type].modelId_ = anim.modelId_;
 		animations_[type].animIndex_ = anim.animIndex_;
 		animations_[type].attachNo_ = anim.attachNo_;
 		animations_[type].totalTime_ = anim.totalTime_;
@@ -85,7 +87,7 @@ void RobotAnimeController::UpperBodyUpdate(void)
 			//ROOTは不動のため、現アニメの影響を受けない
 			MV1SetAttachAnimBlendRateToFrame(modelId_, playAnim_[Body::UP].attachNo_, 60, 0.0f, false);
 
-			blend_[Body::UP].rate_ = blend_[Body::UP].stepBlend_ / blendTime_;
+			blend_[Body::UP].rate_ = blend_[Body::UP].stepBlend_ / BLEND_TIME;
 			blend_[Body::UP].stepBlend_ += deltaTime_;
 		}
 		//ブレンドが終了したら
@@ -155,7 +157,7 @@ void RobotAnimeController::LowerBodyUpdate(void)
 			MV1SetAttachAnimBlendRateToFrame(modelId_, blend_[Body::LOW].attachNo_, 115, 1.0f - blend_[Body::LOW].rate_, true);
 			MV1SetAttachAnimBlendRateToFrame(modelId_, blend_[Body::LOW].attachNo_, 120, 1.0f - blend_[Body::LOW].rate_, true);
 
-			blend_[Body::LOW].rate_ = blend_[Body::LOW].stepBlend_ / blendTime_;
+			blend_[Body::LOW].rate_ = blend_[Body::LOW].stepBlend_ / BLEND_TIME;
 			blend_[Body::LOW].stepBlend_ += deltaTime_;
 		}
 		else
@@ -231,6 +233,7 @@ void RobotAnimeController::DetachAnim(void)
 			anim.first != blend_[Body::LOW].type_
 			)
 		{
+				//アニメーションを外す
 				MV1DetachAnim(modelId_, attachedTypeNum_[anim.first]);
 				isAttach_[anim.first] = false;
 		}
@@ -263,11 +266,14 @@ void RobotAnimeController::UpperBodyPlay(int type, bool priority, bool isLoop ,
 			if (!isAttach_[newType])
 			{
 				//アニメーションをアタッチして現在再生中アニメーションナンバーに格納
-				playAnim_[Body::UP].attachNo_ = MV1AttachAnim(modelId_, 0, playAnim_[Body::UP].model_);
+				playAnim_[Body::UP].attachNo_ = MV1AttachAnim(modelId_, 0, playAnim_[Body::UP].modelId_);
+				//アニメーション影響率を変える
 				MV1SetAttachAnimBlendRateToFrame(modelId_, playAnim_[Body::UP].attachNo_, 60, 0.0f, true);
+				//アタッチ中フラグをtrueにする
 				isAttach_[newType] = true;
+				//アタッチ中アニメーションのアタッチナンバーを保存
 				attachedTypeNum_[newType] = playAnim_[Body::UP].attachNo_;
-
+				//再生開始時間を設定
 				playAnim_[Body::UP].step_ = startStep;
 			}
 			else
@@ -323,7 +329,7 @@ void RobotAnimeController::LowerBodyPlay(int type, bool priority , bool isLoop ,
 			if (!isAttach_[newType])
 			{
 				//アタッチされていない場合、アタッチする
-				playAnim_[Body::LOW].attachNo_ = MV1AttachAnim(modelId_, 0, playAnim_[Body::LOW].model_);
+				playAnim_[Body::LOW].attachNo_ = MV1AttachAnim(modelId_, 0, playAnim_[Body::LOW].modelId_);
 				MV1SetAttachAnimBlendRateToFrame(modelId_, playAnim_[Body::LOW].attachNo_, 60, 0.0f, true);
 				isAttach_[newType] = true;
 				attachedTypeNum_[newType] = playAnim_[Body::LOW].attachNo_;

@@ -33,65 +33,49 @@ public:
 	BossEnemy();
 	~BossEnemy();
 
-	void Init();
-
+	//アップデート
 	void Update();
 
+	//描画
 	void Draw(void);
 
 	//相手の座標
 	void SetPlayerPosition(const VECTOR* playerPos);
 
+	//座標を取得
 	const VECTOR& GetBossEnemyPos(void) const;
-
 
 	//プレイヤーの状態をへんこうする
 	void ChangeState(std::unique_ptr<StateBase> state);
 
+	//アニメーションの初期化
 	virtual void InitAnimation(void)override;
 
-	//相手の座標
+	//相手の座標を設定
 	void SetEnemyPosition(const VECTOR* enemyPos);
 
-	const VECTOR& GetEnemyPosition(void)const;
-
+	//攻撃を行う
 	void ActiveSpMove(SP_MOVE spMove);
 
-	void InActiveSpMove(SP_MOVE spMove);
-
+	//攻撃が終わっているかどうかを判定
 	const bool& IsActiveSpMove(SP_MOVE spMove);
 
-	const int& GetSpMoveModelId( SP_MOVE spMove);
-
+	//攻撃の配列を取得
 	const std::map<SP_MOVE, std::unique_ptr<DamageObject>>& GetSpMove()const;
 
-	void MakeObjects(void);
+	//攻撃オブジェクトの生成
+	void MakeSpMoveObjects(void);
 
+	//死亡状態に移行
 	void ChangeDeathState(void);
 
+	//エフェクトの再生
 	void PlayEffect(STATE state);
-
 
 private:
 
+	//攻撃オブジェクト配列
 	std::map<SP_MOVE, std::unique_ptr<DamageObject>> spMoves_;
-
-	static constexpr VECTOR SCALE_BOSS_ENEMY = {10.0f,10.0f,10.0f };
-
-	static constexpr VECTOR DEFAULT_POS = { 0.0f, -30.0f, 1600.0f };
-
-	static constexpr int ENEMY_TYPE = 1;
-
-	static constexpr float ENEMY_HP = 500.0f;
-
-	static constexpr float CAPSUL_RADIUS = 300.0f;
-
-	static constexpr float CAPSUL_TOP = 2000.0f;
-
-	static constexpr float CAPSUL_DOWN = 200.0f;
-
-	static constexpr VECTOR EFFECT_EXPLOSION_SCALE = { 200.0f,200.0f,200.0f };
-
 
 	//座標、回転、大きさ等の情報を持つ
 	Transform transform_;
@@ -105,7 +89,6 @@ private:
 	//状態の管理
 	std::unique_ptr<DeathBall> deathBall_;
 
-	
 	//プレイヤーの座標
 	const VECTOR* playerPos_;
 

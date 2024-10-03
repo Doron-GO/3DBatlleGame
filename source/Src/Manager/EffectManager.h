@@ -36,7 +36,8 @@ private:
 	Transform& transform_;
 
 	// 種類別のアニメーションデータ
-	std::map<int, EffectData> efect_;
+	//キー：エフェクトタイプ,バリュー：エフェクトデータ
+	std::map<int, EffectData> efects_;
 
 
 };

@@ -34,7 +34,7 @@ BoostState::BoostState(Player& player):player_(player)
 	//ƒWƒƒƒ“ƒv—Í‚ğ0‚É‚·‚é
 	player_.JumpStop();
 	//d—Í‚ğ0‚É‚·‚é
-	player_.GravityZero();
+	player_.GravityOne();
 }
 
 void BoostState::Update()

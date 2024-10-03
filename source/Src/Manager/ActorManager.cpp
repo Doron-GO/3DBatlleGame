@@ -23,17 +23,16 @@ static constexpr float STAGE_OUT_Y = -1000.0f;
 
 ActorManager::ActorManager(int numberofPlayers)
 {
-	if (numberofPlayers ==0)
+	playMode_ = numberofPlayers;
+	if (playMode_ == SINGLE_PLAY)
 	{
 		InitSIngleMode(numberofPlayers);
 		_update = &ActorManager::UpdateSingleMode;
-		_draw = &ActorManager::DrawSingleMode;
 	}
 	else
 	{	
 		InitBattleMode(numberofPlayers);
 		_update = &ActorManager::UpdateBattleMode;
-		_draw = &ActorManager::DrawBattleMode;
 	}
 	InitUI();
 	isDeadAnyPlayer_ = false;
@@ -60,20 +59,20 @@ void ActorManager::InitSIngleMode(int numberofPlayers)
 	SetBossEnemyInfo();
 	players_[SINGLE_PLAY]->Init();
 	bossEnemy_->SetEnemyPosition(&(players_[SINGLE_PLAY]->GetPlayerPos()));
-	bossEnemy_->MakeObjects();
+	bossEnemy_->MakeSpMoveObjects();
 }
 
 void ActorManager::Update()
-{
-	(this->*_update)();
-}
-
-void ActorManager::UpdateBattleMode(void)
 {
 	for (auto& player : players_)
 	{
 		player->Update();
 	}
+	(this->*_update)();
+}
+
+void ActorManager::UpdateBattleMode(void)
+{
 	DamegeBeamCollision();
 	DamegeSwordCollision();
 	IsWin();
@@ -81,10 +80,6 @@ void ActorManager::UpdateBattleMode(void)
 
 void ActorManager::UpdateSingleMode(void)
 {
-	for (auto& player : players_)
-	{
-		player->Update();
-	}
 	bossEnemy_->Update();
 	DmageBossSpMoveCollision();
 	DmageBossBeamCollision();
@@ -93,22 +88,15 @@ void ActorManager::UpdateSingleMode(void)
 
 void ActorManager::Draw(void)
 {
-	(this->*_draw)();
-}
-
-void ActorManager::DrawBattleMode(void)
-{
 	for (auto& player : players_)
 	{
 		player->Draw();
 	}
-
-}
-
-void ActorManager::DrawSingleMode(void)
-{
-	players_[SINGLE_PLAY]->Draw();
-	bossEnemy_->Draw();
+	//シングルモードならボスを描画
+	if (playMode_ == SINGLE_PLAY)
+	{
+		bossEnemy_->Draw();
+	}
 }
 
 void ActorManager::DrawDebug(int playerType)
@@ -154,38 +142,33 @@ void ActorManager::AddClliders(Collider* collider)
 
 void ActorManager::SetEnemyInfo(void)
 {
-	for (int player = 0; player < PLAYER_NUM_MAX; player++)
+	for (int idx = 0; idx < PLAYER_NUM_MAX; idx++)
 	{
-		int num = 1 - player;
-		int num2 = 0+ player;
-		if (num <= -1)
+		//設定する側プレイヤータイプ
+		int playerType1 = 1 - idx;
+		//設定される側プレイヤータイプ
+		int playerType2 = 0+ idx;
+		if (playerType1 <= -1)
 		{
-			num = 0;
+			playerType1 = 0;
 		}
-		if (num2 >= 1)
+		if (playerType2 >= 1)
 		{
-			num2 = 1;
+			playerType2 = 1;
 		}
-		players_[num]->SetEnemyPosition(&(players_[num2]->GetTransform().pos));
-		players_[num]->SetEnemyHp(&(players_[num2]->GetPlayerHP()));
-		players_[num]->SetEnemyState(&(players_[num2]->pState_));
+		//敵プレイヤーの座標、HP、ステートを設定
+		players_[playerType1]->SetEnemyPosition(&(players_[playerType2]->GetTransform().pos));
+		players_[playerType1]->SetEnemyHp(&(players_[playerType2]->GetPlayerHP()));
+		players_[playerType1]->SetEnemyState(&(players_[playerType2]->pState_));
 	}
 }
 
 void ActorManager::SetBossEnemyInfo(void)
 {
-	int SINGLE_PLAY = 0;
-
+	//ボスの座標、HP、ステートを設定
 	players_[SINGLE_PLAY]->SetEnemyPosition(&bossEnemy_->GetBossEnemyPos());
 	players_[SINGLE_PLAY]->SetEnemyHp(&bossEnemy_->GetPlayerHP());
-
 	players_[SINGLE_PLAY]->SetEnemyState(nullptr);
-
-}
-
-void ActorManager::DamageObjectInit(void)
-{
-
 }
 
 void ActorManager::DamegeBeamCollision(void)
@@ -250,17 +233,25 @@ void ActorManager::DamegeSwordCollision(void)
 	{
 		for (auto& sabers : players_)
 		{
+			//攻撃側のサーベル
 			auto& saber = sabers->GetBeamSaber().GetSaber();			
-			//プレイヤーと剣のプレイヤータイプが違うもしくは無敵時間が終わってないまたは剣がアクティブ状態でない
+			//①プレイヤーと剣のプレイヤータイプが違う、
+			//②無敵時間が終わってない
+			//③剣がアクティブ状態でない
+			//一つでも当てはまっていたら戻る
 			if (IsEqual(player->GetPlayerType() , sabers->GetPlayerType()) ||!(saber.IsActive())
 				|| !player->IsSafeTimeSufficient())
 			{	
 				continue;
 			}
+			//サーベルとカプセル当たり判定が接触していたら
 			if (player->GetCapsule().Collision(saber.GetModelId()))
 			{
+				//サーベルを非アクティブ化
 				saber.Hit();
+				//ダメージ
 				player->Damage(saber.GetDamage());
+				//ダウン状態に移行
 				player->ChangeDwonState();
 			}
 		}
@@ -269,9 +260,8 @@ void ActorManager::DamegeSwordCollision(void)
 
 void ActorManager::DmageBossSpMoveCollision(void)
 {
-	int SINGLE_PLAY = 0;
-	auto& spmoves = bossEnemy_->GetSpMove();
-	for (auto& spmove : spmoves)
+	auto& spMoves = bossEnemy_->GetSpMove();
+	for (auto& spmove : spMoves)
 	{
 		//ボスの技がアクティブ状態の時もしくはプレイヤーの無敵時間が終わっていなかったら
 		if (!spmove.second->IsActive()|| !players_[SINGLE_PLAY]->IsSafeTimeSufficient())
@@ -281,8 +271,11 @@ void ActorManager::DmageBossSpMoveCollision(void)
 		//わざとップレイヤーが当たっていたらプレイヤーをダウン状態にしてHPを減らす
 		if (players_[SINGLE_PLAY]->GetCapsule().Collision(spmove.second->GetModelId()))
 		{
+			//無敵時間を設定
 			players_[SINGLE_PLAY]->SetSafeTime(30.0f);
+			//ダウン状態に移行
 			players_[SINGLE_PLAY]->ChangeDwonState();
+			//ダメージ
 			players_[SINGLE_PLAY]->Damage(spmove.second->GetDamage());
 		}
 	}
@@ -290,8 +283,6 @@ void ActorManager::DmageBossSpMoveCollision(void)
 
 void ActorManager::DmageBossBeamCollision(void)
 {
-	int SINGLE_PLAY = 0;
-
 	auto& beams= players_[SINGLE_PLAY]->GetBeamRifle().GetBeams();
 	for (auto& beam : beams)
 	{
@@ -300,9 +291,12 @@ void ActorManager::DmageBossBeamCollision(void)
 		{
 			continue;
 		}
+		//あたっていたら
 		if (bossEnemy_->GetCapsule().Collision(beam->GetModelId()))
 		{
+			//ビームを非アクティブ化
 			beam->Hit();
+			//ダメージ
 			bossEnemy_->Damage(beam->GetDamage());
 		}
 	}
@@ -311,6 +305,7 @@ void ActorManager::DmageBossBeamCollision(void)
 
 void ActorManager::InitUI(void)
 {
+	//UIをプレイヤーから受け取る
 	for (auto& player : players_)
 	{
 		userInterface_.emplace_back(player->MoveUI());
@@ -323,7 +318,7 @@ const bool& ActorManager::IsDeadAnyPlayer(void)const
 }
 
 void ActorManager::IsWin(void)
-{
+{	//どちらかのプレイヤーが死んでいたら戻る
 	if (isDeadAnyPlayer_)
 	{
 		return;
@@ -333,31 +328,36 @@ void ActorManager::IsWin(void)
 		//体力がゼロになるもしくはステージから落ちたら負けとする
 		if (0.0f>= player->GetPlayerHP() || StageOut(player->GetPlayerPos()))
 		{
-			loserNum_ = player->GetPlayerType() ;
-			winnerNum_ = 1 - loserNum_;
+			//敗北側プレイヤータイプを格納
+			loserPlayerType_ = player->GetPlayerType();
+			//勝利側プレイヤータイプを格納
+			winnerPlayerType_ = 1 - loserPlayerType_;
+			//各プレイヤーを勝利状態、敗北状態に移行
 			ChangeStateGameSet();
+			//どちらか死亡済みフラグをtrue
 			isDeadAnyPlayer_ = true;
 		}
 	}
 }
 
 void ActorManager::IsSingleModeWin(void)
-{
+{	//どちらかのプレイヤーが死んでいたら戻る
 	if (isDeadAnyPlayer_)
 	{
 		return;
 	}
-	int SINGLE_PLAY = 0;
 	//体力がゼロになるもしくはステージから落ちたら負けとする
 	if (0.0f >= players_[SINGLE_PLAY]->GetPlayerHP() || StageOut(players_[SINGLE_PLAY]->GetPlayerPos()))
-	{
+	{	//敗北状態に移行
 		players_[SINGLE_PLAY]->Lose();
 		isDeadAnyPlayer_ = true;
 	}
 	else if(0.0f >= bossEnemy_->GetPlayerHP())
 	{
 		isDeadAnyPlayer_ = true;
+		//勝利状態に移行
 		players_[SINGLE_PLAY]->Win();
+		//ボスを死亡状態に移行
 		bossEnemy_->ChangeDeathState();
 	}
 	else
@@ -367,6 +367,7 @@ void ActorManager::IsSingleModeWin(void)
 
 bool ActorManager::StageOut(const VECTOR& pos) 
 {
+	//プレイヤーY座標が一定以下になったら
 	if (pos.y < STAGE_OUT_Y)
 	{	
 		return true;
@@ -375,14 +376,14 @@ bool ActorManager::StageOut(const VECTOR& pos)
 }
 
 void ActorManager::ChangeStateGameSet(void)
-{
-	players_[loserNum_]->Lose();
-	players_[winnerNum_]->Win();
+{	//敗北状態、勝利状態に移行させる
+	players_[loserPlayerType_]->Lose();
+	players_[winnerPlayerType_]->Win();
 }
 
 
 bool ActorManager::IsEqual(int playerNum, int damageNum)
-{
+{	//攻撃する側タイプと攻撃される側タイプが同じかどうか
 	if (playerNum == damageNum)
 	{
 		return true;

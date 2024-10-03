@@ -15,40 +15,56 @@ public:
 
 
 	ActorManager(int numberofPlayers);
-
+	
+	//アップデート
 	void Update();
+
+	//対戦モードアップデート
 	void UpdateBattleMode(void);
+	//シングルモードアップデート
 	void UpdateSingleMode(void);
 
+	//描画
 	void Draw(void);
-	void DrawBattleMode(void);
-	void DrawSingleMode(void);
-	void DrawDebug(int playerType);
-	void DrawAnimeDebug(int playerType);
+
+	//カメラ描画
 	void DrawCamera(int playerType);
+	
 	//残弾数やHPゲージ等の表示
 	void DrawUI(int playerType);
 
 	//ゲームスタートなどの共通UI
 	void DrawCommonUI(const float&startCount, const bool& isGameSet,const float& rematchMode);
 
+	//コリジョンの追加
 	void AddClliders(Collider* collider);
+	
+	//
 	void SetEnemyInfo(void);
+	
+	
 	void SetBossEnemyInfo(void);
-	void DamageObjectInit(void);
+	
+		
+	
 	void DamegeBeamCollision(void);
+	
+	
 	void DamegeSwordCollision(void);
+	
+	
 	void DmageBossSpMoveCollision(void);
 	void DmageBossBeamCollision(void);
 	void InitUI(void);
 	const bool& IsDeadAnyPlayer(void)const;
 
+	//デバッグ用
+	void DrawDebug(int playerType);
+	void DrawAnimeDebug(int playerType);
+
 private:
 
 	void (ActorManager::* _update)();
-
-	void (ActorManager::* _draw)();
-
 
 	std::vector< std::unique_ptr<Player>>players_;
 
@@ -64,9 +80,13 @@ private:
 	//どちらかのプレイヤーが死んだかどうかを判定
 	bool isDeadAnyPlayer_;
 
-	int loserNum_;
+	int loserPlayerType_;
 
-	int winnerNum_;
+	int winnerPlayerType_;
+
+	//プレイモード
+	int playMode_;
+
 	void IsWin(void);
 
 	void IsSingleModeWin(void);

@@ -121,32 +121,46 @@ Player::~Player()
 
 void Player::Init(void)
 {	
+	//モデルの生成
 	InitTransform();
+	//オブジェクトの生成
 	MakeObjects();
+	//アニメーションの追加
 	InitAnimation();
+	//カメラの初期化
 	InitCamera();
 }
 
 void Player::MakeObjects(void)
 {
+	//アニメーションコントローラーの再生
 	roboAnimeController_ = std::make_unique< RobotAnimeController>(transform_.modelId);
+	//ビームライフルの生成
 	beamRifle_ = std::make_unique <BeamRifle>(playerType_, static_cast<int> (playMode_),*this);
+	//ビームサーベルの生成
 	beamSaber_ = std::make_unique <BeamSaber>(playerType_,transform_);
+	//カプセル当たり判定の生成
 	capsule_ = std::make_unique<CollisionCapsule>(transform_, CAPSULE_TOP, CAPSULE_DOWN, CAPSULE_RADIUS);
+	//UIの生成
 	userInterface_ = std::make_unique<UserInterface>(resMng_, enemyPos_, enemyDistance_, boostGauge_,
 		playerHp_, *enemyHp_,isWin_, beamRifle_->GetNumnberOfBullets() , static_cast<int> (playMode_),playerType_, input_->GetJPadType());
-
+	//エフェクトマネージャーの生成
 	effectManager_ = std::make_unique<EffectManager>(transform_);
 }
 
 void Player::InitTransform(void)
 {
+	//モデルの読み込み
 	transform_.SetModel(resMng_.LoadModelDuplicate(ResourceManager::SRC::PLAYER));
+	//大きさ
 	transform_.scl = AsoUtility::VECTOR_ONE;
+	//座標
 	transform_.pos = { DEFAULT_POS.x, DEFAULT_POS.y, (DEFAULT_POS.z * playerType_) };
+	//回転
 	transform_.quaRot = Quaternion();
 	transform_.quaRotLocal =
 		Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(180.0f), 0.0f });
+	//プレイヤータイプによって回転、座標を変える
 	if (playerType_ == static_cast<int>(PLAYER_TYPE::PLAYER_2))
 	{
 		moveQua_ =Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(180.0f), 0.0f });
@@ -154,6 +168,7 @@ void Player::InitTransform(void)
 	}
 	movedPos_ = transform_.pos;
 	transform_.Update();
+	//敵との距離を測る
 	Range();
 }
 
@@ -163,29 +178,46 @@ void Player::InitParameter(void)
 	pState_ = STATE::IDLE;
 	//パッドは1始まりなので+1
 	padNum_ = playerType_ + 1;
+	//移動量
 	movePow_ = AsoUtility::VECTOR_ZERO;
+	//移動後座標
 	movedPos_ = AsoUtility::VECTOR_ZERO;
+	//重力方向
 	dirGravity_ = { 0.0f,-1.0f,0.0f };
+	//重力の逆方向
 	dirUpGravity_ = { 0.0f,1.0f,0.0f };
 	startUpperQuaRotY_ = transform_.quaRot;
+	//ブーストゲージの値の初期化
 	boostGauge_ = MAX_BOOST_GAGE;
-	gravityPow_ = GRAVITY_POW;
+	//HP値の初期化
 	playerHp_ = MAX_PLAYER_HP;
+	//ブーストゲージ回復カウントの初期化
 	rechargeBoostCount_ = RECHARGE_BOOST_DELAY;
+	//着地硬直値の初期化
 	landingStanTime_ = 0.0f;
+	//最高速の初期化
 	maxMoveSpeed_ = 0.0f;
+	//射撃硬直値の初期化
 	shotFlame_ = 0.0f;
+	//無敵時間の初期化
 	safeTime_ = 0.0f;
+	//重力値の初期化
 	gravityPow_ = DEFAULT_GRAVITY_POW;
+	//スーパーアーマー値の初期化
 	superArmor_ = 0;
+	//上半身捻りフラグの初期化
 	revertFlag_ = false;
+	//射撃フラグの初期化
 	shotFlag_	= false;
+	//追尾フラグの初期化
 	isHorming_	= true;
+	//ブーストゲージ回復フラグの初期化
 	rechargeBoostFlag_ = false;
 }
 
 void Player::InitAnimation(void)
 {
+	//アニメーションの追加
 	roboAnimeController_->Add(static_cast<int>(STATE::IDLE), PATH_ANIMATION_PLAYER + "Idle.mv1", 20.0f, 750.0f);
 	roboAnimeController_->Add(static_cast<int>(STATE::RUN), PATH_ANIMATION_PLAYER + "Run.mv1", 22.0f, 100.0f);
 	roboAnimeController_->Add(static_cast<int>(STATE::SHOT), PATH_ANIMATION_PLAYER + "shot.mv1", 160.0f, 100.0f);
@@ -199,6 +231,7 @@ void Player::InitAnimation(void)
 	roboAnimeController_->Add(static_cast<int>(STATE::WIN), PATH_ANIMATION_PLAYER + "Win.mv1", 60.0f, 170.0f);
 
 	roboAnimeController_->Update();
+	//エフェクトの追加
 	effectManager_->Add(static_cast<int>(STATE::LOSE), EFFECT_EXPLOSION_SCALE, false,
 		resMng_.Load(ResourceManager::SRC::EXPLOSION).handleId_);
 
@@ -296,7 +329,9 @@ void Player::UpdateSIngleMode(void)
 
 void Player::Update()
 {
+	//デルタタイムの更新
 	deltaTime_ = DeltaTime::GetInstsnce().GetDeltaTime();
+
 	//コントローラ入力の更新
 	input_->Update();
 	
@@ -306,6 +341,7 @@ void Player::Update()
 	//ブーストゲージ回復
 	RecoverBoostGauge();
 
+	//今が対戦モードかどうかを判定
 	if (playMode_ == PLAY_MODE::BATTLE_MODE)
 	{
 		//現在の敵の状態を調べる
@@ -364,6 +400,7 @@ void Player::WeaponUpdate(void)
 
 void Player::RangeDistance(void)
 {
+	//相手との距離を測る
 	VECTOR enemyVec= VSub(*enemyPos_, transform_.pos);
 	enemyVec = { abs(enemyVec.x),abs(enemyVec.y),abs(enemyVec.z) };
 	enemyDistance_ = AsoUtility::SqrMagnitudeF(enemyVec);
@@ -373,6 +410,7 @@ void Player::RangeDistance(void)
 
 void Player::Range(void)
 {
+	//相手との距離によって、追尾するかを決める
 	RangeDistance();
 	if (enemyDistance_< WITHIN_RANGE)
 	{
@@ -385,9 +423,11 @@ void Player::Range(void)
 }
 bool Player::IsDead(void)
 {
+	//HPが0以下なら死亡する
 	if (!IsGaugeSufficient(playerHp_,-1))
 	{
 		return true;
+		//敗北状態にする
 		Lose();
 	}
 	return true;
@@ -395,12 +435,14 @@ bool Player::IsDead(void)
 
 void Player::Lose(void)
 {
+	//敗北状態に移行
 	ChangeState(std::make_unique<LoseState>(*this));
 }
 
 void Player::Win(void)
 {
 	isWin_ = true;
+	//勝利状態に移行
 	ChangeState(std::make_unique<WinnerState>(*this));
 }
 
@@ -411,11 +453,11 @@ const Player::STATE& Player::GetState(void)
 
 void Player::DamageSuperArmor(void)
 {
-	superArmor_ -= 1;
+	superArmor_ --;
 }
 
 void Player::Draw(void)
-{
+{	//モデルの描画
 	MV1DrawModel(transform_.modelId);
 	beamRifle_->Draw();
 	beamSaber_->Draw();
@@ -451,17 +493,24 @@ void Player::CollisionGravity(void)
 		if ( jumpDot_ > 0.9f && hit.HitFlag>0.0f )
 		{
 			float dis = 4.0f;
+			//着地した場所の高さに合わせる
 			movedPos_ = VAdd(hit.HitPosition, VScale(dirUpGravity_, dis));
+			//ジャンプ力を消す
 			jumpPow_ = VECTOR{0.0f,0.0f,0.0f};
+			//重力を戻す
 			gravityPow_ = GRAVITY_POW ;
+			//ブーストゲージ回復フラグをtrueにする
 			rechargeBoostFlag_ = true;
+			//接地フラグをtrueにする
 			groundedFlag_ = true;
+			//着地硬直カウントを計測
 			CountLandingStanTime();
 		}
 		else
 		{
 			groundedFlag_ = false;
 			landingStanTime_ = FALL_STAN_TIME;
+			//落下中に移動しているときはフォール状態にする
 			if (pState_==STATE::IDLE|| pState_ == STATE::RUN)
 			{
 				ChangeState(std::make_unique<FallState>(*this));
@@ -761,13 +810,16 @@ void Player::PlayerDebugDraw(int playerType)
 void Player::Combat(void)
 {
 	superArmor_ = MAX_SUPER_ARMOR;
+	//格闘前状態に移行
 	ChangeState(std::make_unique<CombatTransitionState>(*this ,transform_.pos,movePow_ ,quaRot_, offsetEnemy_) );
 }
 
 
 void Player::ConsumeBoostGauge(float rate)
 {
+	//ゲージを減らす
 	ConsumeGauge(boostGauge_, rate);
+	//一定以下になったら値を固定
 	if (boostGauge_<=0.0f)
 	{
 		boostGauge_ = 0.0f;
@@ -775,13 +827,14 @@ void Player::ConsumeBoostGauge(float rate)
 }
 
 void Player::StopRechargeBoost(void)
-{
+{	//ブーストゲージの回復を止める
 	rechargeBoostCount_ = 0;
 	rechargeBoostFlag_ = false;
 }
 
 bool Player::IsSuperArmor(void)
 {
+	//スーパーアーマーが残っているかどうかを判定
 	if (superArmor_>0)
 	{
 		return true;
@@ -790,19 +843,25 @@ bool Player::IsSuperArmor(void)
 }
 
 std::unique_ptr<UserInterface> Player::MoveUI(void)
-{
+{	//生成したUIを渡す
 	return std::move(userInterface_);
 }
 
 void Player::Jump(void)
 {
+	//ブーストゲージが一定以上残っていればジャンプする
 	if (IsGaugeSufficient(boostGauge_, MIN_JUMP_BOOST))
 	{
+		//ジャンプ力を設定
 		jumpSpeed_ = JUMP_POW;
 		VECTOR jump = { 0.0f,1.0f,0.0f };
 		jumpPow_ = VScale(jump, jumpSpeed_ * (deltaTime_));
+		//重力を0にする
 		gravityPow_ = 0.0f;
-		boostGauge_ -= JUMP_BOOST_DAMPING_RATE*(deltaTime_ );
+		//ブーストゲージを減らす
+		//boostGauge_ -= JUMP_BOOST_DAMPING_RATE*(deltaTime_ );
+		ConsumeBoostGauge(JUMP_BOOST_DAMPING_RATE * (deltaTime_));
+		//ブーストゲージ回復を止める
 		rechargeBoostCount_ = 0;
 		rechargeBoostFlag_ = false;
 	}
@@ -818,14 +877,16 @@ void Player::CalcGravity()
 	{
 		return;
 	}
+	//重力を加算
 	if (gravityPow_ < MAX_GRAVITY_POW)
 	{
 		gravityPow_ += GRAVITY_RATE *(deltaTime_) ;
 	}
-	else
+	else//一定を超えてら固定
 	{
 		gravityPow_ = MAX_GRAVITY_POW ;
-	}	
+	}
+	//ジャンプ力を減らす
 	if (jumpPow_.y < -MAX_GRAVITY_POW)
 	{
 		jumpPow_.y =  -MAX_GRAVITY_POW;
@@ -840,23 +901,25 @@ void Player::ResetShotFlame(void)
 
 void Player::RecoverBoostGauge(void)
 {
-	//ブーストゲージ回復フラグがtrue
+	//ブーストゲージ回復フラグがtrueでなければ戻る
 	if (!rechargeBoostFlag_)
 	{
 		return;
 	}
+	//ブーストゲージ回復開始時間を計測する
 	if (!IsGaugeSufficient(rechargeBoostCount_, RECHARGE_BOOST_DELAY))
 	{
 		rechargeBoostCount_+= (deltaTime_ * RECHARGE_BOOST_COUNT_RATE);
 	}
 	else
 	{
+		//ブーストゲージを回復する
 		if (!IsGaugeSufficient(boostGauge_, MAX_BOOST_GAGE))
 		{
 			boostGauge_+= 10.0f*(deltaTime_ * RECHARGE_BOOST_RATE);
 			rechargeBoostCount_ = RECHARGE_BOOST_DELAY;
 		}
-		else
+		else//一定を超えてら止める
 		{
 			boostGauge_ = 100.0f;
 			rechargeBoostFlag_ = false;
@@ -867,6 +930,7 @@ void Player::RecoverBoostGauge(void)
 
 const bool Player::IsGaugeSufficient(float Gauge, float RequiredGaugeAmount) const
 {
+	//引数1が引数2異常かどうかを判定する
 	if(Gauge >= RequiredGaugeAmount)
 	{
 		return true;
@@ -879,11 +943,13 @@ const bool Player::IsGaugeSufficient(float Gauge, float RequiredGaugeAmount) con
 
  bool Player::IsBoostGaugeSufficient(float RequiredGaugeAmount) 
 {
+	 //ブーストゲージが一定量を超えているかを判定
 	return IsGaugeSufficient(boostGauge_,RequiredGaugeAmount);
 }
 
  bool Player::IsSafeTimeSufficient(void)
  {
+	 //無敵時間が終わっているかどうかを判定
 	 if (safeTime_ > 0.0f)
 	 {
 		 return false;
@@ -896,16 +962,16 @@ const bool Player::IsGaugeSufficient(float Gauge, float RequiredGaugeAmount) con
 }
 
 void Player::MoveStop(void)
-{
+{	//移動量を0にする
 	movePow_ = VECTOR{ 0.0f,0.0f,0.0f };
 }
 
 void Player::JumpStop(void)
-{
+{	//ジャンプ力を0にする
 	jumpPow_ = VECTOR{ 0.0f,0.0f,0.0f };
 }
 
-void Player::GravityZero(void)
+void Player::GravityOne(void)
 {
 	gravityPow_ = 1.0f;
 }
@@ -918,7 +984,6 @@ void Player::CountSafeTime( float value)
 void Player::SetSafeTime(float value)
 {
 	safeTime_ = value;
-
 }
 
 void Player::RechargeBoostCountReset(void)
@@ -928,6 +993,7 @@ void Player::RechargeBoostCountReset(void)
 
 const bool Player::LandingStunEnded(void) const
 {
+	//着地硬直時間が終わったかどうかを判定
 	if (landingStanTime_>0.0f)
 	{
 		return false;
@@ -937,6 +1003,7 @@ const bool Player::LandingStunEnded(void) const
 
 const bool Player::CombatStunEnded(void) const
 {
+	//攻撃硬直時間が終わったかどうかを判定
 	if (combatStanTime_ > 0.0f)
 	{
 		return false;
@@ -946,6 +1013,7 @@ const bool Player::CombatStunEnded(void) const
 
 const bool Player::AllStanEnded(void) const
 {
+	//着地硬直と攻撃硬直が終わっているか判定
 	if (CombatStunEnded() && LandingStunEnded())
 	{
 		return true;
@@ -955,11 +1023,13 @@ const bool Player::AllStanEnded(void) const
 
 void Player::SetCombatStan(float stanTime)
 {
+	//攻撃硬直時間を設定
 	combatStanTime_ = stanTime;
 }
 
 void Player::CountLandingStanTime(void)
 {
+	//着地硬直時間計測
 	if (!LandingStunEnded())
 	{
 		landingStanTime_ -= (deltaTime_ * FALL_STAN_RATE);
@@ -972,6 +1042,7 @@ void Player::CountLandingStanTime(void)
 
 void Player::CountCombatStanTime(void)
 {
+	//攻撃硬直時間計測
 	if (!CombatStunEnded())
 	{
 		combatStanTime_ -= (deltaTime_ * COMBAT_STAN_RATE);
@@ -984,6 +1055,7 @@ void Player::CountCombatStanTime(void)
 
 void Player::MoveSpeedZero(void)
 {
+	//スピードが0になるように、徐々に減らす
 	if (moveSpeed_>0.0f)
 	{
 		moveSpeed_ -=  (deltaTime_ * DEFAULT_RATE);
@@ -996,6 +1068,7 @@ void Player::MoveSpeedZero(void)
 
 void Player::JumpPowZero(void)
 {
+	//ジャンプ力を減らす
 	if (jumpPow_.y >= 0.0f)
 	{
 		jumpPow_.y -= DECREASE_JUMP_POW_RATE * (deltaTime_);
@@ -1004,6 +1077,7 @@ void Player::JumpPowZero(void)
 
 bool Player::StickAdjustment(VECTOR v1, VECTOR v2)
 {
+	//スティックが一定上倒されているかを判定する
 	if (v1.x >= v2.x || v1.y >= v2.y)
 	{
 		return true;
@@ -1013,6 +1087,7 @@ bool Player::StickAdjustment(VECTOR v1, VECTOR v2)
 
 void Player::ConsumeGauge(float& gauge, float rate)
 {
+	//ゲージを減らす
 	gauge -= rate;
 	if (gauge<=0.0f)
 	{
@@ -1024,11 +1099,13 @@ void Player::CalculateAngleToTarget()
 	//相手に向かってベクトルを作る
 	VECTOR enemyPos = *enemyPos_;
 	enemyVec_ = VSub({ enemyPos.x,0.0f,enemyPos.z }, { transform_.pos.x, 0.0f, transform_.pos.z });
+
 	//自分の前方ベクトルと相手に向かってのベクトル間の回転量をとる
 	goalUpperQuaRotY_ = Quaternion::FromToRotation(transform_.GetForward(), enemyVec_);
 
 	//自分から敵への角度
 	angle_ = AsoUtility::Rad2DegF(goalUpperQuaRotY_.ToEuler().y);
+
 	//敵との角度が一定以上以下なら既定の角度にする
 	if (angle_ >= 70.0f)
 	{
@@ -1064,13 +1141,20 @@ void Player::Shot(void)
 {
 	if (input_->IsTriggerd("shot")&&!shotFlag_)
 	{
+		//射撃フラグをtrueに
 		shotFlag_ = true;
+		//現在のモデルの向きを格納
 		startUpperQuaRotY_ = transform_.quaRot;
+		//モデルの目線方向から相手方向への角度を測る
 		CalculateAngleToTarget();
+		//弾を発射する
 		beamRifle_->Trigger();
+		//射撃アニメーションを再生
 		PlayUpperAnim(static_cast<int>(STATE::SHOT), true, true, false);
+		//腰捻りフラグをtrue
 		revertFlag_ = true;
 	}
+	//射撃フラグがtrueなら
 	if (shotFlag_)
 	{
 		startUpperQuaRotY_ = { startUpperQuaRotY_.w,0.0f,startUpperQuaRotY_.y,0.0f };	

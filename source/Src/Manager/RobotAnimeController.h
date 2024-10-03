@@ -34,36 +34,47 @@ public:
 	// アニメーションデータ
 	struct Animation
 	{
-		int model_ = -1;
+		//モデルID
+		int modelId_ = -1;
+		//アタッチ番号
 		int attachNo_ = -1;
+		//アニメーション番号
 		int animIndex_ = 0;
+		//再生スピード
 		float speed_ = 0.0f;
+		//アニメーションの総再生時間
 		float totalTime_ = 0.0f;
+		//アニメーションの現再生時間
 		float step_ = 0.0f;
+		//アニメーションの優先権
 		bool priority_ = false;
+		//ループするかどうか
 		bool isLoop_ = false;
+		//一回再生かどうか
 		bool isStop_ = false;
+		//一回再生が終わったか
 		bool isEnd = false;
 	};
 
+	//切り替えられるアニメーション(古いほう)
 	struct Blend
-	{
-		int attachNo_ = -1;//ブレンドされるアニメーションのアタッチ番号
-		STATE type_ = STATE::NONE;		//ブレンドされるアニメーション
-		bool blendFlag_ = false;//ブレンド中かどうか
-		float rate_ = 0;	//ブレンド率
-		float stepBlend_ = 0;//ブレンド率加算
-		float blendTime_ = 0;//ブレンドりつを0～1にするためのもの
+	{	
+		//アニメーションのアタッチ番号
+		int attachNo_ = -1;
+		//アニメーションタイプ
+		STATE type_ = STATE::NONE;
+		//ブレンド中かどうか
+		bool blendFlag_ = false;
+		//ブレンド率
+		float rate_ = 0;
+		//ブレンド率加算
+		float stepBlend_ = 0;
 	};
-
-
-	int upplayType_;
-	int lowlayType_;
-
 
 	RobotAnimeController(int modelId);
 	~RobotAnimeController();
 
+	//総合アップデート
 	void Update(void);
 
 	void Draw(void);
@@ -112,14 +123,16 @@ private:
 	//first:アニメーションタイプ second:アタッチしているかどうか (trueはアタッチされている)
 	std::map<STATE, bool> isAttach_;
 
-	float blendTime_;
-
+	//デルタタイム
 	float deltaTime_;
 
+	//上半身アニメーションアップデート
 	void UpperBodyUpdate(void);
 
+	//下半身アニメーションアップデート
 	void LowerBodyUpdate(void);
 
+	//アニメーションを外す
 	void DetachAnim(void);
 
 };

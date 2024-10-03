@@ -191,7 +191,7 @@ public:
 
 
 	//重力_を0にする
-	void GravityZero(void);
+	void GravityOne(void);
 
 	//ブーストダッシュをする
 	void Boost(void);
@@ -476,6 +476,7 @@ private:
 	//transform_.pos と transform_.quaRot
 	void TransformUpdate(void);
 
+	//武器のアップデート
 	void WeaponUpdate(void);
 
 	//相手との距離を測る関数
