@@ -109,6 +109,9 @@ public:
 	//敵座標の取得
 	const VECTOR GetEnemyPos(void) const;
 
+	//敵との距離
+	const float& GetEnemyDistance(void) const;
+
 	//自分の座標の取得
 	const VECTOR& GetPlayerPos(void) const;
 
@@ -260,7 +263,16 @@ public:
 	bool IsSuperArmor(void);
 
 	//UIを渡す関数
-	 std::unique_ptr<UserInterface> MoveUI(void);
+	std::unique_ptr<UserInterface> MoveUI(void);
+
+	//ブーストゲージ
+	const float& GetBoostGauge(void) const;
+
+	//勝利したかどうかを判定
+	const bool& IsWin(void) const;
+
+	//ビームライフルの弾数
+	const int& GetNumnberOfBullets(void);
 
 	//回転の設定用変数
 	Quaternion quaRot_;

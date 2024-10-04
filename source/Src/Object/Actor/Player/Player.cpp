@@ -847,6 +847,21 @@ std::unique_ptr<UserInterface> Player::MoveUI(void)
 	return std::move(userInterface_);
 }
 
+const float& Player::GetBoostGauge(void) const
+{
+	return boostGauge_;
+}
+
+const bool& Player::IsWin(void) const
+{
+	return isWin_;
+}
+
+const int& Player::GetNumnberOfBullets(void)
+{
+	return beamRifle_->GetNumnberOfBullets();
+}
+
 void Player::Jump(void)
 {
 	//ブーストゲージが一定以上残っていればジャンプする
@@ -1301,6 +1316,11 @@ const bool& Player::IsHorming(void) const
 const VECTOR Player::GetEnemyPos(void) const
 {
 	return *enemyPos_;
+}
+
+const float& Player::GetEnemyDistance(void) const
+{
+	return enemyDistance_;
 }
 
 const VECTOR& Player::GetPlayerPos(void) const

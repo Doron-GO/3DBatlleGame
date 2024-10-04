@@ -363,12 +363,12 @@ void UserInterface::DrawEnemyHp(void)
 	enemyHpPos = ConvWorldPosToScreenPos(enemyHpPos);
 	int X = static_cast<int>(enemyHpPos.x);
 	int Y = static_cast<int>(enemyHpPos.y);
-	int geuge = static_cast<int>((enemyHpGauge_ * 2) / scale);
+	int gauge = static_cast<int>((enemyHpGauge_ * 2) / scale);
 
 	//ìGHPÉQÅ[ÉWògÇÃï\é¶
-	DrawRectGraph(X, Y, 0, 0, geuge, 15, uiImgH_[IMG_TYPE::BOOST_GAUGE_CASE], true);
+	DrawRectGraph(X, Y, 0, 0, gauge, 15, uiImgH_[IMG_TYPE::BOOST_GAUGE_CASE], true);
 	//ìGHPÉQÅ[ÉWÇÃï\é¶
-	DrawRectGraph(X, Y, 0, 0, geuge, 15, uiImgH_[IMG_TYPE::ENEMY_HP_GAUGE], true);
+	DrawRectGraph(X, Y, 0, 0, gauge, 15, uiImgH_[IMG_TYPE::ENEMY_HP_GAUGE], true);
 
 }
 

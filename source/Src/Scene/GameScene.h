@@ -75,9 +75,6 @@ private:
     //ゲームコントローラタイプ(PS、XBOX想定)
     JOYPAD_TYPE joyPadType_;
 
-    //UI
-    std::vector<UserInterface>userInterface_;
-
     //プレイヤーごとの描画スクリーン
     std::vector<int>cameraScreens_;
 
@@ -102,8 +99,8 @@ private:
 
     void DrawBattleMode(void);
 
-    void ChangeGameScene();
-    void ChangeTitleScene();
+    void ChangeGameScene(void);
+    void ChangeTitleScene(void);
 
     //ゲーム開始時のカウントダウン終了判定
     bool IsGameStart(void);

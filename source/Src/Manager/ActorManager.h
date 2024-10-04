@@ -66,13 +66,13 @@ private:
 
 	void (ActorManager::* _update)();
 
-	std::vector< std::unique_ptr<Player>>players_;
+	std::vector<std::unique_ptr<Player>> players_;
 
 	//ビームライフルやビームサーベル
-	std::vector<std::unique_ptr<DamageObject>>damageObject_;
+	std::vector<std::unique_ptr<DamageObject>> damageObject_;
 
 	//HPやブーストゲージの表示
-	std::vector< std::unique_ptr<UserInterface>>userInterface_;
+	std::vector<std::unique_ptr<UserInterface>> userInterfaces_;
 
 	//一人用モード敵
 	std::unique_ptr<BossEnemy> bossEnemy_;
@@ -100,5 +100,7 @@ private:
 	void ChangeStateGameSet(void);
 
 	bool IsEqual(int playerNum, int damageNum);
-};
 
+	void CreateBattleUI(void);
+
+};

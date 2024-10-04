@@ -1,7 +1,7 @@
+#include"../Object/Time/DeltaTime.h"
 #include "Input.h"
 #include<cassert>
 #include<algorithm>
-#include"../Object/Time/DeltaTime.h"
 
 bool Input::IsTriggerd(const std::string& input) const
 {

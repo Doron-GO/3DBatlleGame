@@ -40,15 +40,22 @@ ActorManager::ActorManager(int numberofPlayers)
 
 void ActorManager::InitBattleMode(int numberofPlayers)
 {
+
+	// プレイヤー初期化
 	for (int num = 0; num < PLAYER_NUM_MAX; num++)
 	{
 		players_.emplace_back(std::make_unique<Player>(num,numberofPlayers));
 	}
+
+
 	SetEnemyInfo();
+
 	for (auto& player : players_)
 	{
 		player->Init();
 	}
+
+	CreateBattleUI();
 
 }
 
@@ -122,12 +129,12 @@ void ActorManager::DrawCamera(int playerType)
 
 void ActorManager::DrawUI(int playerType)
 {
-	userInterface_[playerType]->Draw(isDeadAnyPlayer_);
+	userInterfaces_[playerType]->Draw(isDeadAnyPlayer_);
 }
 
 void ActorManager::DrawCommonUI(const float& startCount, const bool& isGameSet, const float& rematchMode)
 {
-	userInterface_[PLAYER_TYPE]->DrawCommonUI(startCount, isGameSet, rematchMode);
+	userInterfaces_[PLAYER_TYPE]->DrawCommonUI(startCount, isGameSet, rematchMode);
 }
 
 
@@ -142,25 +149,21 @@ void ActorManager::AddClliders(Collider* collider)
 
 void ActorManager::SetEnemyInfo(void)
 {
+
 	for (int idx = 0; idx < PLAYER_NUM_MAX; idx++)
 	{
-		//設定する側プレイヤータイプ
-		int playerType1 = 1 - idx;
-		//設定される側プレイヤータイプ
-		int playerType2 = 0+ idx;
-		if (playerType1 <= -1)
-		{
-			playerType1 = 0;
-		}
-		if (playerType2 >= 1)
-		{
-			playerType2 = 1;
-		}
+		//敵プレイヤー側の要素番号を切り替える
+		int targetIdx = (idx + 1) % PLAYER_NUM_MAX;
+
+		//敵プレイヤーを取得
+		auto& target = players_[targetIdx];
+
 		//敵プレイヤーの座標、HP、ステートを設定
-		players_[playerType1]->SetEnemyPosition(&(players_[playerType2]->GetTransform().pos));
-		players_[playerType1]->SetEnemyHp(&(players_[playerType2]->GetPlayerHP()));
-		players_[playerType1]->SetEnemyState(&(players_[playerType2]->pState_));
+		players_[idx]->SetEnemyPosition(&(target->GetTransform().pos));
+		players_[idx]->SetEnemyHp(&(target->GetPlayerHP()));
+		players_[idx]->SetEnemyState(&(target->pState_));
 	}
+
 }
 
 void ActorManager::SetBossEnemyInfo(void)
@@ -308,7 +311,7 @@ void ActorManager::InitUI(void)
 	//UIをプレイヤーから受け取る
 	for (auto& player : players_)
 	{
-		userInterface_.emplace_back(player->MoveUI());
+		userInterfaces_.emplace_back(player->MoveUI());
 	}
 }
 
@@ -389,4 +392,46 @@ bool ActorManager::IsEqual(int playerNum, int damageNum)
 		return true;
 	}
 	return false;
+}
+
+void ActorManager::CreateBattleUI(void)
+{
+
+	for (int idx = 0; idx < PLAYER_NUM_MAX; idx++)
+	{
+
+		// 自分
+		auto& me = players_[idx];
+
+		//敵プレイヤー側の要素番号を切り替える
+		int targetIdx = (idx + 1) % PLAYER_NUM_MAX;
+
+		//敵プレイヤーを取得
+		auto& target = players_[targetIdx];
+
+		//敵プレイヤーの座標、HP、ステートを設定
+		players_[idx]->SetEnemyPosition(&(target->GetTransform().pos));
+		players_[idx]->SetEnemyHp(&(target->GetPlayerHP()));
+		players_[idx]->SetEnemyState(&(target->pState_));
+
+
+
+		userInterfaces_.emplace_back(
+			std::make_unique<UserInterface>(
+				ResourceManager::GetInstance(),
+				target->GetTransform().pos,
+				me->GetEnemyDistance(),
+				me->GetBoostGauge(),
+				me->GetPlayerHP(),
+				target->GetPlayerHP(),
+				me->IsWin(),
+				me->GetNumnberOfBullets(),
+				playMode_,
+				idx,
+				input_->GetJPadType()
+				);
+
+	}
+
+
 }

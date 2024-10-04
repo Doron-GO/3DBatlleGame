@@ -31,7 +31,7 @@ public:
      const float& GetBigDamage(void)const;
 
     //非ホーミングでの有効化
-    void InActivateHorming();
+    void InActivateHorming(void);
 
 private:
 

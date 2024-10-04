@@ -154,11 +154,11 @@ resMng_(ResourceManager::GetInstance())
 
 }
 
-GameScene::~GameScene()
+GameScene::~GameScene(void)
 {
 }
 
-void GameScene::Update()
+void GameScene::Update(void)
 {
 	deltaTime_ = DeltaTime::GetInstsnce().GetDeltaTime();
 	input_.Update();
@@ -173,7 +173,7 @@ void GameScene::Update()
 	sceneTransitor_.Update();
 }
 
-void GameScene::Draw()
+void GameScene::Draw(void)
 {	
 	(this->*draw_)();
 	sceneTransitor_.Draw();
@@ -250,7 +250,7 @@ void GameScene::ChangeGameScene(void)
 	sceneManager_.ChangeScene(std::make_shared<GameScene>(sceneManager_, playMode_, sceneTransitor_, input_));
 }
 
-void GameScene::ChangeTitleScene()
+void GameScene::ChangeTitleScene(void)
 {
 	//タイトルシーンに移行
 	sceneManager_.ChangeScene(std::make_shared<TitleScene>(sceneManager_, sceneTransitor_,input_));

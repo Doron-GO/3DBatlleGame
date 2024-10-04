@@ -8,9 +8,18 @@ class UserInterface
 {
 public:
 
-	UserInterface(ResourceManager& resMng, const VECTOR* enemyPos,float& distance,
-		float& boostGauge, float& hpGauge, const float& enemyHp, bool& IsWin,
-		const int& numnberofBullets,int playMode,int playerType,const JOYPAD_TYPE& joyPadType);
+	UserInterface(
+		ResourceManager& resMng, 
+		const VECTOR* enemyPos,
+		float& distance,
+		float& boostGauge, 
+		float& hpGauge, 
+		const float& enemyHp,
+		bool& IsWin,
+		const int& numnberofBullets,
+		int playMode,
+		int playerType,
+		const JOYPAD_TYPE& joyPadType);
 
 	~UserInterface();
 
