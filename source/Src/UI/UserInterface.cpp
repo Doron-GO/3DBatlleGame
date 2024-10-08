@@ -6,114 +6,114 @@
 #pragma region Parameter
 
 //シングルモード時の勝利または敗北画像の座標
- constexpr VECTOR SINGLEMODE_IMG_POS = { 800.0f,400.0f ,0.0f };
+static constexpr VECTOR SINGLEMODE_IMG_POS = { 800.0f,400.0f ,0.0f };
 
- constexpr VECTOR MULTI_MODE_IMG_POS = { 400.0f,400.0f ,0.0f };
-
-//敵ターゲット画像の座標調整用
- constexpr float TARGET_OFFSET_Y = 100.0f;
+static constexpr VECTOR MULTI_MODE_IMG_POS = { 400.0f,400.0f ,0.0f };
 
 //敵ターゲット画像の座標調整用
- constexpr float ENEMY_HP_GAUGE_OFFSET_Y = 400.0f;
+static constexpr float TARGET_OFFSET_Y = 100.0f;
+
+//敵ターゲット画像の座標調整用
+static constexpr float ENEMY_HP_GAUGE_OFFSET_Y = 400.0f;
 
  //ブーストゲージ画像の座標
- constexpr VECTOR BOOST_GAUGE_IMG_POS_MULTI= { 400.0f,850.0f,0.0f };
- constexpr VECTOR BOOST_GAUGE_IMG_POS_SINGLE = { 1100.0f,850.0f,0.0f };
- constexpr double BOOST_GAUGE_CASE_SCALE_SINGLE= 2.5;
- constexpr double BOOST_GAUGE_CASE_SCALE_MULTI= 2.0;
- constexpr int BOOST_GAUGE_OFFSET_X_SINGLE = 5;
- constexpr int BOOST_GAUGE_OFFSET_Y_SINGLE = 40;
- constexpr int BOOST_GAUGE_OFFSET_X_MULTI = 4;
- constexpr int BOOST_GAUGE_OFFSET_Y_MULTI = 30;
+static constexpr VECTOR BOOST_GAUGE_IMG_POS_MULTI= { 400.0f,850.0f,0.0f };
+static constexpr VECTOR BOOST_GAUGE_IMG_POS_SINGLE = { 1100.0f,850.0f,0.0f };
+static constexpr double BOOST_GAUGE_CASE_SCALE_SINGLE= 2.5;
+static constexpr double BOOST_GAUGE_CASE_SCALE_MULTI= 2.0;
+static constexpr int BOOST_GAUGE_OFFSET_X_SINGLE = 5;
+static constexpr int BOOST_GAUGE_OFFSET_Y_SINGLE = 40;
+static constexpr int BOOST_GAUGE_OFFSET_X_MULTI = 4;
+static constexpr int BOOST_GAUGE_OFFSET_Y_MULTI = 30;
 
  //HPゲージ表示の数値
- constexpr VECTOR HP_GAUGE_POS_MULTI = {25.0f,800.0f,0.0f};
- constexpr VECTOR HP_GAUGE_POS_SINGLE = {4.0f,750.0f,0.0f};
+static constexpr VECTOR HP_GAUGE_POS_MULTI = {25.0f,800.0f,0.0f};
+ static constexpr VECTOR HP_GAUGE_POS_SINGLE = {4.0f,750.0f,0.0f};
 
 
  //残弾数表示の数値
- constexpr VECTOR NUMBER_OF_BULLETS_POS_SINGLE = {1300.0f,650.0f,0.0f};
- constexpr VECTOR NUMBER_OF_BULLETS_POS_MULTI = {600.0f,700.0f,0.0f};
- constexpr int NUMBER_OF_BULLETS_CENTER_X= 140;
- constexpr int NUMBER_OF_BULLETS_CENTER_Y=100;
- constexpr int NUMBER_OF_BULLETS_OFFSET = 10;
- constexpr double NUMBER_OF_BULLETS_SCALE_MULTI = 0.4;
- constexpr double NUMBER_OF_BULLETS_SCALE_SINGLE= 0.6;
+ static constexpr VECTOR NUMBER_OF_BULLETS_POS_SINGLE = {1300.0f,650.0f,0.0f};
+ static constexpr VECTOR NUMBER_OF_BULLETS_POS_MULTI = {600.0f,700.0f,0.0f};
+ static constexpr int NUMBER_OF_BULLETS_CENTER_X= 140;
+ static constexpr int NUMBER_OF_BULLETS_CENTER_Y=100;
+ static constexpr int NUMBER_OF_BULLETS_OFFSET = 10;
+ static constexpr double NUMBER_OF_BULLETS_SCALE_MULTI = 0.4;
+ static constexpr double NUMBER_OF_BULLETS_SCALE_SINGLE= 0.6;
 
  //タイトルに戻る画像
- constexpr int BACK_TO_TITLE_POS_X = 800;
- constexpr int BACK_TO_TITLE_POS_Y = 500;
- constexpr int BACK_TO_TITLE_CENTER_X = 250;
- constexpr int BACK_TO_TITLE_CENTER_Y = 50;
- constexpr double BACK_TO_TITLE_SCALE = 1.5;
+ static constexpr int BACK_TO_TITLE_POS_X = 800;
+ static constexpr int BACK_TO_TITLE_POS_Y = 500;
+ static constexpr int BACK_TO_TITLE_CENTER_X = 250;
+ static constexpr int BACK_TO_TITLE_CENTER_Y = 50;
+ static constexpr double BACK_TO_TITLE_SCALE = 1.5;
 
  //もう一戦画像
- constexpr int ONE_MOR_FIGHT_POS_X = 800;
- constexpr int ONE_MOR_FIGHT_POS_Y = 700;
- constexpr int ONE_MOR_FIGHT_CENTER_X = 273;
- constexpr int ONE_MOR_FIGHT_CENTER_Y = 54;
- constexpr double ONE_MOR_FIGHT_SCALE = 1.5;
+ static constexpr int ONE_MOR_FIGHT_POS_X = 800;
+ static constexpr int ONE_MOR_FIGHT_POS_Y = 700;
+ static constexpr int ONE_MOR_FIGHT_CENTER_X = 273;
+ static constexpr int ONE_MOR_FIGHT_CENTER_Y = 54;
+ static constexpr double ONE_MOR_FIGHT_SCALE = 1.5;
 
  //×ボタンを押してくれ画像
- constexpr int  PLEASE_CROSS_BUTTON_POS_X = 800;
- constexpr int  PLEASE_CROSS_BUTTON_POS_Y = 900;
- constexpr int  PLEASE_CROSS_BUTTON_CENTER_X = 480;
- constexpr int  PLEASE_CROSS_BUTTON_CENTER_Y = 52;
- constexpr double  PLEASE_CROSS_BUTTON_SCALE = 1.2;
+ static constexpr int  PLEASE_CROSS_BUTTON_POS_X = 800;
+ static constexpr int  PLEASE_CROSS_BUTTON_POS_Y = 900;
+ static constexpr int  PLEASE_CROSS_BUTTON_CENTER_X = 480;
+ static constexpr int  PLEASE_CROSS_BUTTON_CENTER_Y = 52;
+ static constexpr double  PLEASE_CROSS_BUTTON_SCALE = 1.2;
 
  //Aボタンを押してくれ画像
- constexpr int  PLEASE_A_BUTTON_POS_X = 800;
- constexpr int  PLEASE_A_BUTTON_POS_Y = 800;
- constexpr int  PLEASE_A_BUTTON_CENTER_X = 395;
- constexpr int  PLEASE_A_BUTTON_CENTER_Y = 34;
- constexpr double  PLEASE_A_BUTTON_SCALE = 1.2;
+ static constexpr int  PLEASE_A_BUTTON_POS_X = 800;
+ static constexpr int  PLEASE_A_BUTTON_POS_Y = 800;
+ static constexpr int  PLEASE_A_BUTTON_CENTER_X = 395;
+ static constexpr int  PLEASE_A_BUTTON_CENTER_Y = 34;
+ static constexpr double  PLEASE_A_BUTTON_SCALE = 1.2;
 
  //セレクト画像の数値
- constexpr int  TRIANGLE_POS_X = 1200;
- constexpr int  TRIANGLE_POS_Y = 500;
- constexpr int  TRIANGLE_CENTER_X = 280;
- constexpr int  TRIANGLE_CENTER_Y = 63;
- constexpr int  TRIANGLE_OFFSET = 200;
- constexpr double  TRIANGLE_SCALE = 1.2;
+ static constexpr int  TRIANGLE_POS_X = 1200;
+ static constexpr int  TRIANGLE_POS_Y = 500;
+ static constexpr int  TRIANGLE_CENTER_X = 280;
+ static constexpr int  TRIANGLE_CENTER_Y = 63;
+ static constexpr int  TRIANGLE_OFFSET = 200;
+ static constexpr double  TRIANGLE_SCALE = 1.2;
 
  //ゲーム開始時に出るREADYの画像の数値
- constexpr int READY_POS_X = 800;
- constexpr int  READY_POS_Y = 400;
- constexpr int  READY_CENTER_X = 117;
- constexpr int  READY_CENTER_Y = 44;
- constexpr int  READY_OFFSET = 200;
- constexpr double  READY_SCALE = 3.0;
+ static constexpr int READY_POS_X = 800;
+ static constexpr int  READY_POS_Y = 400;
+ static constexpr int  READY_CENTER_X = 117;
+ static constexpr int  READY_CENTER_Y = 44;
+ static constexpr int  READY_OFFSET = 200;
+ static constexpr double  READY_SCALE = 3.0;
 
  //ゲーム開始時に出るFIGHTの画像の数値
- constexpr int FIGHT_POS_X = 800;
- constexpr int  FIGHT_POS_Y = 400;
- constexpr int  FIGHT_CENTER_X = 120;
- constexpr int  FIGHT_CENTER_Y = 49;
- constexpr int  FIGHT_OFFSET = 200;
- constexpr double  FIGHT_SCALE = 4.5;
+ static constexpr int FIGHT_POS_X = 800;
+ static constexpr int  FIGHT_POS_Y = 400;
+ static constexpr int  FIGHT_CENTER_X = 120;
+ static constexpr int  FIGHT_CENTER_Y = 49;
+ static constexpr int  FIGHT_OFFSET = 200;
+ static constexpr double  FIGHT_SCALE = 4.5;
 
  //ゲームスタート開始秒数
- constexpr float START_TIME_MAX = 3.0f;
+ static constexpr float START_TIME_MAX = 3.0f;
 
  //対戦開始時「READY」画像表示秒数
- constexpr float READY_TIME_MAX = 1.5f;
+ static constexpr float READY_TIME_MAX = 1.5f;
 
  //画面分割用の線の太さ
- constexpr int  LINE_THICKNES = 1000;
+ static constexpr int  LINE_THICKNES = 1000;
 
  //プレイヤー１のタイプ
- constexpr int PLAYER_TYPE = 0;
+ static constexpr int PLAYER_TYPE = 0;
 
  //プレイモード(シングルプレイ)
- constexpr int PLAY_MODE = 0;
+ static constexpr int PLAY_MODE = 0;
 
  //プレイヤー１のPADナンバー
- constexpr int PAD_NUM = 1;
+ static constexpr int PAD_NUM = 1;
 
  //敵HP
- constexpr int ENEMY_HP = 1000;
+ static constexpr int ENEMY_HP = 1000;
  //ボスHP
- constexpr int BOSS_HP = 500;
+ static constexpr int BOSS_HP = 500;
 
 #pragma endregion
 

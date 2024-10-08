@@ -17,80 +17,80 @@
 #pragma region Parameter
 
 //デルタタイムにかける定数(60.0f)
- constexpr float DEFAULT_RATE = 60.0f;
+static constexpr float DEFAULT_RATE = 60.0f;
 
  //プレイヤーの初期ヒットポイント
- constexpr float MAX_PLAYER_HP = 1000.0f;
+static constexpr float MAX_PLAYER_HP = 1000.0f;
 
- constexpr float GRAVITY_POW = 30.0f;
+static constexpr float GRAVITY_POW = 30.0f;
 //重力デルタタイムにかける定数
- constexpr float GRAVITY_RATE = 100.0f;
+static constexpr float GRAVITY_RATE = 100.0f;
  //重力の最大値
- constexpr float MAX_GRAVITY_POW = 30.0f;
+static constexpr float MAX_GRAVITY_POW = 30.0f;
 
 //ブーストゲージの最大量
- constexpr float MAX_BOOST_GAGE = 100.0f;
+static constexpr float MAX_BOOST_GAGE = 100.0f;
 //初期重力値
- constexpr float DEFAULT_GRAVITY_POW = 3.0f;
+static constexpr float DEFAULT_GRAVITY_POW = 3.0f;
 
 //ブーストゲージが回復し始めるまでの時間
- constexpr float RECHARGE_BOOST_DELAY = 100.0f;
+static constexpr float RECHARGE_BOOST_DELAY = 100.0f;
 //ブーストゲージ回復カウントのデルタタイムにかける定数
- constexpr float RECHARGE_BOOST_COUNT_RATE = 60.0f;
+static constexpr float RECHARGE_BOOST_COUNT_RATE = 60.0f;
 //ブーストゲージ回復のデルタタイムにかける定数
- constexpr float RECHARGE_BOOST_RATE = 10.0f;
+static constexpr float RECHARGE_BOOST_RATE = 10.0f;
 
  //ブースト移動のデルタタイムにかける定数
  constexpr float BOOST_MOVE_RATE = 60.0f;
 
 //着地硬直時間
- constexpr float FALL_STAN_TIME = 40.0f;
+static constexpr float FALL_STAN_TIME = 40.0f;
  //着地硬直計測デルタタイムにかける定数
- constexpr float FALL_STAN_RATE = 100.0f;
+static constexpr float FALL_STAN_RATE = 100.0f;
 //格闘硬直時間
- constexpr float COMBAT_STAN_TIME = 30.0f;
+static constexpr float COMBAT_STAN_TIME = 30.0f;
 //格闘硬直計測デルタタイムにかける定数
  constexpr float COMBAT_STAN_RATE = 100.0f;
 
  //爆発エフェクトの大きさ
- constexpr VECTOR EFFECT_EXPLOSION_SCALE = { 20.0f,20.0f,20.0f };
+static constexpr VECTOR EFFECT_EXPLOSION_SCALE = { 20.0f,20.0f,20.0f };
 
 //一人用モードボスの座標補正値
- constexpr float OFFSET_BOSS_ENEMY = 1000.0f;
+static constexpr float OFFSET_BOSS_ENEMY = 1000.0f;
 
 //二人人用モード座標補正値(値なし)
- constexpr float OFFSET_ENEMY = 0.0f;
+static constexpr float OFFSET_ENEMY = 0.0f;
 
  //プレイヤーの初期位置
- constexpr VECTOR DEFAULT_POS = { 0.0f, -30.0f, 800.0f };
+static constexpr VECTOR DEFAULT_POS = { 0.0f, -30.0f, 800.0f };
 
  //スーパーアーマーの最大値
- constexpr int MAX_SUPER_ARMOR = 2;
+static constexpr int MAX_SUPER_ARMOR = 2;
 
 //ジャンプ時に使用する、デルタタイムにかけるブーストゲージ減少定数
- constexpr float JUMP_BOOST_DAMPING_RATE = 60.0f;
+static constexpr float JUMP_BOOST_DAMPING_RATE = 60.0f;
 //ジャンプ力
  constexpr float JUMP_POW = 2500.0f;
  //ジャンプ力を徐々に減らすデルタタイムにかける定数
- constexpr float DECREASE_JUMP_POW_RATE = 100.0f;
+ static constexpr float DECREASE_JUMP_POW_RATE = 100.0f;
 
 //カプセル頂点座標
- constexpr float CAPSULE_TOP = 200.0f;
+ static constexpr float CAPSULE_TOP = 200.0f;
 //カプセル底辺座標
- constexpr float CAPSULE_DOWN = 20.0f;
+ static constexpr float CAPSULE_DOWN = 20.0f;
 //カプセル半径
- constexpr float CAPSULE_RADIUS = 100.0f;
+ static constexpr float CAPSULE_RADIUS = 100.0f;
 
  //射撃可能時間計測デルタタイムにかける定数
- constexpr float SHOT_FRAME_RATE = 6.0f;
+ static constexpr float SHOT_FRAME_RATE = 6.0f;
  //最射撃可能時間
- constexpr float SHOT_FRAME_TIME = 5.0f;
+ static constexpr float SHOT_FRAME_TIME = 5.0f;
 
  //重力判定のライン判定の始まりと終わり
- constexpr float COLL_CHEAK_START_SCALE = 25.0f;
- constexpr float COLL_CHEAK_END_SCALE = 10.0f;
+ static constexpr float COLL_CHEAK_START_SCALE = 25.0f;
+ static constexpr float COLL_CHEAK_END_SCALE = 10.0f;
 
- constexpr float DEFAULT_DISTANCE = 4000.0f;
+ static constexpr float DEFAULT_DISTANCE = 4000.0f;
 
 
 

@@ -6,16 +6,16 @@
 
 #pragma region Parameter
 //ビームが発射可能になるまでの時間
- constexpr float RELOAD_COUNT_TIME = 100.0f;
+static constexpr float RELOAD_COUNT_TIME = 100.0f;
 
 //ビームの再発射可能時間を計測するデルタタイムにかける定数
- constexpr float RELOAD_COUNT_RATE = 60.0f;
+static constexpr float RELOAD_COUNT_RATE = 60.0f;
 
 //装弾数
- constexpr int MAX_BULLETS = 5;
+static constexpr int MAX_BULLETS = 5;
 
 //ビームライフルの大きさ
- constexpr VECTOR SCALE = { 0.07f,0.07f,0.07f };
+static constexpr VECTOR SCALE = { 0.07f,0.07f,0.07f };
 
 #pragma endregion
 
