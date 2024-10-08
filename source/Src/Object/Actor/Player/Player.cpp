@@ -141,9 +141,9 @@ void Player::MakeObjects(void)
 	beamSaber_ = std::make_unique <BeamSaber>(playerType_,transform_);
 	//カプセル当たり判定の生成
 	capsule_ = std::make_unique<CollisionCapsule>(transform_, CAPSULE_TOP, CAPSULE_DOWN, CAPSULE_RADIUS);
-	//UIの生成
-	userInterface_ = std::make_unique<UserInterface>(resMng_, enemyPos_, enemyDistance_, boostGauge_,
-		playerHp_, *enemyHp_,isWin_, beamRifle_->GetNumnberOfBullets() , static_cast<int> (playMode_),playerType_, input_->GetJPadType());
+	////UIの生成
+	//userInterface_ = std::make_unique<UserInterface>(resMng_, enemyPos_, enemyDistance_, boostGauge_,
+	//	playerHp_, *enemyHp_,isWin_, beamRifle_->GetNumnberOfBullets() , static_cast<int> (playMode_),playerType_);
 	//エフェクトマネージャーの生成
 	effectManager_ = std::make_unique<EffectManager>(transform_);
 }
@@ -168,8 +168,6 @@ void Player::InitTransform(void)
 	}
 	movedPos_ = transform_.pos;
 	transform_.Update();
-	//敵との距離を測る
-	Range();
 }
 
 void Player::InitParameter(void)
@@ -842,10 +840,10 @@ bool Player::IsSuperArmor(void)
 	return false;
 }
 
-std::unique_ptr<UserInterface> Player::MoveUI(void)
-{	//生成したUIを渡す
-	return std::move(userInterface_);
-}
+//std::unique_ptr<UserInterface> Player::MoveUI(void)
+//{	//生成したUIを渡す
+//	return std::move(userInterface_);
+//}
 
 const float& Player::GetBoostGauge(void) const
 {

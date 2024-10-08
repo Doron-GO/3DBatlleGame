@@ -262,8 +262,8 @@ public:
 	//スーパーアーマーが残っているかどうかを判定
 	bool IsSuperArmor(void);
 
-	//UIを渡す関数
-	std::unique_ptr<UserInterface> MoveUI(void);
+	////UIを渡す関数
+	//std::unique_ptr<UserInterface> MoveUI(void);
 
 	//ブーストゲージ
 	const float& GetBoostGauge(void) const;

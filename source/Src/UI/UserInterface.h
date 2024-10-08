@@ -10,16 +10,15 @@ public:
 
 	UserInterface(
 		ResourceManager& resMng, 
-		const VECTOR* enemyPos,
-		float& distance,
-		float& boostGauge, 
-		float& hpGauge, 
+		const VECTOR& enemyPos,
+		const float& distance,
+		const float& boostGauge, 
+		const float& hpGauge, 
 		const float& enemyHp,
-		bool& IsWin,
+		const bool& IsWin,
 		const int& numnberofBullets,
 		int playMode,
-		int playerType,
-		const JOYPAD_TYPE& joyPadType);
+		int playerType);
 
 	~UserInterface();
 
@@ -58,10 +57,10 @@ private:
 	std::map<IMG_TYPE,int> uiImgH_;
 
 	//ブーストゲージの数値
-	float& boostGauge_;
+	const float& boostGauge_;
 
 	//HPの数値
-	float& hpGauge_;
+	const float& hpGauge_;
 
 	//敵HPの数値
  	const float& enemyHpGauge_;
@@ -70,7 +69,7 @@ private:
 	const int& numnberofBullets_;
 
 	//敵との距離
-	float& enemyDistance_;
+	const float& enemyDistance_;
 
 	//プレイモード
 	int playMode_;
@@ -82,7 +81,7 @@ private:
 	int fontBullets_;
 
 	//プレイヤーが勝利したか敗北したかの判定
-	bool& isWin_;
+	const bool& isWin_;
 
 	//勝利、敗北画像の座標
 	VECTOR victoryOrDefeatPos_;
@@ -113,7 +112,7 @@ private:
 	int rematchMode_;
 
 	//敵の座標
-	const VECTOR* enemyPos_;
+	const VECTOR& enemyPos_;
 
 	//スタート計測変数
 	float startCount_;
@@ -146,7 +145,7 @@ private:
 	void DrawGameUIStart(const float& startCount);
 	
 	//ゲーム終了時の表示
-	void DrawUIGameSet(const bool& isGameSet, const float& rematchMode);
+	void DrawUIGameSet(const bool& isGameSet, const int& rematchMode);
 
 };
 

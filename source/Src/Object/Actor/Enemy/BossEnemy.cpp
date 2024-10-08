@@ -22,7 +22,7 @@ static constexpr VECTOR DEFAULT_POS = { 0.0f, -30.0f, 1600.0f };
 static constexpr int ENEMY_TYPE = 1;
 
 //ボスHP
-static constexpr float ENEMY_HP = 500.0f;
+static constexpr float ENEMY_HP = 1000.0f;
 
 //当たり判定カプセルの半径
 static constexpr float CAPSUL_RADIUS = 300.0f;

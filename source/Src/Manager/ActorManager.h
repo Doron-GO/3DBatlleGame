@@ -34,28 +34,24 @@ public:
 	void DrawUI(int playerType);
 
 	//ゲームスタートなどの共通UI
-	void DrawCommonUI(const float&startCount, const bool& isGameSet,const float& rematchMode);
+	void DrawCommonUI(const float&startCount, const bool& isGameSet,const int& rematchMode);
 
 	//コリジョンの追加
-	void AddClliders(Collider* collider);
+	void AddClliders(Collider* collider);	
 	
-	//
-	void SetEnemyInfo(void);
+	//弾との当たりは判定
+	void DamegeShotCollision(void);
 	
-	
-	void SetBossEnemyInfo(void);
-	
-		
-	
-	void DamegeBeamCollision(void);
-	
-	
+	//剣との当たり判定
 	void DamegeSwordCollision(void);
 	
-	
+	//ボスの攻撃との当たり判定
 	void DmageBossSpMoveCollision(void);
+
+	//ボスと弾との当たり判定
 	void DmageBossBeamCollision(void);
-	void InitUI(void);
+
+	//いずれかのプレイヤーが死んだかどうかを返す
 	const bool& IsDeadAnyPlayer(void)const;
 
 	//デバッグ用
@@ -87,20 +83,30 @@ private:
 	//プレイモード
 	int playMode_;
 
+	//勝者が決まったかどうかを判定
 	void IsWin(void);
 
+	//勝者が決まったかどうかを判定(シングルモード)
 	void IsSingleModeWin(void);
 
+	//対戦モード初期化
 	void InitBattleMode(int numberofPlayers);
 
+	//シングルモード初期化
 	void InitSIngleMode(int numberofPlayers);
 
+	//場外に落ちたかどうか
 	bool StageOut(const VECTOR& pos);
 
+	//各プレイヤーを勝利、敗北状態に変える
 	void ChangeStateGameSet(void);
 
+	//
 	bool IsEqual(int playerNum, int damageNum);
 
+	//対戦モードのUI
 	void CreateBattleUI(void);
+	//シングルモードのUI
+	void CreateSingleUI(void);
 
 };

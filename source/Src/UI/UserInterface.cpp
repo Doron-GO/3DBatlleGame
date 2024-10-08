@@ -107,12 +107,20 @@
  //プレイモード(シングルプレイ)
  constexpr int PLAY_MODE = 0;
 
+ //プレイヤー１のPADナンバー
+ constexpr int PAD_NUM = 1;
+
+ //敵HP
+ constexpr int ENEMY_HP = 1000;
+ //ボスHP
+ constexpr int BOSS_HP = 500;
+
 #pragma endregion
 
 
-UserInterface::UserInterface(ResourceManager& resMng, const VECTOR* enemyPos, float& distance,
-	float& boostGauge, float& hpGauge, const float& enemyHp,bool& IsWin_,const int& numnberofBullets,
-	int playMode, int playerType, const JOYPAD_TYPE& joyPadType):
+UserInterface::UserInterface(ResourceManager& resMng, const VECTOR& enemyPos,const float& distance,
+	const float& boostGauge,const float& hpGauge, const float& enemyHp,const bool& IsWin_,const int& numnberofBullets,
+	int playMode, int playerType):
 	resMng_(resMng), enemyPos_(enemyPos), enemyDistance_(distance), 
 	boostGauge_(boostGauge), hpGauge_(hpGauge),enemyHpGauge_(enemyHp), isWin_(IsWin_), numnberofBullets_(numnberofBullets)
 {
@@ -120,7 +128,7 @@ UserInterface::UserInterface(ResourceManager& resMng, const VECTOR* enemyPos, fl
 	playMode_ = playMode;
 	
 	//コントローラーのタイプを格納(PSかXBOX)
-	joyPadType_ = joyPadType;
+	joyPadType_ = static_cast<JOYPAD_TYPE>(GetJoypadType(PAD_NUM));
 	
 	//対戦終了時のモード選択の初期化(初期カーソルrはタイトルへ戻る)
 	rematchMode_ = 0;
@@ -326,7 +334,7 @@ void UserInterface::VictoryOrDefeat(void)
 
 void UserInterface::DrawTarget(void)
 {
-	VECTOR pos = *(enemyPos_);
+	VECTOR pos = (enemyPos_);
 	VECTOR TargetPos = pos;
 	TargetPos.y += TARGET_OFFSET_Y;
 	TargetPos = ConvWorldPosToScreenPos(TargetPos);
@@ -358,18 +366,18 @@ void UserInterface::DrawEnemyHp(void)
 	{
 		scale = 10;
 	}
-	VECTOR enemyHpPos = *(enemyPos_);
+	VECTOR enemyHpPos = (enemyPos_);
 	enemyHpPos.y += ENEMY_HP_GAUGE_OFFSET_Y;
 	enemyHpPos = ConvWorldPosToScreenPos(enemyHpPos);
 	int X = static_cast<int>(enemyHpPos.x);
 	int Y = static_cast<int>(enemyHpPos.y);
 	int gauge = static_cast<int>((enemyHpGauge_ * 2) / scale);
+	int gaugeCase = static_cast<int>((ENEMY_HP * 2) / scale);
 
 	//敵HPゲージ枠の表示
-	DrawRectGraph(X, Y, 0, 0, gauge, 15, uiImgH_[IMG_TYPE::BOOST_GAUGE_CASE], true);
+	DrawRectGraph(X, Y, 0, 0, gaugeCase, 15, uiImgH_[IMG_TYPE::BOOST_GAUGE_CASE], true);
 	//敵HPゲージの表示
 	DrawRectGraph(X, Y, 0, 0, gauge, 15, uiImgH_[IMG_TYPE::ENEMY_HP_GAUGE], true);
-
 }
 
 void UserInterface::DrawGameUIStart(const float& startCount)
@@ -391,7 +399,7 @@ void UserInterface::DrawGameUIStart(const float& startCount)
 	}
 }
 
-void UserInterface::DrawUIGameSet(const bool& isGameSet, const float& rematchMode)
+void UserInterface::DrawUIGameSet(const bool& isGameSet, const int& rematchMode)
 {
 	//勝敗が決まっていなければ戻る
 	if (!isGameSet)
