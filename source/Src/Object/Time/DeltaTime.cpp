@@ -1,7 +1,7 @@
 #include "DeltaTime.h"
 #include<DxLib.h>
 
-void DeltaTime::Update()
+void DeltaTime::Update(void)
 {	
 	auto nowTime = std::chrono::system_clock::now();
 	deltaTime_ = 	static_cast<float>(
@@ -15,31 +15,31 @@ void DeltaTime::Update()
 
 }
 
-const float DeltaTime::GetDeltaTime()const
+const float DeltaTime::GetDeltaTime(void)const
 {
 	return deltaTime_;
 }
 
-const float DeltaTime::GetElapsedTime()const
+const float DeltaTime::GetElapsedTime(void)const
 {
 	return elapsedTime_;
 }
 
-void DeltaTime::SetStart()
+void DeltaTime::SetStart(void)
 {
  	preTime_ = std::chrono::system_clock::now();
 }
 
-void DeltaTime::Reset()
+void DeltaTime::Reset(void)
 {
 	elapsedTime_ = 0.0f;
 }
 
-DeltaTime::DeltaTime() : deltaTime_(0.000001f), elapsedTime_(0.0f)
+DeltaTime::DeltaTime(void) : deltaTime_(0.000001f), elapsedTime_(0.0f)
 {
 
 }
 
-DeltaTime::~DeltaTime()
+DeltaTime::~DeltaTime(void)
 {
 }

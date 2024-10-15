@@ -1,5 +1,5 @@
 #pragma once
-#include"../Comon/Transform.h"
+#include"../Common/Transform.h"
 #include"../../Manager/ResourceManager.h"
 
 class Player;
@@ -30,7 +30,7 @@ public:
 	virtual void InActivate(void);
 
 	//ロボットモデルと座標、回転を同期
-	virtual void SyncPosition();
+	virtual void SyncPosition(void);
 
 protected:
 

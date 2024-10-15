@@ -1,5 +1,5 @@
 #pragma once
-#include "../Object/Comon/Transform.h"
+#include "../Object/Common/Transform.h"
 #include<memory>
 #include<vector>
 #include "Scene.h"
@@ -18,8 +18,8 @@ public:
     TitleScene(SceneManager& manager,Transitor& transit,Input& input);
     ~TitleScene();
 
-    virtual void Update() override;
-    virtual void Draw() override;
+    virtual void Update(void) override;
+    virtual void Draw(void) override;
 
 private:
 
@@ -42,7 +42,7 @@ private:
     };
 
     //モードセレクト
-    int selectNum_;
+    int playMode_;
 
     //タイトル画面から選択画面に行く下かを判定
     bool startFlag_;

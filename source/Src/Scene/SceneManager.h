@@ -34,10 +34,10 @@ public:
 	//void Update(Input& input);
 	
 	//現在シーンの更新
-	void Update();
+	void Update(void);
 
 	//現在シーンの描画
-	void Draw();
+	void Draw(void);
 
 private:
 

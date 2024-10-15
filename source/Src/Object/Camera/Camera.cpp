@@ -2,7 +2,7 @@
 #include <DxLib.h>
 #include <EffekseerForDXLib.h>
 #include "../../Utility/AsoUtility.h"
-#include "../Comon/Transform.h"
+#include "../Common/Transform.h"
 #include "Camera.h"
 
 Camera::Camera()

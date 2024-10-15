@@ -10,7 +10,7 @@ public:
 
     DeadState(BossEnemy& bossEnemy);
 private:
-    virtual void Update()override;
+    virtual void Update(void)override;
 
     BossEnemy& bossEnemy_;
 

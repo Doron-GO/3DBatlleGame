@@ -1,4 +1,5 @@
 #pragma once
+#include<functional>
 #include "DamageObject.h"
 class DeathBall :
     public DamageObject
@@ -34,6 +35,7 @@ private:
     };
 
     void (DeathBall::* _update)();
+    std::function<void(void)> update_;
 
     const VECTOR& playerPos_;
 };

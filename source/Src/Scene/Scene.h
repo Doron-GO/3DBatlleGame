@@ -16,11 +16,11 @@ class Scene
 public:
 	Scene(SceneManager& scene,Transitor& transit,Input& input);
 
-	virtual ~Scene() {};
+	virtual ~Scene(void) {};
 
-	virtual void Update() = 0;
+	virtual void Update(void) = 0;
 
-	virtual void Draw() ;
+	virtual void Draw(void) ;
 
 protected:
 

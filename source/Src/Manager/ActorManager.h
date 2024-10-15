@@ -1,6 +1,5 @@
 #pragma once
-#include"../Object/Actor/Enemy/BossEnemy.h"
-#include"../Object/Actor/Player/Player.h"
+#include<functional>
 #include<memory>
 #include<vector>
 #include<DxLib.h>
@@ -8,13 +7,16 @@
 class Collider;
 class DamageObject;
 class UserInterface;
+class ActorBase;
+class Player;
+class BossEnemy;
 
 class ActorManager
 {
 public:
 
 
-	ActorManager(int numberofPlayers);
+	ActorManager(int playMode);
 	
 	//アップデート
 	void Update();
@@ -37,7 +39,7 @@ public:
 	void DrawCommonUI(const float&startCount, const bool& isGameSet,const int& rematchMode);
 
 	//コリジョンの追加
-	void AddClliders(Collider* collider);	
+	void AddColliders(Collider* collider);	
 	
 	//弾との当たりは判定
 	void DamegeShotCollision(void);
@@ -58,9 +60,20 @@ public:
 	void DrawDebug(int playerType);
 	void DrawAnimeDebug(int playerType);
 
+	const std::vector<std::unique_ptr<Player>>& GetPlayers(void);
+
+	const std::unique_ptr<BossEnemy>& GetBossEnemy(void);
+
+	std::vector<std::unique_ptr<UserInterface>>MoveUI(void);
+	
+	bool& IsDeadAnyPlayer(void);
+
 private:
 
 	void (ActorManager::* _update)();
+	//状態管理(更新ステップ)
+	std::function<void(void)>update_;
+
 
 	std::vector<std::unique_ptr<Player>> players_;
 
@@ -76,8 +89,10 @@ private:
 	//どちらかのプレイヤーが死んだかどうかを判定
 	bool isDeadAnyPlayer_;
 
+	//敗北プレイヤータイプ
 	int loserPlayerType_;
 
+	//勝利プレイヤータイプ
 	int winnerPlayerType_;
 
 	//プレイモード
@@ -89,11 +104,8 @@ private:
 	//勝者が決まったかどうかを判定(シングルモード)
 	void IsSingleModeWin(void);
 
-	//対戦モード初期化
-	void InitBattleMode(int numberofPlayers);
-
-	//シングルモード初期化
-	void InitSIngleMode(int numberofPlayers);
+	//アクターの初期化
+	void InitActor(void);
 
 	//場外に落ちたかどうか
 	bool StageOut(const VECTOR& pos);
@@ -101,12 +113,13 @@ private:
 	//各プレイヤーを勝利、敗北状態に変える
 	void ChangeStateGameSet(void);
 
-	//
-	bool IsEqual(int playerNum, int damageNum);
+	//タイプ１とタイプ２が同タイプかどうかを判定
+	bool IsEqual(int Type1, int Type2);
 
-	//対戦モードのUI
-	void CreateBattleUI(void);
-	//シングルモードのUI
-	void CreateSingleUI(void);
+	//敵の情報をセットする
+	void SetEnemyInfo(ActorBase& player, ActorBase& target);
+
+	//Interfaceクラスの生成
+	void CreateUserInterface(ActorBase& player, ActorBase& target);
 
 };

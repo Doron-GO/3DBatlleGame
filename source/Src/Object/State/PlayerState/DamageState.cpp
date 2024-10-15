@@ -7,7 +7,7 @@ DamageState::DamageState(Player& player) :player_(player)
 	//ダメージアニメーションを再生
 	player_.PlayAnim(static_cast<int>(Player::STATE::DAMAGE), true, true);
 	//現在のステート情報を保存
-	player_.pState_ = Player::STATE::DAMAGE;
+	player_.actorState_ = Player::STATE::DAMAGE;
 	//前後左右移動をストップ
 	player_.MoveStop();
 	//上下の移動をストップ
@@ -24,12 +24,12 @@ DamageState::DamageState(Player& player) :player_(player)
 
 }
 
-void DamageState::Update()
+void DamageState::Update(void)
 {
 	//現在再生中アニメーションが一ループ再生完了したら
 	if (player_.IsAnimEnded())
 	{
-		player_.pState_ = Player::STATE::IDLE;
+		player_.actorState_ = Player::STATE::IDLE;
 		//アイドルアニメーションを再生
 		player_.PlayAnim(static_cast<int>(Player::STATE::IDLE), false, true);
 		//アイドル状態に移行

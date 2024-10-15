@@ -7,14 +7,14 @@
 FallState::FallState(Player& player):player_(player)
 {
 	//ステートをFALL状態にする
-	player_.pState_ = Player::STATE::FALL;
+	player_.actorState_ = Player::STATE::FALL;
 	//アニメーションをFALL状態にする
 	player_.PlayAnim(static_cast<int>(Player::STATE::FALL), false, true, true);
 	//最高速度を設定
 	player_.SetMaxMoveSpeed(player_.FALL_MAX_MOVE_SPEED);
 }
 
-void FallState::Update()
+void FallState::Update(void)
 {
 	//地面に着地したら
 	if (player_.IsGround())

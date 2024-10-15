@@ -4,12 +4,12 @@
 DeadState::DeadState(BossEnemy& bossEnemy):bossEnemy_(bossEnemy)
 {
 	//アニメーションをDEADにする
-	bossEnemy_.PlayAnim(static_cast<int>(BossEnemy::STATE::DEAD), false, false);
+	bossEnemy_.PlayAnim(static_cast<int>(BossEnemy::BOSS_STATE::DEAD), false, false);
 	//死亡時エフェクトを再生
-	bossEnemy_.PlayEffect(BossEnemy::STATE::DEAD);
+	bossEnemy_.PlayEffect(BossEnemy::BOSS_STATE::DEAD);
 }
 
-void DeadState::Update()
+void DeadState::Update(void)
 {
 
 }

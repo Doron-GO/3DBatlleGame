@@ -1,5 +1,5 @@
 #pragma once
-#include"../Comon/Transform.h"
+#include"../Common/Transform.h"
 
 class ResourceManager;
 
@@ -7,14 +7,14 @@ class Stage
 {
 public:
 
-	Stage();
-	~Stage();
+	Stage(void);
+	~Stage(void);
 
 	//描画
-	void Draw();
+	void Draw(void);
 
 	//当たり判定の取得
-	Collider* GetCollider();
+	Collider* GetCollider(void);
 
 private:
 	// シングルトン参照

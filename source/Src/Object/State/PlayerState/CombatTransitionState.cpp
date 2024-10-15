@@ -8,7 +8,7 @@
 CombatTransitionState::CombatTransitionState(Player& player,VECTOR & playerPos, VECTOR& movePow, Quaternion& quarot, float offset):
 	player_(player),playerPos_(playerPos),movePow_(movePow),quarot_(quarot)
 {
-	player_.pState_ = Player::STATE::COMBAT_RUN;
+	player_.actorState_ = Player::STATE::COMBAT_RUN;
 
 	//敵の座標を取得
 	enemyPos_ = player_.GetEnemyPos();
@@ -48,7 +48,7 @@ CombatTransitionState::CombatTransitionState(Player& player,VECTOR & playerPos, 
 	Distance();
 }
 
-void CombatTransitionState::Update()
+void CombatTransitionState::Update(void)
 {
 	//アニメーションをCOMBAT_RUNにする
 	player_.PlayAnim(static_cast<int>(Player::STATE::COMBAT_RUN), false, true,true);

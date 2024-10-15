@@ -23,7 +23,7 @@ BeamShot::BeamShot(int playerType, const bool& isHorming, int num, int playMode)
 	//非有効化
 	activeFlag_ = false;
 	//待機状態の更新処理にする
-	_update = &BeamShot::WaitUpdate;
+	update_ = std::bind(&BeamShot::WaitUpdate, this);
 	//敵座標の初期化
 	enemyPos_ = { 0.0f,0.0f,0.0f };
 	//ホーミングベクトルの初期化
@@ -57,7 +57,8 @@ void BeamShot::Update(VECTOR enemyPos)
 	deltaTime_ = DeltaTime::GetInstsnce().GetDeltaTime();
 	//敵の座標の更新
 	enemyPos_ = enemyPos;
-	(this->*_update)();
+	//
+	update_();
 	//エフェクトマネージャーの更新
 	effectManager_->Update();
 	//トランスフォームの更新
@@ -85,11 +86,11 @@ void BeamShot::Activate(void)
 	//ホーミング状態なら
 	if (isHorming_)
 	{	//ホーミングアップデートにする
-		_update = &BeamShot::HormingUpdate;
+		update_ = std::bind(&BeamShot::HormingUpdate, this);
 	}
 	else
 	{	//ノーマルアップデートにする
-		_update = &BeamShot::NormalUpdate;
+		update_ = std::bind(&BeamShot::NormalUpdate, this);
 	}
 	transform_.Update();
 }
@@ -116,8 +117,9 @@ void BeamShot::Hit(void)
 	effectManager_->Play(static_cast<int>(BEAM_STATE::HIT));
 	//ビームエフェクトの再生を止める
 	effectManager_->Stop(static_cast<int>(BEAM_STATE::BEAM));
+	//
+	update_ = std::bind(&BeamShot::WaitUpdate, this);
 
-	_update = &BeamShot::WaitUpdate;
 }
 
 const int& BeamShot::GetModelId(void) const
@@ -132,6 +134,7 @@ const float& BeamShot::GetBigDamage(void) const
 
 void BeamShot::WaitUpdate(void)
 {
+	int t = 0;
 }
 
 void BeamShot::NormalUpdate(void)
@@ -162,7 +165,7 @@ void BeamShot::HormingUpdate(void)
 	if (hormingCount_> HORMING_COUNT_TIME)
 	{
 		//ホーミング処理のなしのアップデート処理に変更
-		_update = &BeamShot::NormalUpdate;
+		update_ = std::bind(&BeamShot::NormalUpdate, this);
 	}
 }
 
@@ -210,5 +213,6 @@ void BeamShot::CoolTimeCount(void)
 
 void BeamShot::InActivateHorming()
 {
-	_update = &BeamShot::NormalUpdate;
+	update_ = std::bind(&BeamShot::NormalUpdate, this);
+
 }

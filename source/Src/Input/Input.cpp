@@ -313,7 +313,7 @@ keyLx_(joyDInState_.X), keyLy_(joyDInState_.Y)
 
 }
 
-void Input::Update()
+void Input::Update(void)
 {
 	float delta = DeltaTime::GetInstsnce().GetDeltaTime();
 	//ハードの入力自体はチェックします
@@ -403,12 +403,12 @@ void Input::RewriteInput(const std::string& key, const INPUT_INFO& inputinfo){
 
 }
 
-void Input::ComitInputConfig()
+void Input::ComitInputConfig(void)
 {
 	inputTable_ = tempTable_;
 }
 
-bool Input::CheckExclusiveInput()
+bool Input::CheckExclusiveInput(void)
 {
 	char keycode[256];
 	GetHitKeyStateAll(keycode);//キーボード入力
@@ -479,7 +479,7 @@ const bool Input::IsStickSlanted() const
 	return false;
 }
 
-JOYPAD_TYPE Input::GetJPadType()
+JOYPAD_TYPE Input::GetJPadType(void)
 {
 	return static_cast<JOYPAD_TYPE>(GetJoypadType(1));
 }

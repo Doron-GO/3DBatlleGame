@@ -5,7 +5,7 @@
 #include"../../Weapon/BeamRifle.h"
 #include"../../Weapon/BeamSaber.h"
 #include"../../State/StateBase.h"
-#include"../../Comon/Transform.h"
+#include"../../Common/Transform.h"
 #include"../../../Input/Input.h"
 #include"../../Camera/Camera.h"
 #include"../ActorBase.h"
@@ -45,33 +45,33 @@ public:
 	static constexpr float FALL_MAX_MOVE_SPEED = 35.0f;//FALL状態時移動スピード
 
 
-	enum class STATE
-	{
-		NONE,
-		RUN,
-		JUMP,
-		DAMAGE,
-		DOWN,
-		SHOT,
-		IDLE,
-		BOOST,
-		BOOST_DASH,
-		FALL,
-		COMBAT,
-		COMBAT_RUN,
-		WIN,
-		LOSE,
+	//enum class STATE
+	//{
+	//	NONE,
+	//	RUN,
+	//	JUMP,
+	//	DAMAGE,
+	//	DOWN,
+	//	SHOT,
+	//	IDLE,
+	//	BOOST,
+	//	BOOST_DASH,
+	//	FALL,
+	//	COMBAT,
+	//	COMBAT_RUN,
+	//	WIN,
+	//	LOSE,
 
-	};	
+	//};	
 	
-	Player(int playerNum, int playMode);
+	Player(int playerType, int playMode);
 
-	~Player();
+	~Player(void);
 
 	void Init(void);
 
 	//更新
-	void Update();
+	void Update(void);
 
 	//描画
 	void Draw(void);
@@ -108,9 +108,6 @@ public:
 
 	//敵座標の取得
 	const VECTOR GetEnemyPos(void) const;
-
-	//敵との距離
-	const float& GetEnemyDistance(void) const;
 
 	//自分の座標の取得
 	const VECTOR& GetPlayerPos(void) const;
@@ -155,7 +152,7 @@ public:
 	void ChangeState(std::unique_ptr<StateBase> state_);
 
 	//コントローラー入力情報の取得
-	const Input& GetInput() const;
+	const Input& GetInput(void) const;
 
 	//移動する関数
 
@@ -254,7 +251,7 @@ public:
 	void Win(void);
 
 	//ステートの取得
-	const STATE& GetState(void);
+	virtual const STATE& GetState(void) override;
 
 	//スーパーアーマーを削る
 	void DamageSuperArmor(void);
@@ -266,7 +263,7 @@ public:
 	//std::unique_ptr<UserInterface> MoveUI(void);
 
 	//ブーストゲージ
-	const float& GetBoostGauge(void) const;
+	const float& GetBoostFuel(void) const;
 
 	//勝利したかどうかを判定
 	const bool& IsWin(void) const;
@@ -277,8 +274,8 @@ public:
 	//回転の設定用変数
 	Quaternion quaRot_;
 
-	//プレイヤーの現在の状態
-	STATE pState_;
+	////プレイヤーの現在の状態
+	STATE actorState_;
 
 private:
 
@@ -297,9 +294,6 @@ private:
 	//ホーミング可能かどうかを判定
 	bool isHorming_;
 
-	//敵のステート情報
-	const STATE* enemyState_;
-
 	PLAY_MODE playMode_;
 
 	//UI
@@ -307,9 +301,6 @@ private:
 
 	//エフェクト再生
 	std::unique_ptr<EffectManager> effectManager_;
-
-	//トランスフォーム
-	Transform transform_;
 
 	//ビームライフル
 	std::unique_ptr<BeamRifle> beamRifle_;	
@@ -381,14 +372,13 @@ private:
 	float  offsetEnemy_; 
 
 	//自分から敵へのベクトル
-
 	VECTOR enemyVec_;
 
 	//フォール中地面着地フラグ
-	bool groundedFlag_;
+	bool isGrounded_;
 
 	//上下半身の回転を元に戻すフラグ
-	float revertFlag_;
+	bool isRevertUpperBodyRot_;
 
 	//到達するべき回転
 	Quaternion goalUpperQuaRotY_;
@@ -408,9 +398,6 @@ private:
 	//重力の強さ
 	float gravityPow_;
 
-	//ブーストゲージ
-	float boostGauge_;
-
 	//ブーストゲージ回復開始判定 true:回復中　false:回復停止
 	bool rechargeBoostFlag_;
 
@@ -425,15 +412,6 @@ private:
 
 	//近接攻撃硬直時間
 	float combatStanTime_;
-
-	//ホーミング弾実装用のテスト変数
-	const VECTOR* enemyPos_;
-
-	//敵との距離
-	float enemyDistance_;
-
-	//敵HP
-	const float* enemyHp_;
 
 	//勝利したかどうかを判定
 	bool isWin_;
@@ -455,10 +433,10 @@ private:
 	void SpeedAdd(void);
 
 	//自分の向いている方向から敵がいる方向までの角度を計る
-	void CalculateAngleToTarget();
+	void CalculateAngleToTarget(void);
 
 	//上半身の回転を元に戻す関数
-	void RevertRotate();
+	void RevertRotate(void);
 
 	//ブーストゲージを回復する
 	void RecoverBoostGauge(void);
@@ -509,7 +487,7 @@ private:
 
 	void UpdateBattleMode(void);
 
-	void UpdateSIngleMode(void);
+	void UpdateSingleMode(void);
 
 };	
 

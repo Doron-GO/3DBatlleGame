@@ -15,7 +15,7 @@ public:
     CombatTransitionState(Player& player,VECTOR& playerPos, VECTOR& movePow, Quaternion& quarot, float offset);
 private:
     Player& player_;
-    virtual void Update()override;
+    virtual void Update(void)override;
 
     VECTOR dashVec_;
     VECTOR& playerPos_;

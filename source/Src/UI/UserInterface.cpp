@@ -118,11 +118,18 @@ static constexpr VECTOR HP_GAUGE_POS_MULTI = {25.0f,800.0f,0.0f};
 #pragma endregion
 
 
-UserInterface::UserInterface(ResourceManager& resMng, const VECTOR& enemyPos,const float& distance,
-	const float& boostGauge,const float& hpGauge, const float& enemyHp,const bool& IsWin_,const int& numnberofBullets,
-	int playMode, int playerType):
-	resMng_(resMng), enemyPos_(enemyPos), enemyDistance_(distance), 
-	boostGauge_(boostGauge), hpGauge_(hpGauge),enemyHpGauge_(enemyHp), isWin_(IsWin_), numnberofBullets_(numnberofBullets)
+UserInterface::UserInterface(
+	int playMode,
+	int playerType,
+	const float& distance,
+	const int& bulletNum,
+	const float& boostGauge,
+	const float& hpGauge,
+	const bool& isWin,
+	const VECTOR& enemyPos,
+	const float& enemyHp) :
+	resMng_(ResourceManager::GetInstance()), enemyPos_(enemyPos), enemyDistance_(distance),
+	boostGauge_(boostGauge), hpGauge_(hpGauge),enemyHpGauge_(enemyHp), isWin_(isWin), numnberofBullets_(bulletNum)
 {
 	//プレイモードを保存
 	playMode_ = playMode;
@@ -143,7 +150,7 @@ UserInterface::UserInterface(ResourceManager& resMng, const VECTOR& enemyPos,con
 	if (playerType == PLAYER_TYPE)
 	{
 		//共通UIの初期化
-		InitCommonUi();
+		InitCommonUI();
 	}
 
 }
@@ -173,7 +180,7 @@ void UserInterface::Draw(bool& gameSet)
 	}
 }
 
-void UserInterface::DrawCommonUI(const float& startCount, const bool& isGameSet, const float& rematchMode)
+void UserInterface::DrawCommonUI(const float& startCount, const bool& isGameSet, const int& rematchMode)
 {
 	//ゲームスタート時UI
 	DrawGameUIStart(startCount);
@@ -257,7 +264,7 @@ void UserInterface::InitImage(void)
 	}
 }
 
-void UserInterface::InitCommonUi(void)
+void UserInterface::InitCommonUI(void)
 {
 	//画像読み込み
 	uiImgH_.emplace(IMG_TYPE::BACK_TO_TITLE, resMng_.Load(ResourceManager::SRC::BACK_TO_TITLE).handleId_);

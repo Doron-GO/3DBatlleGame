@@ -13,25 +13,25 @@ public:
 		return s_Instance;
 	}
 	//更新
-	void Update();
+	void Update(void);
 
 	//デルタタイムの取得
-	const float GetDeltaTime()const;
+	const float GetDeltaTime(void)const;
 
 	//経過時間の取得
-	const float GetElapsedTime()const;
+	const float GetElapsedTime(void)const;
 
 	//計測の開始
-	void SetStart();
+	void SetStart(void);
 
 	//経過時間のリセット
-	void Reset();
+	void Reset(void);
 
 private:
 
-	DeltaTime();
+	DeltaTime(void);
 
-	~DeltaTime();
+	~DeltaTime(void);
 
 	//デルタタイム
 	float deltaTime_;

@@ -16,7 +16,7 @@ DeathBall::DeathBall(int playerType, const VECTOR& pos) :DamageObject(playerType
 	//ダメージ量の設定
 	damage_ = 500.0f;
 	//更新処理の状態
-	_update = &DeathBall::WaitUpdate;
+	update_ = std::bind(&DeathBall::WaitUpdate, this);
 	//エフェクトマネージャーの生成
 	effectManager_ = std::make_unique<EffectManager>(transform_);
 	//エフェクトの追加
@@ -34,7 +34,7 @@ void DeathBall::Draw(void)
 
 void DeathBall::Update(VECTOR enemyPos)
 {
-	(this->*_update)();
+	update_();
 	//エフェクトの更新
 	effectManager_->Update();
 	//トランスフォームの更新
@@ -53,7 +53,9 @@ void DeathBall::Activate(void)
 	//エフェクトの再生
 	effectManager_->Play(static_cast<int>(BALL_STATE::BALL));
 	//アップデートをNormalUpdateに変更
-	_update = &DeathBall::NormalUpdate;
+	update_ = std::bind(&DeathBall::NormalUpdate, this);
+
+
 }
 
 void DeathBall::InActivate(void)
@@ -65,7 +67,7 @@ void DeathBall::InActivate(void)
 	//エフェクトの再生を停止
 	effectManager_->Stop(static_cast<int>(BALL_STATE::BALL));
 	//アップデートをNormalUpdateに変更
-	_update = &DeathBall::WaitUpdate;
+	update_ = std::bind(&DeathBall::WaitUpdate, this);
 
 }
 

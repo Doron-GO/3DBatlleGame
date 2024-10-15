@@ -12,7 +12,7 @@ WinnerState::WinnerState(Player& player):player_(player)
 
 }
 
-void WinnerState::Update()
+void WinnerState::Update(void)
 {
 	player_.PlayAnim(static_cast<int>(Player::STATE::WIN), true, false);
 }

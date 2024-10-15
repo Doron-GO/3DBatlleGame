@@ -1,5 +1,7 @@
 #pragma once
+#include<functional>
 #include "DamageObject.h"
+
 class BeamShot :
     public DamageObject
 {
@@ -87,6 +89,7 @@ private:
     void CoolTimeCount(void);
 
     void (BeamShot::* _update)();
+    std::function<void(void)> update_;
 
     //相手プレイヤーの座標
     VECTOR enemyPos_;

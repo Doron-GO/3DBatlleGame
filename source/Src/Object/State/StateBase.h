@@ -8,8 +8,8 @@ class StateBase
 {
 public:
 
-	virtual ~ StateBase(){};
-	virtual void Update()=0;
+	virtual ~ StateBase(void){};
+	virtual void Update(void)=0;
 
 };
 

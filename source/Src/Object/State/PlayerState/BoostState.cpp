@@ -22,7 +22,7 @@ BoostState::BoostState(Player& player):player_(player)
 	//射撃クールタイムをリセット
 	player_.ResetShotFlame();
 	//ステートをBOOSTにする
-	player_.pState_ = Player::STATE::BOOST;
+	player_.actorState_ = Player::STATE::BOOST;
 	//アニメーションをBOOSTにする
 	player_.PlayAnim(static_cast<int>(Player::STATE::BOOST), false, true,true);
 	//ブーストをする方向を決定する
@@ -37,7 +37,7 @@ BoostState::BoostState(Player& player):player_(player)
 	player_.GravityOne();
 }
 
-void BoostState::Update()
+void BoostState::Update(void)
 {
 	//ブースト時間が終わっているか判定
 	if (boostTime_> MAX_BOOST_TIME)

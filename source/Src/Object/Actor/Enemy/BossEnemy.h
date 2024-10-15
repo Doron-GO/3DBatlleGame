@@ -1,5 +1,5 @@
 #pragma once
-#include"../../Comon/Transform.h"
+#include"../../Common/Transform.h"
 #include"../ActorBase.h"
 
 class ResourceManager;
@@ -14,7 +14,7 @@ class BossEnemy:
 {
 public:
 
-	enum class STATE
+	enum class BOSS_STATE
 	{
 		NONE,
 		WAIT,
@@ -30,17 +30,14 @@ public:
 		DEATH_BALL
 	};
 
-	BossEnemy();
-	~BossEnemy();
+	BossEnemy(int playerType);
+	~BossEnemy(void);
 
 	//アップデート
-	void Update();
+	void Update(void);
 
 	//描画
 	void Draw(void);
-
-	//相手の座標
-	void SetPlayerPosition(const VECTOR* playerPos);
 
 	//座標を取得
 	const VECTOR& GetBossEnemyPos(void) const;
@@ -51,8 +48,6 @@ public:
 	//アニメーションの初期化
 	virtual void InitAnimation(void)override;
 
-	//相手の座標を設定
-	void SetEnemyPosition(const VECTOR* enemyPos);
 
 	//攻撃を行う
 	void ActiveSpMove(SP_MOVE spMove);
@@ -70,15 +65,15 @@ public:
 	void ChangeDeathState(void);
 
 	//エフェクトの再生
-	void PlayEffect(STATE state);
+	void PlayEffect(BOSS_STATE state);
+
+	virtual const STATE& GetState(void) override;
+
 
 private:
 
 	//攻撃オブジェクト配列
 	std::map<SP_MOVE, std::unique_ptr<DamageObject>> spMoves_;
-
-	//座標、回転、大きさ等の情報を持つ
-	Transform transform_;
 
 	//エフェクト再生
 	std::unique_ptr<EffectManager> effectManager_;
@@ -89,8 +84,6 @@ private:
 	//状態の管理
 	std::unique_ptr<DeathBall> deathBall_;
 
-	//プレイヤーの座標
-	const VECTOR* playerPos_;
 
 };
 

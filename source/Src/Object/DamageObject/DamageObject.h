@@ -1,7 +1,7 @@
 #pragma once
 #include"../../Manager/ResourceManager.h"
 #include"../../Manager/EffectManager.h"
-#include"../Comon/Transform.h"
+#include"../Common/Transform.h"
 #include<memory>
 
 class ResourceManager;

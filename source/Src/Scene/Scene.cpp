@@ -4,6 +4,6 @@ Scene::Scene(SceneManager& scene,Transitor& transit, Input& input):sceneManager_
 {
 }
 
-void Scene::Draw()
+void Scene::Draw(void)
 {
 }

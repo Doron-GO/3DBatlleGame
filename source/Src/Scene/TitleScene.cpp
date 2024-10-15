@@ -71,7 +71,7 @@ resMng_(ResourceManager::GetInstance()), camera_(std::make_unique<Camera>()),sta
 {
 	sceneTransitor_.Start();
 	//モード選択の初期カーソル位置を一人用に設定
-	selectNum_=0;
+	playMode_=0;
 	//ボタンを押してねの状態にする(押されたら選択画面へ)
 	startFlag_ = false;
 	
@@ -98,12 +98,12 @@ resMng_(ResourceManager::GetInstance()), camera_(std::make_unique<Camera>()),sta
 
 }
 
-TitleScene::~TitleScene()
+TitleScene::~TitleScene(void)
 {
 
 }
 
-void TitleScene::Update()
+void TitleScene::Update(void)
 {
 	input_.Update();
 	//選択画面でなくモード選択がされていなければ戻る
@@ -120,7 +120,7 @@ void TitleScene::Update()
 	sceneTransitor_.Update();
 }
 
-void TitleScene::Draw()
+void TitleScene::Draw(void)
 {
 	ClearDrawScreen();
 	//カメラの更新
@@ -154,7 +154,7 @@ void TitleScene::Draw()
 void TitleScene::ChangeGameScene(void)
 {
 	//ゲームシーンへ移行
-	sceneManager_.ChangeScene(std::make_shared<GameScene>(sceneManager_, selectNum_,sceneTransitor_,input_));
+	sceneManager_.ChangeScene(std::make_shared<GameScene>(sceneManager_, playMode_, sceneTransitor_, input_));
 }
 
 void TitleScene::DrawPleaseButton(void)
@@ -186,7 +186,7 @@ void TitleScene::DrawModeSelect(void)
 		MULTI_PLAY_CENTER_X, MULTI_PLAY_CENTER_Y, MULTI_PLAY_SCALE, 0.0, imgType_[IMG_TYPE::MULTI_PLAY], true, false);
 	
 	//カーソル選択画像
-	DrawRotaGraph2(TRIANGLE_POS_X, TRIANGLE_POS_Y + (TRIANGLE_OFFSET * selectNum_),
+	DrawRotaGraph2(TRIANGLE_POS_X, TRIANGLE_POS_Y + (TRIANGLE_OFFSET * playMode_),
 		TRIANGLE_CENTER_X, TRIANGLE_CENTER_Y, TRIANGLE_SCALE, 0.0, imgType_[IMG_TYPE::TRIANGLE], true, false);
 }
 
@@ -224,14 +224,14 @@ bool TitleScene::ButtonPush(void)
 bool TitleScene::SelectCursor(void)
 {
 	//上ボタンか十字キー上を押したら、カーソルを上に動かす
-	if (input_.IsTriggerd("up") && selectNum_ > static_cast<int>(GAME_MODE::SINGLE))
+	if (input_.IsTriggerd("up") && playMode_ > static_cast<int>(GAME_MODE::SINGLE))
 	{
-		selectNum_--;
+		playMode_--;
 	}
 	//下ボタンか十字キー下を押したら、カーソルを上に動かす
-	else if (input_.IsTriggerd("down") && selectNum_ < static_cast<int>(GAME_MODE::MULTI))
+	else if (input_.IsTriggerd("down") && playMode_ < static_cast<int>(GAME_MODE::MULTI))
 	{
-		selectNum_++;
+		playMode_++;
 	}
 	else
 	{

@@ -19,7 +19,7 @@ void WeaponBase::InActivate(void)
 	activeFlag_ = false;
 }
 
-void WeaponBase::SyncPosition()
+void WeaponBase::SyncPosition(void)
 {
 	//âEéËÇÃçsóÒ
 	MATRIX rightHandMat = MV1GetFrameLocalWorldMatrix(playerTransform_.modelId, ATTACH_RIGHT_HAND_FRAME);

@@ -7,13 +7,13 @@
 IdleState::IdleState(Player& player):player_(player)
 {
 	//ステートをIDLE状態にする
-	player_.pState_ = Player::STATE::IDLE;
+	player_.actorState_ = Player::STATE::IDLE;
 	//ジャンプ力をにする
 	player_.JumpStop();
 
 }
 
-void IdleState::Update()
+void IdleState::Update(void)
 {
 	//着地硬直が終了していて、格闘攻撃硬直を終了していたら
 	if (player_.LandingStunEnded()&&player_.CombatStunEnded())

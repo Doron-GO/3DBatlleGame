@@ -6,11 +6,11 @@
 
 BarrageState::BarrageState(BossEnemy& bossEnemy) :bossEnemy_(bossEnemy)
 {
-	bossEnemy_.PlayAnim(static_cast<int>(BossEnemy::STATE::SHOOTING), false, true);
+	bossEnemy_.PlayAnim(static_cast<int>(BossEnemy::BOSS_STATE::SHOOTING), false, true);
 	bossEnemy_.ActiveSpMove(BossEnemy::SP_MOVE::DEATH_BALL);
 }
 
-void BarrageState::Update()
+void BarrageState::Update(void)
 {
 	if (bossEnemy_.IsAnimEnded() && !(bossEnemy_.IsActiveSpMove(BossEnemy::SP_MOVE::DEATH_BALL)))
 	{

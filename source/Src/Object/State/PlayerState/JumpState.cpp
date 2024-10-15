@@ -6,7 +6,7 @@
 JumpState::JumpState(Player& player):player_(player)
 {
 	//ステートをJUMPにする
-	player_.pState_ = Player::STATE::JUMP;
+	player_.actorState_ = Player::STATE::JUMP;
 	//最高速度を設定
 	player_.SetMaxMoveSpeed(player_.MAX_JUMP_MOVE_SPEED);
 	//重力を0にする
@@ -15,7 +15,7 @@ JumpState::JumpState(Player& player):player_(player)
 	player_.ConsumeBoostGauge(Player::JUMP_FAST_RATE);
 }
 
-void JumpState::Update()
+void JumpState::Update(void)
 {
 	//スティックの倒れている方向を取得
 	player_.GetMoveDir();
@@ -38,7 +38,7 @@ void JumpState::Update()
 	if (player_.GetInput().IsTriggerd("combat"))
 	{
 		//ステートを近接攻撃ダッシュ状態にする
-		player_.pState_ = Player::STATE::COMBAT_RUN;
+		player_.actorState_ = Player::STATE::COMBAT_RUN;
 		//近接攻撃処理
 		player_.Combat();
 		return;

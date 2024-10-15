@@ -71,7 +71,7 @@ public:
 	/// <summary>
 	/// キー入力情報を更新する(毎フレーム)
 	/// </summary>
-	void Update();
+	void Update(void);
 
 	/// <summary>
 	/// 今押した瞬間かどうかを返す(押しっぱなしはfalse)
@@ -112,17 +112,17 @@ public:
 	/// <param name="inputinfo">機器からの入力情報(ハード)</param>
 	void RewriteInput(const std::string& key, const INPUT_INFO& inputinfo);
 
-	void ComitInputConfig();
+	void ComitInputConfig(void);
 
 	/// <summary>
 	/// 現在の入力が除外入力に当たるのかどうかをチェックする
 	/// </summary>
 	/// <returns>true:除外入力に当たる,false:当たらない</returns>
-	bool CheckExclusiveInput();
+	bool CheckExclusiveInput(void);
 
 
 	// 接続されたコントローラの種別を取得する
-	JOYPAD_TYPE GetJPadType();
+	JOYPAD_TYPE GetJPadType(void);
 
 	//LもしくはRスティックが任意の方向に倒されているかどうか判定
 	const bool isStickTilted(STICK_DIR dir, STICK_LR lr)const;

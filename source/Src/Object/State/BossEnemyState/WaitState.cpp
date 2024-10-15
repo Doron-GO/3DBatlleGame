@@ -7,10 +7,10 @@ WaitState::WaitState(BossEnemy& bossEnemy):bossEnemy_(bossEnemy)
 
 }
 
-void WaitState::Update()
+void WaitState::Update(void)
 {
 	//アニメーションWAITにする
-	bossEnemy_.PlayAnim(static_cast<int>(BossEnemy::STATE::WAIT), false, true);
+	bossEnemy_.PlayAnim(static_cast<int>(BossEnemy::BOSS_STATE::WAIT), false, true);
 
 	//アニメーション再生が終わっていたら
 	if (bossEnemy_.IsAnimEnded())

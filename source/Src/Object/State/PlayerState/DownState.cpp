@@ -5,7 +5,7 @@
 DownState::DownState(Player& player):player_(player)
 {
 	//ステートをDOWN状態に
-	player_.pState_ = Player::STATE::DOWN;
+	player_.actorState_ = Player::STATE::DOWN;
 	//アニメーションをDOWにする
 	player_.PlayAnim(static_cast<int>(Player::STATE::DOWN), true, false,false,-1.0f,0.01f);
 	//ジャンプ力を0にする
@@ -22,13 +22,13 @@ DownState::DownState(Player& player):player_(player)
 
 }
 
-void DownState::Update()
+void DownState::Update(void)
 {
 	//アニメーション再生が終わっていたら
 	if (player_.IsAnimEnded())
 	{
 		//状態をIDLEにする
-		player_.pState_ = Player::STATE::IDLE;
+		player_.actorState_ = Player::STATE::IDLE;
 		//アニメーションをIDLEにする
 		player_.PlayAnim(static_cast<int>(Player::STATE::IDLE), false, true);
 		//アイドル状態に移行

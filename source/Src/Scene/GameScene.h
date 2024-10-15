@@ -1,5 +1,6 @@
 #pragma once
 #include<DxLib.h>
+#include<functional>
 #include<vector>
 #include<map>
 #include "Scene.h"
@@ -11,6 +12,7 @@ class Player;
 class Stage;
 class Camera;
 class ActorManager;
+class ActorBase;
 class UserInterface;
 class ResourceManager;
 
@@ -31,10 +33,19 @@ public:
     GameScene(SceneManager& manager, int playMode, Transitor& transit, Input& input);
     ~GameScene();
 
-    virtual void Update() override;
-    virtual void Draw() override;
+    virtual void Update(void) override;
+    virtual void Draw(void) override;
 
 private:
+
+    // シーン状態
+    enum class STATE
+    {
+        NONE,
+        READY,
+        PLAYING,
+        MODE_SELECT,
+    };
 
     //読み込み画像の種類
     enum class IMG_TYPE
@@ -58,13 +69,19 @@ private:
 
     ResourceManager& resMng_;
 
-    void (GameScene::* draw_)();
+    STATE state_;
+
+    //状態管理(更新ステップ)
+    std::function<void(void)>funcDraw_;
 
     //ステージ
     std::unique_ptr<Stage> stage_;
 
     //プレイヤーマネージャー
-    std::unique_ptr<ActorManager>actorManager_;
+    std::unique_ptr<ActorManager> actorManager_;
+
+    //HPやブーストゲージの表示
+    std::vector<std::unique_ptr<UserInterface>> userInterfaces_;
 
     //プレイモード(シングル、対戦)
     int playMode_;
@@ -76,7 +93,7 @@ private:
     JOYPAD_TYPE joyPadType_;
 
     //プレイヤーごとの描画スクリーン
-    std::vector<int>cameraScreens_;
+    std::vector<int> cameraScreens_;
 
     //統合描画スクリーン
     int integrationScreen_;
@@ -92,22 +109,43 @@ private:
 
     float deltaTime_;
 
+    //3D設定
+    void Init3DSetting(void);
+
     //画像の読み込み
     void InitImage(void);
 
-    void DrawSIngleMode(void);
+    //描画スクリーンと描画ステップ
+    void InitRender(void);
 
+    //UIの初期化(actorManagerからプレイヤーとボスを取得してきて、ゲームシーンで作っている)
+    void InitUI(void);
+
+    //UIの初期化(actorMnagerで作り、ゲームシーンにmoveしている)
+    void InitUI2(void);
+
+    //UIの生成
+    void CreateUserInterface( ActorBase& player, ActorBase& target);
+
+    //シングルモードの描画
+    void DrawSingleMode(void);
+
+    //対戦モードの描画
     void DrawBattleMode(void);
 
+    //ゲームシーンに移行する
     void ChangeGameScene(void);
+
+    //タイトルシーンに移行する
     void ChangeTitleScene(void);
 
     //ゲーム開始時のカウントダウン終了判定
     bool IsGameStart(void);
+
     bool IsGameSet(void);
 
     bool SelectCursor(void);
     bool SelectDecide(void);
-    void TitleOrGame(void);
+    void SelectTitleOrGame(void);
 
 };

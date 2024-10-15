@@ -1,6 +1,9 @@
 #include "ActorManager.h"
+#include"../Object/Actor/ActorBase.h"
+#include"../Object/Actor/Enemy/BossEnemy.h"
+#include"../Object/Actor/Player/Player.h"
 #include"../Object/DamageObject/Saber.h"
-#include"../Object/Comon/Collider.h"
+#include"../Object/Common/Collider.h"
 #include"../UI/UserInterface.h"
 
 #pragma region Parameter
@@ -8,64 +11,83 @@
 //プレイヤー１のタイプ
 constexpr int PLAYER_TYPE = 0;
 
-static constexpr int PLAYER_NUM_MAX = 2;
+constexpr int SINGLE_PLAY = 0;
 
-static constexpr int PLAYER_NUM_MIN = 1;
-
-static constexpr int SINGLE_PLAY = 0;
-
-
-static constexpr float STAGE_OUT_Y = -1000.0f;
+constexpr float STAGE_OUT_Y = -1000.0f;
 
 #pragma endregion
 
 
 
-ActorManager::ActorManager(int numberofPlayers)
+ActorManager::ActorManager(int playMode)
 {
-	playMode_ = numberofPlayers;
+	playMode_ = playMode;
+	InitActor();
 	if (playMode_ == SINGLE_PLAY)
 	{
-		InitSIngleMode(numberofPlayers);
-		_update = &ActorManager::UpdateSingleMode;
+		//InitSingleMode();
+		//_update = &ActorManager::UpdateSingleMode;
+		update_ = std::bind(&ActorManager::UpdateSingleMode, this);
 	}
 	else
 	{	
-		InitBattleMode(numberofPlayers);
-		_update = &ActorManager::UpdateBattleMode;
+		//InitActor();
+		//_update = &ActorManager::UpdateBattleMode;
+		update_ = std::bind(&ActorManager::UpdateBattleMode, this);
 	}
+	//どちらかのプレイヤーが死んだかどうかを判定
 	isDeadAnyPlayer_ = false;
 }
 
-void ActorManager::InitBattleMode(int numberofPlayers)
+void ActorManager::InitActor(void)
 {
 	// プレイヤーの生成と初期化
-	for (int num = 0; num < PLAYER_NUM_MAX; num++)
+	for (int playerType = 0; playerType <= playMode_; playerType++)
 	{
-		players_.emplace_back(std::make_unique<Player>(num,numberofPlayers));
-	}
-	for (auto& player : players_)
-	{
+		std::unique_ptr player = std::make_unique<Player>(playerType, playMode_);
+		//プレイヤーの初期化
 		player->Init();
+		//配列に格納
+		players_.emplace_back(std::move(player));
 	}
-	//UIの生成
-	CreateBattleUI();
-}
 
-void ActorManager::InitSIngleMode(int numberofPlayers)
-{
-	//プレイヤーを生成して、配列に格納
-	players_.emplace_back(std::make_unique<Player>(SINGLE_PLAY, numberofPlayers));
-	//ボスの生成
-	bossEnemy_ = std::make_unique<BossEnemy>();
-	//プレイヤーの初期化
-	players_[SINGLE_PLAY]->Init();
-	//プレイヤーのパラメータをボス側に渡す
-	bossEnemy_->SetEnemyPosition(&(players_[SINGLE_PLAY]->GetPlayerPos()));
-	bossEnemy_->MakeSpMoveObjects();
-	//UIの生成
-	CreateSingleUI();
+	//プレイヤー1
+	int player1 = static_cast<int>(ActorBase::ACTOR_TYPE::PLAYER_1);
 
+	//シングルモードならプレイヤー１のUIとボスの情報を設定
+	if (playMode_== SINGLE_PLAY)
+	{
+		//ボスの生成
+		int boss = static_cast<int>(ActorBase::ACTOR_TYPE::BOSS);
+		bossEnemy_ = std::make_unique<BossEnemy>(boss);
+
+		//ボスの攻撃オブジェクト生成
+		bossEnemy_->MakeSpMoveObjects();
+
+		//プレイヤーのパラメータをボス側に渡す
+		SetEnemyInfo(*bossEnemy_, *players_[player1]) ;
+
+		//ボス側のパラメータをプレイヤーに渡す
+		SetEnemyInfo(*players_[player1], *bossEnemy_);
+
+		//プレイヤー1のUIを生成
+		CreateUserInterface(*players_[player1], *bossEnemy_);
+
+	}
+	else
+	{
+		//プレイヤー2
+		int player2 = static_cast<int>(ActorBase::ACTOR_TYPE::PLAYER_2);
+
+		//敵プレイヤーのパラメータを持ってくる
+		SetEnemyInfo(*players_[player1], *players_[player2]);
+		SetEnemyInfo(*players_[player2], *players_[player1]);
+
+		//プレイヤー１とプレイヤー２のUIを生成
+		CreateUserInterface(*players_[player1], *players_[player2]);
+		CreateUserInterface(*players_[player2], *players_[player1]);
+
+	}
 }
 
 void ActorManager::Update()
@@ -74,7 +96,8 @@ void ActorManager::Update()
 	{
 		player->Update();
 	}
-	(this->*_update)();
+	//(this->*_update)();
+	update_();
 }
 
 void ActorManager::UpdateBattleMode(void)
@@ -128,6 +151,26 @@ void ActorManager::DrawAnimeDebug(int playerType)
 	}
 }
 
+const std::vector<std::unique_ptr<Player>>& ActorManager::GetPlayers(void)
+{
+	return players_;
+}
+
+const std::unique_ptr<BossEnemy>& ActorManager::GetBossEnemy(void)
+{
+	return bossEnemy_;
+}
+
+std::vector<std::unique_ptr<UserInterface>> ActorManager::MoveUI(void)
+{
+	return std::move(userInterfaces_);
+}
+
+bool& ActorManager::IsDeadAnyPlayer(void)
+{
+	return isDeadAnyPlayer_;
+}
+
 void ActorManager::DrawCamera(int playerType)
 {
 	players_[playerType]->CameraDraw();
@@ -144,7 +187,7 @@ void ActorManager::DrawCommonUI(const float& startCount, const bool& isGameSet, 
 }
 
 
-void ActorManager::AddClliders(Collider* collider)
+void ActorManager::AddColliders(Collider* collider)
 {
 	for (auto& player : players_)
 	{
@@ -250,7 +293,7 @@ void ActorManager::DmageBossSpMoveCollision(void)
 		{
 			continue;
 		}
-		//わざとップレイヤーが当たっていたらプレイヤーをダウン状態にしてHPを減らす
+		//技とプレイヤーが当たっていたらプレイヤーをダウン状態にしてHPを減らす
 		if (players_[SINGLE_PLAY]->GetCapsule().Collision(spmove.second->GetModelId()))
 		{
 			//無敵時間を設定
@@ -298,7 +341,7 @@ void ActorManager::IsWin(void)
 	for (auto& player : players_)
 	{
 		//体力がゼロになるもしくはステージから落ちたら負けとする
-		if (0.0f>= player->GetPlayerHP() || StageOut(player->GetPlayerPos()))
+		if (0.0f>= player->GetHP() || StageOut(player->GetPlayerPos()))
 		{
 			//敗北側プレイヤータイプを格納
 			loserPlayerType_ = player->GetPlayerType();
@@ -319,12 +362,12 @@ void ActorManager::IsSingleModeWin(void)
 		return;
 	}
 	//体力がゼロになるもしくはステージから落ちたら負けとする
-	if (0.0f >= players_[SINGLE_PLAY]->GetPlayerHP() || StageOut(players_[SINGLE_PLAY]->GetPlayerPos()))
+	if (0.0f >= players_[SINGLE_PLAY]->GetHP() || StageOut(players_[SINGLE_PLAY]->GetPlayerPos()))
 	{	//敗北状態に移行
 		players_[SINGLE_PLAY]->Lose();
 		isDeadAnyPlayer_ = true;
 	}
-	else if(0.0f >= bossEnemy_->GetPlayerHP())
+	else if(0.0f >= bossEnemy_->GetHP())
 	{
 		isDeadAnyPlayer_ = true;
 		//勝利状態に移行
@@ -353,70 +396,50 @@ void ActorManager::ChangeStateGameSet(void)
 	players_[winnerPlayerType_]->Win();
 }
 
-bool ActorManager::IsEqual(int playerNum, int damageNum)
-{	//攻撃する側タイプと攻撃される側タイプが同じかどうか
-	if (playerNum == damageNum)
+bool ActorManager::IsEqual(int Type1, int Type2)
+{	
+	//タイプ１とタイプ２が同タイプかどうかを判定
+	if (Type1 == Type2)
 	{
 		return true;
 	}
 	return false;
 }
 
-void ActorManager::CreateBattleUI(void)
+void ActorManager::SetEnemyInfo(ActorBase& player, ActorBase& target)
 {
-	for (int idx = 0; idx < PLAYER_NUM_MAX; idx++)
+	//敵プレイヤーの座標、HP、ステートを設定
+	if (player.GetActorType() != ActorBase::ACTOR_TYPE::BOSS)
 	{
-		// 自分
-		auto& me = players_[idx];
-
-		//敵プレイヤー側の要素番号を切り替える
-		int targetIdx = (idx + 1) % PLAYER_NUM_MAX;
-
-		//敵プレイヤーを取得
-		auto& target = players_[targetIdx];
-
-		//敵プレイヤーの座標、HP、ステートを設定
-		players_[idx]->SetEnemyPosition(&(target->GetTransform().pos));
-		players_[idx]->SetEnemyHp(&(target->GetPlayerHP()));
-		players_[idx]->SetEnemyState(&(target->pState_));
-
-		userInterfaces_.emplace_back(
-			std::make_unique<UserInterface>(
-				ResourceManager::GetInstance(),
-				target->GetTransform().pos,
-				me->GetEnemyDistance(),
-				me->GetBoostGauge(),
-				me->GetPlayerHP(),
-				target->GetPlayerHP(),
-				me->IsWin(),
-				me->GetNumnberOfBullets(),
-				playMode_,
-				idx)
-				);
+		//敵のHP情報をセット
+		player.SetEnemyHp(&target.GetHP());
+		//敵のステート情報をセット
+		player.SetEnemyState(&target.GetState());
 	}
+	//敵の座標情報をセット
+	player.SetEnemyPosition(&target.GetTransform().pos);
 }
 
-void ActorManager::CreateSingleUI(void)
+void ActorManager::CreateUserInterface(ActorBase& player, ActorBase& target)
 {
-	// 自分
-	auto& me = players_[SINGLE_PLAY];
 
-	//敵プレイヤーの座標、HP、ステートを設定
-	me->SetEnemyPosition(& bossEnemy_->GetBossEnemyPos());
-	me->SetEnemyHp(&bossEnemy_->GetPlayerHP());
-	me->SetEnemyState(nullptr);
+	//プレイヤータイプ
+	int playerType = static_cast<int>(player.GetActorType());
 
+	//UIを生成
 	userInterfaces_.emplace_back(
 		std::make_unique<UserInterface>(
-			ResourceManager::GetInstance(),
-			bossEnemy_->GetBossEnemyPos(),
-			me->GetEnemyDistance(),
-			me->GetBoostGauge(),
-			me->GetPlayerHP(),
-			bossEnemy_->GetPlayerHP(),
-			me->IsWin(),
-			me->GetNumnberOfBullets(),
 			playMode_,
-			SINGLE_PLAY)
-	);
+			playerType,
+			player.GetEnemyDistance(),
+			player.GetNumnberOfBullets(),
+			player.GetBoostFuel(),
+			player.GetHP(),
+			player.IsWin(),
+			target.GetTransform().pos,
+			target.GetHP()
+			)
+		);
 }
+
+

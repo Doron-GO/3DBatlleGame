@@ -9,23 +9,22 @@ class UserInterface
 public:
 
 	UserInterface(
-		ResourceManager& resMng, 
-		const VECTOR& enemyPos,
+		int playMode,
+		int playerType,
 		const float& distance,
+		const int& bulletNum,
 		const float& boostGauge, 
 		const float& hpGauge, 
-		const float& enemyHp,
-		const bool& IsWin,
-		const int& numnberofBullets,
-		int playMode,
-		int playerType);
+		const bool& isWin,
+		const VECTOR& enemyPos,
+		const float& enemyHp);
 
-	~UserInterface();
+	~UserInterface(void);
 
 	void Draw(bool& gameSet);
 
 	//共通UI(ゲームスタート等)
-	void DrawCommonUI(const float& startCount, const bool& isGameSet, const float& rematchMode);
+	void DrawCommonUI(const float& startCount, const bool& isGameSet, const int& rematchMode);
 
 private:
 
@@ -54,7 +53,7 @@ private:
 	ResourceManager& resMng_;
 
 	//UI画像ハンドル
-	std::map<IMG_TYPE,int> uiImgH_;
+	std::map<IMG_TYPE, int> uiImgH_;
 
 	//ブーストゲージの数値
 	const float& boostGauge_;
@@ -121,7 +120,7 @@ private:
 	void InitImage(void);
 
 	//ゲームスタート表示などの共通UIの初期化
-	void InitCommonUi(void);
+	void InitCommonUI(void);
 
 	//ブーストゲージの表示
 	void DrawBoostGauge(void);

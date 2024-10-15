@@ -14,7 +14,7 @@ private:
 
     Player& player_;
     //XV
-    virtual void Update()override;
+    virtual void Update(void)override;
 
 };
 

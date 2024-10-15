@@ -12,7 +12,7 @@ LoseState::LoseState(Player& player):player_(player)
 	player_.MoveStop();
 }
 
-void LoseState::Update()
+void LoseState::Update(void)
 {
 	//アニメーションをDOWNに設定
 	player_.PlayAnim(static_cast<int>(Player::STATE::DOWN), false, false);

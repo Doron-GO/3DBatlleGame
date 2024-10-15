@@ -19,17 +19,17 @@ Stage::Stage():resMng_(ResourceManager::GetInstance())
 	transform_.MakeCollider(Collider::TYPE::STAGE);
 }
 
-Stage::~Stage()
+Stage::~Stage(void)
 {
 }
 
-void Stage::Draw()
+void Stage::Draw(void)
 {
 	//•`‰æ
 	MV1DrawModel(transform_.modelId);
 }
 
-Collider* Stage::GetCollider()
+Collider* Stage::GetCollider(void)
 {
 	return transform_.collider;
 }

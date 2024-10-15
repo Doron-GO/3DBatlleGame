@@ -9,7 +9,7 @@ static constexpr float COMBAT_STAN_TIME = 20.0f;
 CombatState::CombatState(Player& player):player_(player)
 {
 	//ステートをCOMBATにする
-	player_.pState_ = Player::STATE::COMBAT;
+	player_.actorState_ = Player::STATE::COMBAT;
 	//アニメーションをCOMBATにする
 	player_.PlayAnim(static_cast<int>(Player::STATE::COMBAT), true, true, false,-1.0f,54.0f);
 	//移動量を0にする
@@ -23,7 +23,7 @@ CombatState::CombatState(Player& player):player_(player)
 
 }
 
-void CombatState::Update()
+void CombatState::Update(void)
 {
 	//アニメーション再生が終わっていたら
 	if (player_.IsAnimEnded())

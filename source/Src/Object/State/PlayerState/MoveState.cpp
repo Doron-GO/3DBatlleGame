@@ -8,14 +8,14 @@
 MoveState::MoveState(Player& player):player_(player)
 {
 	//ステートをRUNに
-	player_.pState_ = Player::STATE::RUN;
+	player_.actorState_ = Player::STATE::RUN;
 	//アニメーションをRUNにする
 	player_.PlayAnim(static_cast<int>(Player::STATE::RUN), false, true);
 	//マックススピードを設定
 	player_.SetMaxMoveSpeed(player_.MOVE_SPEED);
 }
 
-void MoveState::Update()
+void MoveState::Update(void)
 {
 	//スティックの倒れている方向を取得
 	player_.GetMoveDir();

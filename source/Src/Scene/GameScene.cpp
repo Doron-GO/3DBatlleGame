@@ -4,6 +4,9 @@
 #include"../Manager/ActorManager.h"
 #include"../Object/Camera/Camera.h"
 #include "../Scene/SceneManager.h"
+#include"../Object/Actor/Enemy/BossEnemy.h"
+#include"../Object/Actor/Player/Player.h"
+#include"../UI/UserInterface.h"
 #include"../Object/Stage/Stage.h"
 #include"Transition/Transitor.h"
 #include"../UI/UserInterface.h"
@@ -16,65 +19,68 @@
 #pragma region Parameter
 
 //シングルプレイモード
-static constexpr int SINGLE_PLAY_MODE = 0;
+constexpr int SINGLE_PLAY_MODE = 0;
 
 //タイトルに戻る画像
-static constexpr int BACK_TO_TITLE_POS_X = 800;
-static constexpr int BACK_TO_TITLE_POS_Y = 500;
-static constexpr int BACK_TO_TITLE_CENTER_X = 250;
-static constexpr int BACK_TO_TITLE_CENTER_Y = 50;
-static constexpr double BACK_TO_TITLE_SCALE = 1.5;
+constexpr int BACK_TO_TITLE_POS_X = 800;
+constexpr int BACK_TO_TITLE_POS_Y = 500;
+constexpr int BACK_TO_TITLE_CENTER_X = 250;
+constexpr int BACK_TO_TITLE_CENTER_Y = 50;
+constexpr double BACK_TO_TITLE_SCALE = 1.5;
 
 //もう一戦画像
-static constexpr int ONE_MOR_FIGHT_POS_X = 800;
-static constexpr int ONE_MOR_FIGHT_POS_Y = 700;
-static constexpr int ONE_MOR_FIGHT_CENTER_X = 273;
-static constexpr int ONE_MOR_FIGHT_CENTER_Y = 54;
-static constexpr double ONE_MOR_FIGHT_SCALE = 1.5;
+constexpr int ONE_MOR_FIGHT_POS_X = 800;
+constexpr int ONE_MOR_FIGHT_POS_Y = 700;
+constexpr int ONE_MOR_FIGHT_CENTER_X = 273;
+constexpr int ONE_MOR_FIGHT_CENTER_Y = 54;
+constexpr double ONE_MOR_FIGHT_SCALE = 1.5;
 
 //×ボタンを押してくれ画像
-static constexpr int  PLEASE_CROSS_BUTTON_POS_X = 800;
-static constexpr int  PLEASE_CROSS_BUTTON_POS_Y = 900;
-static constexpr int  PLEASE_CROSS_BUTTON_CENTER_X = 480;
-static constexpr int  PLEASE_CROSS_BUTTON_CENTER_Y = 52;
-static constexpr double  PLEASE_CROSS_BUTTON_SCALE = 1.2;
+constexpr int PLEASE_CROSS_BUTTON_POS_X = 800;
+constexpr int PLEASE_CROSS_BUTTON_POS_Y = 900;
+constexpr int PLEASE_CROSS_BUTTON_CENTER_X = 480;
+constexpr int PLEASE_CROSS_BUTTON_CENTER_Y = 52;
+constexpr double PLEASE_CROSS_BUTTON_SCALE = 1.2;
 
 //Aボタンを押してくれ画像
-static constexpr int  PLEASE_A_BUTTON_POS_X = 800;
-static constexpr int  PLEASE_A_BUTTON_POS_Y = 800;
-static constexpr int  PLEASE_A_BUTTON_CENTER_X = 395;
-static constexpr int  PLEASE_A_BUTTON_CENTER_Y = 34;
-static constexpr double  PLEASE_A_BUTTON_SCALE = 1.2;
+constexpr int PLEASE_A_BUTTON_POS_X = 800;
+constexpr int PLEASE_A_BUTTON_POS_Y = 800;
+constexpr int PLEASE_A_BUTTON_CENTER_X = 395;
+constexpr int PLEASE_A_BUTTON_CENTER_Y = 34;
+constexpr double PLEASE_A_BUTTON_SCALE = 1.2;
 
 //セレクト画像の数値
-static constexpr int  TRIANGLE_POS_X = 1200;
-static constexpr int  TRIANGLE_POS_Y = 500;
-static constexpr int  TRIANGLE_CENTER_X = 280;
-static constexpr int  TRIANGLE_CENTER_Y = 63;
-static constexpr int  TRIANGLE_OFFSET = 200;
-static constexpr double  TRIANGLE_SCALE = 1.2;
+constexpr int TRIANGLE_POS_X = 1200;
+constexpr int TRIANGLE_POS_Y = 500;
+constexpr int TRIANGLE_CENTER_X = 280;
+constexpr int TRIANGLE_CENTER_Y = 63;
+constexpr int TRIANGLE_OFFSET = 200;
+constexpr double TRIANGLE_SCALE = 1.2;
 
 //ゲーム開始時に出るREADYの画像の数値
-static constexpr int READY_POS_X = 800;
-static constexpr int  READY_POS_Y = 400;
-static constexpr int  READY_CENTER_X = 117;
-static constexpr int  READY_CENTER_Y = 44;
-static constexpr int  READY_OFFSET = 200;
-static constexpr double  READY_SCALE = 3.0;
+constexpr int READY_POS_X = 800;
+constexpr int READY_POS_Y = 400;
+constexpr int READY_CENTER_X = 117;
+constexpr int READY_CENTER_Y = 44;
+constexpr int READY_OFFSET = 200;
+constexpr double READY_SCALE = 3.0;
 
 //ゲーム開始時に出るFIGHTの画像の数値
-static constexpr int FIGHT_POS_X = 800;
-static constexpr int  FIGHT_POS_Y = 400;
-static constexpr int  FIGHT_CENTER_X = 120;
-static constexpr int  FIGHT_CENTER_Y = 49;
-static constexpr int  FIGHT_OFFSET = 200;
-static constexpr double  FIGHT_SCALE = 4.5;
+constexpr int FIGHT_POS_X = 800;
+constexpr int FIGHT_POS_Y = 400;
+constexpr int FIGHT_CENTER_X = 120;
+constexpr int FIGHT_CENTER_Y = 49;
+constexpr int FIGHT_OFFSET = 200;
+constexpr double FIGHT_SCALE = 4.5;
 
 //ゲームスタート開始秒数
-static constexpr float START_TIME_MAX = 3.0f;
+constexpr float START_TIME_MAX = 3.0f;
 
 //画面分割用の線の太さ
-static constexpr int  LINE_THICKNES = 1000;
+constexpr int LINE_THICKNES = 1000;
+
+constexpr int SINGLE_PLAY = 0;
+
 
 #pragma endregion
 
@@ -82,6 +88,8 @@ static constexpr int  LINE_THICKNES = 1000;
 GameScene::GameScene(SceneManager& manager, int playMode, Transitor& transit, Input& input):Scene(manager, transit,input), 
 resMng_(ResourceManager::GetInstance())
 {
+
+	// トランジッションの開始
 	sceneTransitor_.Start();
 	
 	//タイトルシーンで決まったゲームモードを格納
@@ -96,62 +104,34 @@ resMng_(ResourceManager::GetInstance())
 	//プレイヤー１のパッドの種類を取得
 	joyPadType_ = input_.GetJPadType();
 
-	//プレイヤー１と２の画面を作る
-	int SCX = static_cast<int>(SCREEN_SIZE.x);
-	int SCY = static_cast<int>(SCREEN_SIZE.y);
-	cameraScreens_.emplace_back(MakeScreen(SCX /2, SCY, true));
-	cameraScreens_.emplace_back(MakeScreen(SCX /2, SCY, true));
-
-	//プレイヤー１と２の両方の画面を描画するスクリーンを作る
-	integrationScreen_= MakeScreen(SCX, SCY, true);
-
 	//プレイヤー１と２の画面の座標
 	screenPos_.emplace(PLAYER_NUM::P_1, VECTOR(0, 0));
 	screenPos_.emplace(PLAYER_NUM::P_2, VECTOR(SCREEN_SIZE.x / 2, 0));
 
-	//プレイヤーとボスを管理するマネージャ―の生成
-	actorManager_ = std::make_unique<ActorManager>(playMode);
-
 	//ステージの生成
 	stage_ = std::make_unique<Stage>();
 
-	//ステージのコリジョンを追加
-	actorManager_->AddClliders(stage_->GetCollider());
+	//プレイヤーとボスを管理するマネージャ―の生成
+	actorManager_ = std::make_unique<ActorManager>(playMode);
 
-	if (playMode == SINGLE_PLAY_MODE)
-	{
-		draw_ = &GameScene::DrawSIngleMode;
-	}
-	else
-	{
-		draw_ = &GameScene::DrawBattleMode;
-	}
+	//ステージのコリジョンを追加
+	actorManager_->AddColliders(stage_->GetCollider());
+
+	//カメラ更新が必要なため、一回アップデートをしておく
+	actorManager_->Update();
+
+	//UIの初期化
+	InitUI2();
+
+	// 3D設定
+	Init3DSetting();
 
 	//画像の読み込み
 	InitImage();
+
+	//描画スクリーンと描画ステップ
+	InitRender();
 	
-	//一回アップデートをしておく
-	actorManager_->Update();
-
-	// Zバッファを有効にする
-	SetUseZBuffer3D(true);
-
-	// Zバッファへの書き込みを有効にする
-	SetWriteZBuffer3D(true);
-
-	// バックカリングを有効にする
-	SetUseBackCulling(true);
-	// ライトの設定
-	ChangeLightTypeDir({ 0.3f, -0.7f, 0.8f });
-
-	// 背景色設定
-	SetBackgroundColor(0, 139, 139);
-
-	// フォグ設定
-	SetFogEnable(true);
-	SetFogColor(5, 5, 5);
-	SetFogStartEnd(10000.0f, 20000.0f);
-
 }
 
 GameScene::~GameScene(void)
@@ -175,8 +155,30 @@ void GameScene::Update(void)
 
 void GameScene::Draw(void)
 {	
-	(this->*draw_)();
+	funcDraw_();
 	sceneTransitor_.Draw();
+}
+
+void GameScene::Init3DSetting(void)
+{
+	// Zバッファを有効にする
+	SetUseZBuffer3D(true);
+
+	// Zバッファへの書き込みを有効にする
+	SetWriteZBuffer3D(true);
+
+	// バックカリングを有効にする
+	SetUseBackCulling(true);
+	// ライトの設定
+	ChangeLightTypeDir({ 0.3f, -0.7f, 0.8f });
+
+	// 背景色設定
+	SetBackgroundColor(0, 139, 139);
+
+	// フォグ設定
+	SetFogEnable(true);
+	SetFogColor(5, 5, 5);
+	SetFogStartEnd(10000.0f, 20000.0f);
 }
 
 void GameScene::InitImage(void)
@@ -191,21 +193,101 @@ void GameScene::InitImage(void)
 	imgType_.emplace(IMG_TYPE::FIGHT, resMng_.Load(ResourceManager::SRC::FIGHT_IMAGE).handleId_);
 }
 
-void GameScene::DrawSIngleMode(void)
+void GameScene::InitRender(void)
 {
+	//プレイヤー１と２の両方の画面を描画するスクリーンを作る
+	int SCX = static_cast<int>(SCREEN_SIZE.x);
+	int SCY = static_cast<int>(SCREEN_SIZE.y);
+	integrationScreen_ = MakeScreen(SCX, SCY, true);
+
+	if (playMode_ == SINGLE_PLAY_MODE)
+	{
+		//draw_ = &GameScene::DrawSingleMode;
+		funcDraw_ = std::bind(&GameScene::DrawSingleMode, this);
+	}
+	else
+	{
+		//プレイヤー１と２の画面を作る
+		cameraScreens_.emplace_back(MakeScreen(SCX / 2, SCY, true));
+		cameraScreens_.emplace_back(MakeScreen(SCX / 2, SCY, true));
+		//draw_ = &GameScene::DrawBattleMode;
+		funcDraw_ = std::bind(&GameScene::DrawBattleMode, this);
+	}
+}
+
+void GameScene::InitUI(void)
+{
+	//actorManagerから情報取ってこれるのって、良いのかわからない
+
+	//プレイヤー1
+	int player1 = static_cast<int>(ActorBase::ACTOR_TYPE::PLAYER_1);
+
+	 auto& players=  actorManager_->GetPlayers();
+	 
+	if (playMode_ == SINGLE_PLAY)
+	{
+		auto& bossEnemy = actorManager_->GetBossEnemy();
+		//プレイヤー1のUIを生成
+		CreateUserInterface(*players[player1], *bossEnemy);
+	}
+	else
+	{
+		//プレイヤー2
+		int player2 = static_cast<int>(ActorBase::ACTOR_TYPE::PLAYER_2);
+
+		//プレイヤー１とプレイヤー２のUIを生成
+		CreateUserInterface(*players[player1], *players[player2]);
+		CreateUserInterface(*players[player2], *players[player1]);
+	}
+}
+
+void GameScene::InitUI2(void)
+{
+	userInterfaces_ = actorManager_->MoveUI();
+}
+
+void GameScene::CreateUserInterface( ActorBase& player, ActorBase& target)
+{
+	//プレイヤータイプ
+	 int playerType = static_cast<int>(player.GetActorType());
+
+	//UIを生成
+	userInterfaces_.emplace_back(
+		std::make_unique<UserInterface>(
+			playMode_,
+			playerType,
+			player.GetEnemyDistance(),
+			player.GetNumnberOfBullets(),
+			player.GetBoostFuel(),
+			player.GetHP(),
+			player.IsWin(),
+			target.GetTransform().pos,
+			target.GetHP()
+			)
+	);
+}
+
+void GameScene::DrawSingleMode(void)
+{
+	bool& isDeadAnyPlayer = actorManager_->IsDeadAnyPlayer();
+
 	ClearDrawScreen();
 	actorManager_->DrawCamera(SINGLE_PLAY_MODE);
 	actorManager_->Draw();
 	stage_->Draw();
-	actorManager_->DrawUI(SINGLE_PLAY_MODE);
+	//actorManager_->DrawUI(SINGLE_PLAY_MODE);
+	userInterfaces_[SINGLE_PLAY]->Draw(isDeadAnyPlayer);
 	UpdateEffekseer3D();
 	DrawEffekseer3D();
 	//共通UI描画(ゲームスタートなど)
-	actorManager_->DrawCommonUI(startCount_, IsGameSet(), rematchMode_);
+	//actorManager_->DrawCommonUI(startCount_, IsGameSet(), rematchMode_);
+	userInterfaces_[SINGLE_PLAY]->DrawCommonUI(startCount_, isDeadAnyPlayer, rematchMode_);
+
 }
 void GameScene::DrawBattleMode(void)
 {
 	int maxIdx = static_cast<int>(PLAYER_NUM::MAX);
+	bool& isDeadAnyPlayer = actorManager_->IsDeadAnyPlayer();
 	for (int idx = 0; idx < maxIdx; idx++)
 	{
 		SetDrawScreen(cameraScreens_[idx]);
@@ -214,7 +296,8 @@ void GameScene::DrawBattleMode(void)
 		actorManager_->DrawCamera(idx);
 		actorManager_->Draw();
 		stage_->Draw();
-		actorManager_->DrawUI(idx);
+		//actorManager_->DrawUI(idx);
+		userInterfaces_[idx]->Draw(isDeadAnyPlayer);
 		UpdateEffekseer3D();
 		DrawEffekseer3D();
 	}
@@ -241,7 +324,11 @@ void GameScene::DrawBattleMode(void)
 	DrawGraph(0, 0, integrationScreen_, true);
 
 	//共通UI描画(ゲームスタートなど)
-	actorManager_->DrawCommonUI(startCount_,IsGameSet(),rematchMode_);
+//	actorManager_->DrawCommonUI(startCount_,IsGameSet(),rematchMode_);
+	int player1 = static_cast<int>(ActorBase::ACTOR_TYPE::PLAYER_1);
+
+	userInterfaces_[player1]->DrawCommonUI(startCount_, isDeadAnyPlayer, rematchMode_);
+
 
 }
 void GameScene::ChangeGameScene(void)
@@ -290,19 +377,17 @@ bool GameScene::SelectCursor(void)
 	{
 		rematchMode_++;
 	}
-	else
-	{
-	}
 	return SelectDecide();
 }
 
 bool GameScene::SelectDecide(void)
-{	//PSコンの使用時に×ボタンが押された時
+{	
+	//PSコンの使用時に×ボタンが押された時
 	if (JOYPAD_TYPE::DUAL_SHOCK_4 == joyPadType_ ||
 		JOYPAD_TYPE::DUAL_SENSE == joyPadType_ &&
 		input_.IsTriggerd("b"))
 	{
-		TitleOrGame();
+		SelectTitleOrGame();
 		return true;
 	}
 	//XBOXならAボタン
@@ -310,7 +395,7 @@ bool GameScene::SelectDecide(void)
 		JOYPAD_TYPE::XBOX_ONE == joyPadType_ &&
 		input_.IsTriggerd("jump"))
 	{
-		TitleOrGame();
+		SelectTitleOrGame();
 		return true;
 	}
 	//その他ならプレステコンでいう×ボタンの場所のボタン
@@ -320,12 +405,14 @@ bool GameScene::SelectDecide(void)
 	return false;
 }
 
-void GameScene::TitleOrGame(void)
+void GameScene::SelectTitleOrGame(void)
 {
+	//カーソルがタイトルならタイトルシーンに移行
 	if (rematchMode_ == static_cast<int>(REMATCH_MODE::BACK_TO_TITLE))
 	{
 		ChangeTitleScene();
 	}
+	//カーソルがタイトルならもう一戦
 	else if (rematchMode_ == static_cast<int>(REMATCH_MODE::ONE_MORE_FIGHT))
 	{
 		ChangeGameScene();
@@ -335,7 +422,3 @@ void GameScene::TitleOrGame(void)
 		ChangeTitleScene();
 	}
 }
-
-
-
-

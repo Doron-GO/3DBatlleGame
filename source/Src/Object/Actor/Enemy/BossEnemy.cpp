@@ -38,8 +38,11 @@ static constexpr VECTOR EFFECT_EXPLOSION_SCALE = { 200.0f,200.0f,200.0f };
 
 #pragma endregion
 
-BossEnemy::BossEnemy()
+BossEnemy::BossEnemy(int playerType)
 {
+
+	actorType_ = static_cast<ACTOR_TYPE>(playerType);
+
 	//モデルの読み込み
 	transform_.SetModel(resMng_.LoadModelDuplicate(ResourceManager::SRC::PLAYER));
 	//大きさ
@@ -53,7 +56,7 @@ BossEnemy::BossEnemy()
 	transform_.Update();
 
 	//アニメーションコントローラーの生成
-	roboAnimeController_ = std::make_unique <RobotAnimeController>(transform_.modelId);
+	robotAnimeController_ = std::make_unique <RobotAnimeController>(transform_.modelId);
 
 	//カプセルあたらい判定クラスの生成
 	capsule_ = std::make_unique<CollisionCapsule>(transform_, CAPSUL_TOP, CAPSUL_DOWN, CAPSUL_RADIUS);
@@ -66,11 +69,11 @@ BossEnemy::BossEnemy()
 	ChangeState(std::make_unique<WaitState>(*this));
 
 	//HPを設定
-	playerHp_ = ENEMY_HP;
+	hp_ = ENEMY_HP;
 
 }
 
-BossEnemy::~BossEnemy()
+BossEnemy::~BossEnemy(void)
 {
 	
 }
@@ -79,18 +82,13 @@ BossEnemy::~BossEnemy()
 void BossEnemy::InitAnimation(void)
 {
 	//アニメーションの追加
-	roboAnimeController_->Add(static_cast<int>(STATE::SHOOTING), PATH_ANIMATION_BOSS_ENEMY + "Boss_Shooting.mv1", 10.0f, 750.0f);
-	roboAnimeController_->Add(static_cast<int>(STATE::WAIT), PATH_ANIMATION_BOSS_ENEMY + "Boss_Idle.mv1", 60.0f, 427.0f);
-	roboAnimeController_->Add(static_cast<int>(STATE::DEAD), PATH_ANIMATION_BOSS_ENEMY + "Dying.mv1", 30.0f, 174.0f);
-	roboAnimeController_->Add(static_cast<int>(STATE::DOWN), PATH_ANIMATION_BOSS_ENEMY + "Crouch.mv1", 100.0f, 427.0f);
-	roboAnimeController_->Update();
-	effectManager_->Add(static_cast<int>(STATE::DEAD), EFFECT_EXPLOSION_SCALE, false,resMng_.Load(ResourceManager::SRC::EXPLOSION).handleId_);
+	robotAnimeController_->Add(static_cast<int>(BOSS_STATE::SHOOTING), PATH_ANIMATION_BOSS_ENEMY + "Boss_Shooting.mv1", 10.0f, 750.0f);
+	robotAnimeController_->Add(static_cast<int>(BOSS_STATE::WAIT), PATH_ANIMATION_BOSS_ENEMY + "Boss_Idle.mv1", 60.0f, 427.0f);
+	robotAnimeController_->Add(static_cast<int>(BOSS_STATE::DEAD), PATH_ANIMATION_BOSS_ENEMY + "Dying.mv1", 30.0f, 174.0f);
+	robotAnimeController_->Add(static_cast<int>(BOSS_STATE::DOWN), PATH_ANIMATION_BOSS_ENEMY + "Crouch.mv1", 100.0f, 427.0f);
+	robotAnimeController_->Update();
+	effectManager_->Add(static_cast<int>(BOSS_STATE::DEAD), EFFECT_EXPLOSION_SCALE, false,resMng_.Load(ResourceManager::SRC::EXPLOSION).handleId_);
 
-}
-
-void BossEnemy::SetEnemyPosition(const VECTOR* enemyPos)
-{
-	playerPos_ = enemyPos;
 }
 
 void BossEnemy::ActiveSpMove(SP_MOVE spMove)
@@ -111,7 +109,7 @@ const std::map<BossEnemy::SP_MOVE, std::unique_ptr<DamageObject>>& BossEnemy::Ge
 
 void BossEnemy::MakeSpMoveObjects(void)
 {
-	spMoves_.emplace(SP_MOVE::DEATH_BALL, std::make_unique <DeathBall>(ENEMY_TYPE,*playerPos_));
+	spMoves_.emplace(SP_MOVE::DEATH_BALL, std::make_unique <DeathBall>(ENEMY_TYPE,*enemyPos_));
 
 }
 
@@ -121,12 +119,17 @@ void BossEnemy::ChangeDeathState(void)
 	return;
 }
 
-void BossEnemy::PlayEffect(STATE state)
+void BossEnemy::PlayEffect(BOSS_STATE state)
 {
 	effectManager_->Play(static_cast<int>(state));
 }
 
-void BossEnemy::Update()
+const BossEnemy::STATE& BossEnemy::GetState(void)
+{
+	return actorState_;
+}
+
+void BossEnemy::Update(void)
 {
 	//デルタタイムの更新
 	deltaTime_ = DeltaTime::GetInstsnce().GetDeltaTime();
@@ -135,15 +138,15 @@ void BossEnemy::Update()
 	//攻撃オブジェクトのアップデート
 	for(auto& spMove: spMoves_)
 	{
-		spMove.second->Update(*playerPos_);
+		spMove.second->Update(*enemyPos_);
 	}
 	//アニメーションコントローラーのアップデート
-	roboAnimeController_->Update();
+	robotAnimeController_->Update();
 	//当たり判定の更新
 	capsule_->Update();
 	//エフェクトマネージャーの更新
 	effectManager_->Update();
-	DrawFormatStringF(0.0f, 880.0f, 0xffffff, "playerHp_%f", playerHp_);
+	DrawFormatStringF(0.0f, 880.0f, 0xffffff, "playerHp_%f", hp_);
 
 }
 
@@ -154,11 +157,6 @@ void BossEnemy::Draw(void)
 	{
 		spMove.second->Draw();
 	}
-}
-
-void BossEnemy::SetPlayerPosition(const VECTOR* playerPos)
-{
-	playerPos_ = playerPos;
 }
 
 const VECTOR& BossEnemy::GetBossEnemyPos(void) const

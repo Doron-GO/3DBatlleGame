@@ -1,5 +1,5 @@
 #pragma once
-#include"../Comon/Transform.h"
+#include"../Common/Transform.h"
 class CollisionBase
 {
 public:

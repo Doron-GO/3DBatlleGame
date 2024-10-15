@@ -7,7 +7,7 @@
 BoostDashState::BoostDashState(Player& player) : player_(player)
 {
 	//ステートをBOOST_DASHにする
-	player_.pState_ = Player::STATE::BOOST_DASH;
+	player_.actorState_ = Player::STATE::BOOST_DASH;
 	//アニメーションをBOOSTにする
 	player_.PlayAnim(static_cast<int>(Player::STATE::BOOST), false, true, true);
 	//最高速を設定
@@ -16,7 +16,7 @@ BoostDashState::BoostDashState(Player& player) : player_(player)
 	player_.SetMoveSpeed(player_.BOOST_DASH_MOVE_SPEED);
 }
 
-void BoostDashState::Update()
+void BoostDashState::Update(void)
 {
 	//スティックの倒れている方向を取得
 	player_.GetMoveDirBoostDash();

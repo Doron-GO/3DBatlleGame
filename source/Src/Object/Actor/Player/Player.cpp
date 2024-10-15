@@ -1,3 +1,9 @@
+#include<string>
+#include<DxLib.h>
+#include"../../../../Config.h"
+#include"../../../Utility/AsoUtility.h"
+#include"../../../Manager/ResourceManager.h"
+#include"../../Time/DeltaTime.h"
 #include"../../State/PlayerState/CombatTransitionState.h"
 #include"../../State/PlayerState/DamageState.h"
 #include"../../State/PlayerState/WinnerState.h"
@@ -5,14 +11,9 @@
 #include"../../State/PlayerState/FallState.h"
 #include"../../State/PlayerState/DownState.h"
 #include"../../State/PlayerState/LoseState.h"
-#include"../../../Manager/ResourceManager.h"
-#include"../../../Utility/AsoUtility.h"
 #include"../../DamageObject/BeamShot.h"
-#include"../../Time/DeltaTime.h"
-#include"../../../../Config.h"
 #include "Player.h"
-#include<DxLib.h>
-#include<string>
+
 
 #pragma region Parameter
 
@@ -97,10 +98,13 @@ static constexpr float JUMP_BOOST_DAMPING_RATE = 60.0f;
 #pragma endregion
 
 
-Player::Player(int playerNum, int playMode):playerType_(playerNum),
+Player::Player(int playerType, int playMode):playerType_(playerType),
 state_(nullptr),input_(std::make_unique<Input>(padNum_)),camera_(std::make_unique<Camera>())
 {
 	playMode_ = static_cast<PLAY_MODE>(playMode);
+
+	actorType_ = static_cast<ACTOR_TYPE>(playerType_);
+
 	//プレイヤー内で使うほかクラスを生成
 	ChangeState(std::make_unique<IdleState>(*this));
 	if (playMode_ == PLAY_MODE::SINGLE_MODE)
@@ -134,7 +138,7 @@ void Player::Init(void)
 void Player::MakeObjects(void)
 {
 	//アニメーションコントローラーの再生
-	roboAnimeController_ = std::make_unique< RobotAnimeController>(transform_.modelId);
+	robotAnimeController_ = std::make_unique< RobotAnimeController>(transform_.modelId);
 	//ビームライフルの生成
 	beamRifle_ = std::make_unique <BeamRifle>(playerType_, static_cast<int> (playMode_),*this);
 	//ビームサーベルの生成
@@ -173,7 +177,7 @@ void Player::InitTransform(void)
 void Player::InitParameter(void)
 {
 	//初期状態はIdol状態
-	pState_ = STATE::IDLE;
+	actorState_ = STATE::IDLE;
 	//パッドは1始まりなので+1
 	padNum_ = playerType_ + 1;
 	//移動量
@@ -186,9 +190,9 @@ void Player::InitParameter(void)
 	dirUpGravity_ = { 0.0f,1.0f,0.0f };
 	startUpperQuaRotY_ = transform_.quaRot;
 	//ブーストゲージの値の初期化
-	boostGauge_ = MAX_BOOST_GAGE;
+	boostFuel_ = MAX_BOOST_GAGE;
 	//HP値の初期化
-	playerHp_ = MAX_PLAYER_HP;
+	hp_ = MAX_PLAYER_HP;
 	//ブーストゲージ回復カウントの初期化
 	rechargeBoostCount_ = RECHARGE_BOOST_DELAY;
 	//着地硬直値の初期化
@@ -204,7 +208,7 @@ void Player::InitParameter(void)
 	//スーパーアーマー値の初期化
 	superArmor_ = 0;
 	//上半身捻りフラグの初期化
-	revertFlag_ = false;
+	isRevertUpperBodyRot_ = false;
 	//射撃フラグの初期化
 	shotFlag_	= false;
 	//追尾フラグの初期化
@@ -216,19 +220,19 @@ void Player::InitParameter(void)
 void Player::InitAnimation(void)
 {
 	//アニメーションの追加
-	roboAnimeController_->Add(static_cast<int>(STATE::IDLE), PATH_ANIMATION_PLAYER + "Idle.mv1", 20.0f, 750.0f);
-	roboAnimeController_->Add(static_cast<int>(STATE::RUN), PATH_ANIMATION_PLAYER + "Run.mv1", 22.0f, 100.0f);
-	roboAnimeController_->Add(static_cast<int>(STATE::SHOT), PATH_ANIMATION_PLAYER + "shot.mv1", 160.0f, 100.0f);
-	roboAnimeController_->Add(static_cast<int>(STATE::BOOST), PATH_ANIMATION_PLAYER + "Hover.mv1", 30.0f, 20.0f);
-	roboAnimeController_->Add(static_cast<int>(STATE::BOOST_DASH), PATH_ANIMATION_PLAYER + "Hover.mv1", 30.0f, 20.0f);
-	roboAnimeController_->Add(static_cast<int>(STATE::JUMP), PATH_ANIMATION_PLAYER + "Jump.mv1", 50.0f, 100.0f);
-	roboAnimeController_->Add(static_cast<int>(STATE::DAMAGE), PATH_ANIMATION_PLAYER + "Reaction.mv1", 45.0f, 38.0f);
-	roboAnimeController_->Add(static_cast<int>(STATE::COMBAT), PATH_ANIMATION_PLAYER + "Attack_360_High.mv1", 120.0f, 160.0f);
-	roboAnimeController_->Add(static_cast<int>(STATE::COMBAT_RUN), PATH_ANIMATION_PLAYER + "RunWithSword.mv1", 20.0f, 20.0f);
-	roboAnimeController_->Add(static_cast<int>(STATE::DOWN), PATH_ANIMATION_PLAYER + "Stunned.mv1", 100.0f, 96.0f);
-	roboAnimeController_->Add(static_cast<int>(STATE::WIN), PATH_ANIMATION_PLAYER + "Win.mv1", 60.0f, 170.0f);
+	robotAnimeController_->Add(static_cast<int>(STATE::IDLE), PATH_ANIMATION_PLAYER + "Idle.mv1", 20.0f, 750.0f);
+	robotAnimeController_->Add(static_cast<int>(STATE::RUN), PATH_ANIMATION_PLAYER + "Run.mv1", 22.0f, 100.0f);
+	robotAnimeController_->Add(static_cast<int>(STATE::SHOT), PATH_ANIMATION_PLAYER + "shot.mv1", 160.0f, 100.0f);
+	robotAnimeController_->Add(static_cast<int>(STATE::BOOST), PATH_ANIMATION_PLAYER + "Hover.mv1", 30.0f, 20.0f);
+	robotAnimeController_->Add(static_cast<int>(STATE::BOOST_DASH), PATH_ANIMATION_PLAYER + "Hover.mv1", 30.0f, 20.0f);
+	robotAnimeController_->Add(static_cast<int>(STATE::JUMP), PATH_ANIMATION_PLAYER + "Jump.mv1", 50.0f, 100.0f);
+	robotAnimeController_->Add(static_cast<int>(STATE::DAMAGE), PATH_ANIMATION_PLAYER + "Reaction.mv1", 45.0f, 38.0f);
+	robotAnimeController_->Add(static_cast<int>(STATE::COMBAT), PATH_ANIMATION_PLAYER + "Attack_360_High.mv1", 120.0f, 160.0f);
+	robotAnimeController_->Add(static_cast<int>(STATE::COMBAT_RUN), PATH_ANIMATION_PLAYER + "RunWithSword.mv1", 20.0f, 20.0f);
+	robotAnimeController_->Add(static_cast<int>(STATE::DOWN), PATH_ANIMATION_PLAYER + "Stunned.mv1", 100.0f, 96.0f);
+	robotAnimeController_->Add(static_cast<int>(STATE::WIN), PATH_ANIMATION_PLAYER + "Win.mv1", 60.0f, 170.0f);
 
-	roboAnimeController_->Update();
+	robotAnimeController_->Update();
 	//エフェクトの追加
 	effectManager_->Add(static_cast<int>(STATE::LOSE), EFFECT_EXPLOSION_SCALE, false,
 		resMng_.Load(ResourceManager::SRC::EXPLOSION).handleId_);
@@ -264,7 +268,7 @@ void Player::UpdateBattleMode(void)
 	Range();
 
 	// アニメーション再生
-	roboAnimeController_->Update();
+	robotAnimeController_->Update();
 
 	//エフェクト再生
 	effectManager_->Update();
@@ -283,7 +287,7 @@ void Player::UpdateBattleMode(void)
 
 }
 
-void Player::UpdateSIngleMode(void)
+void Player::UpdateSingleMode(void)
 {
 	VECTOR enemyPos = { enemyPos_->x,enemyPos_->y + offsetEnemy_,enemyPos_->z };
 	//カメラに敵の座標を渡す
@@ -306,7 +310,7 @@ void Player::UpdateSIngleMode(void)
 	Range();
 
 	// アニメーション再生
-	roboAnimeController_->Update();
+	robotAnimeController_->Update();
 
 	//エフェクト再生
 	effectManager_->Update();
@@ -334,6 +338,7 @@ void Player::Update()
 	input_->Update();
 	
 	//カメラに敵の座標を渡す
+	auto enemyPos = enemyPos_;
 	camera_->SetTargetPos(*enemyPos_);
 
 	//ブーストゲージ回復
@@ -361,7 +366,7 @@ void Player::Update()
 	Range();
 
 	// アニメーション再生
-	roboAnimeController_->Update();
+	robotAnimeController_->Update();
 
 	//エフェクト再生
 	effectManager_->Update();
@@ -422,7 +427,7 @@ void Player::Range(void)
 bool Player::IsDead(void)
 {
 	//HPが0以下なら死亡する
-	if (!IsGaugeSufficient(playerHp_,-1))
+	if (!IsGaugeSufficient(hp_,-1))
 	{
 		return true;
 		//敗北状態にする
@@ -446,7 +451,7 @@ void Player::Win(void)
 
 const Player::STATE& Player::GetState(void)
 {
-	return pState_;
+	return actorState_;
 }
 
 void Player::DamageSuperArmor(void)
@@ -500,16 +505,16 @@ void Player::CollisionGravity(void)
 			//ブーストゲージ回復フラグをtrueにする
 			rechargeBoostFlag_ = true;
 			//接地フラグをtrueにする
-			groundedFlag_ = true;
+			isGrounded_ = true;
 			//着地硬直カウントを計測
 			CountLandingStanTime();
 		}
 		else
 		{
-			groundedFlag_ = false;
+			isGrounded_ = false;
 			landingStanTime_ = FALL_STAN_TIME;
 			//落下中に移動しているときはフォール状態にする
-			if (pState_==STATE::IDLE|| pState_ == STATE::RUN)
+			if (actorState_ ==STATE::IDLE|| actorState_ == STATE::RUN)
 			{
 				ChangeState(std::make_unique<FallState>(*this));
 			}
@@ -602,7 +607,7 @@ void Player::ChangeState(std::unique_ptr<StateBase> state)
 
 void Player::DebugPlayerState()
 {
-	switch (pState_)
+	switch (actorState_)
 	{
 	case Player::STATE::RUN:
 		debugString_ = "RUN";
@@ -716,7 +721,7 @@ void Player::RobotAnimDebugDraw(int playerType)
 	if (playerType  == playerType_)
 	{
 
-		roboAnimeController_->Draw();
+		robotAnimeController_->Draw();
 	}
 }
 
@@ -760,11 +765,11 @@ void Player::PlayerDebugDraw(int playerType)
 		DrawFormatStringF(0.0f, 350.0f, 0xffffff, "jumpPow_:%f,%f.%f", jumpPow_.x, jumpPow_.y, jumpPow_.z);
 		DrawFormatStringF(0.0f, 370.0f, 0xffffff, "gravityPow_:%f", gravityPow_);
 		DrawFormatStringF(0.0f, 390.0f, 0xffffff, "jumpAdd_:%f", jumpSpeed_);
-		roboAnimeController_->DebugDraw();
+		robotAnimeController_->DebugDraw();
 		camera_->DrawDebug();
 		float dot = VDot(dirGravity_, jumpPow_);
 		DrawFormatStringF(0.0f, 470.0f, 0xffffff, "jumpdot:%f", dot);
-		DrawFormatStringF(0.0f, 500.0f, 0xffffff, "boostGauge_:%f", boostGauge_);
+		DrawFormatStringF(0.0f, 500.0f, 0xffffff, "boostGauge_:%f", boostFuel_);
 		DrawFormatStringF(0.0f, 590.0f, 0xffffff, "shotFlame_:%f", shotFlame_);
 		DrawFormatStringF(0.0f, 610.0f, 0xffffff, "recoverBoostCount_:%f", rechargeBoostCount_);
 		DrawFormatStringF(0.0f, 630.0f, 0xffffff, "landingStanTime_:%f", landingStanTime_);
@@ -789,7 +794,7 @@ void Player::PlayerDebugDraw(int playerType)
 			str = "shotFlag:false";
 		}
 		DrawFormatStringF(0.0f, 710.0f, 0xffffff, "%s", str.c_str());
-		if (revertFlag_)
+		if (isRevertUpperBodyRot_)
 		{
 			str = "revertFlag_:true";
 		}
@@ -816,11 +821,11 @@ void Player::Combat(void)
 void Player::ConsumeBoostGauge(float rate)
 {
 	//ゲージを減らす
-	ConsumeGauge(boostGauge_, rate);
+	ConsumeGauge(boostFuel_, rate);
 	//一定以下になったら値を固定
-	if (boostGauge_<=0.0f)
+	if (boostFuel_<=0.0f)
 	{
-		boostGauge_ = 0.0f;
+		boostFuel_ = 0.0f;
 	}
 }
 
@@ -840,14 +845,9 @@ bool Player::IsSuperArmor(void)
 	return false;
 }
 
-//std::unique_ptr<UserInterface> Player::MoveUI(void)
-//{	//生成したUIを渡す
-//	return std::move(userInterface_);
-//}
-
-const float& Player::GetBoostGauge(void) const
+const float& Player::GetBoostFuel(void) const
 {
-	return boostGauge_;
+	return boostFuel_;
 }
 
 const bool& Player::IsWin(void) const
@@ -863,7 +863,7 @@ const int& Player::GetNumnberOfBullets(void)
 void Player::Jump(void)
 {
 	//ブーストゲージが一定以上残っていればジャンプする
-	if (IsGaugeSufficient(boostGauge_, MIN_JUMP_BOOST))
+	if (IsGaugeSufficient(boostFuel_, MIN_JUMP_BOOST))
 	{
 		//ジャンプ力を設定
 		jumpSpeed_ = JUMP_POW;
@@ -927,14 +927,14 @@ void Player::RecoverBoostGauge(void)
 	else
 	{
 		//ブーストゲージを回復する
-		if (!IsGaugeSufficient(boostGauge_, MAX_BOOST_GAGE))
+		if (!IsGaugeSufficient(boostFuel_, MAX_BOOST_GAGE))
 		{
-			boostGauge_+= 10.0f*(deltaTime_ * RECHARGE_BOOST_RATE);
+			boostFuel_+= 10.0f*(deltaTime_ * RECHARGE_BOOST_RATE);
 			rechargeBoostCount_ = RECHARGE_BOOST_DELAY;
 		}
 		else//一定を超えてら止める
 		{
-			boostGauge_ = 100.0f;
+			boostFuel_ = 100.0f;
 			rechargeBoostFlag_ = false;
 		}
 	}	
@@ -957,7 +957,7 @@ const bool Player::IsGaugeSufficient(float Gauge, float RequiredGaugeAmount) con
  bool Player::IsBoostGaugeSufficient(float RequiredGaugeAmount) 
 {
 	 //ブーストゲージが一定量を超えているかを判定
-	return IsGaugeSufficient(boostGauge_,RequiredGaugeAmount);
+	return IsGaugeSufficient(boostFuel_,RequiredGaugeAmount);
 }
 
  bool Player::IsSafeTimeSufficient(void)
@@ -1107,7 +1107,7 @@ void Player::ConsumeGauge(float& gauge, float rate)
 		gauge = 0.0f;
 	}
 }
-void Player::CalculateAngleToTarget()
+void Player::CalculateAngleToTarget(void)
 {
 	//相手に向かってベクトルを作る
 	VECTOR enemyPos = *enemyPos_;
@@ -1132,7 +1132,7 @@ void Player::CalculateAngleToTarget()
 	goalUpperQuaRotY_ = { goalUpperQuaRotY_.w,0.0f,goalUpperQuaRotY_.y,0.0f };
 }
 
-void Player::RevertRotate()
+void Player::RevertRotate(void)
 {
 	//元々のモデルのmatrix(背骨)
 	MATRIX frameLocalMatrix = MV1GetFrameBaseLocalMatrix(transform_.modelId, 61);
@@ -1145,7 +1145,7 @@ void Player::RevertRotate()
 	float goal = static_cast<float>(abs(frameLocalQua.w));
 	if (start== goal)
 	{
-		revertFlag_ = false;
+		isRevertUpperBodyRot_ = false;
 		shotFlag_ = false;
 	}
 }
@@ -1165,7 +1165,7 @@ void Player::Shot(void)
 		//射撃アニメーションを再生
 		PlayUpperAnim(static_cast<int>(STATE::SHOT), true, true, false);
 		//腰捻りフラグをtrue
-		revertFlag_ = true;
+		isRevertUpperBodyRot_ = true;
 	}
 	//射撃フラグがtrueなら
 	if (shotFlag_)
@@ -1180,7 +1180,7 @@ void Player::Shot(void)
 			shotFlag_ = false;
 		}
 	}
-	if (revertFlag_)
+	if (isRevertUpperBodyRot_)
 	{
 		RevertRotate();
 	}
@@ -1234,7 +1234,7 @@ void Player::GetMoveDir(void)
 	else
 	{
 		//ジャンプ中じゃなければスピードが０になるまで減算する
-		if (!(pState_ == STATE::JUMP))
+		if (!(actorState_ == STATE::JUMP))
 		{
 			MoveSpeedZero();
 		}
@@ -1303,7 +1303,7 @@ void Player::Boost(void)
 
 const bool Player::IsGround(void) const
 {
-	return groundedFlag_;
+	return isGrounded_;
 }
 
 const bool& Player::IsHorming(void) const
@@ -1316,17 +1316,12 @@ const VECTOR Player::GetEnemyPos(void) const
 	return *enemyPos_;
 }
 
-const float& Player::GetEnemyDistance(void) const
-{
-	return enemyDistance_;
-}
-
 const VECTOR& Player::GetPlayerPos(void) const
 {
 	return transform_.pos;
 }
 
-const Input& Player::GetInput() const
+const Input& Player::GetInput(void) const
 {
 	return *(input_);
 }

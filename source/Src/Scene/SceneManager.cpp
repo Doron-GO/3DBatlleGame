@@ -16,7 +16,7 @@ void SceneManager::ChangeScene(std::shared_ptr<Scene> scene)
 	}
 }
 
-void SceneManager::PopScene()
+void SceneManager::PopScene(void)
 {
 	if (scenes_.size() > 1)
 	{
@@ -31,7 +31,7 @@ void SceneManager::PushScene(std::shared_ptr<Scene>scene)
 
 }
 
-void SceneManager::Update()
+void SceneManager::Update(void)
 {
 	_dbgStartDraw();
 

@@ -13,7 +13,7 @@ public:
 private:
 
     //更新
-    virtual void Update()override;
+    virtual void Update(void)override;
 
     //プレイヤー情報
     Player& player_;
