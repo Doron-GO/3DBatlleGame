@@ -4,19 +4,19 @@
 WeaponBase::WeaponBase(int playerType, const Transform& playerTransform):resMng_(ResourceManager::GetInstance()),
 playerTransform_(playerTransform), playerType_(playerType)
 {
-	activeFlag_ = false;
+	isActive_ = false;
 }
 
 void WeaponBase::Activate(void)
 {
 	//—LŒø‰»
-	activeFlag_ = true;
+	isActive_ = true;
 }
 
 void WeaponBase::InActivate(void)
 {
 	//”ñ—LŒø‰»
-	activeFlag_ = false;
+	isActive_ = false;
 }
 
 void WeaponBase::SyncPosition(void)

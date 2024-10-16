@@ -88,7 +88,6 @@ private:
     //弾のクールタイムを計測する
     void CoolTimeCount(void);
 
-    void (BeamShot::* _update)();
     std::function<void(void)> update_;
 
     //相手プレイヤーの座標

@@ -61,8 +61,6 @@ void ActorManager::InitActor(void)
 		int boss = static_cast<int>(ActorBase::ACTOR_TYPE::BOSS);
 		bossEnemy_ = std::make_unique<BossEnemy>(boss);
 
-		//ボスの攻撃オブジェクト生成
-		bossEnemy_->MakeSpMoveObjects();
 
 		//プレイヤーのパラメータをボス側に渡す
 		SetEnemyInfo(*bossEnemy_, *players_[player1]) ;
@@ -70,8 +68,11 @@ void ActorManager::InitActor(void)
 		//ボス側のパラメータをプレイヤーに渡す
 		SetEnemyInfo(*players_[player1], *bossEnemy_);
 
+		//ボスの攻撃オブジェクト生成
+		bossEnemy_->MakeSpMoveObjects();
+
 		//プレイヤー1のUIを生成
-		CreateUserInterface(*players_[player1], *bossEnemy_);
+		//CreateUserInterface(*players_[player1], *bossEnemy_);
 
 	}
 	else
@@ -84,8 +85,8 @@ void ActorManager::InitActor(void)
 		SetEnemyInfo(*players_[player2], *players_[player1]);
 
 		//プレイヤー１とプレイヤー２のUIを生成
-		CreateUserInterface(*players_[player1], *players_[player2]);
-		CreateUserInterface(*players_[player2], *players_[player1]);
+		//CreateUserInterface(*players_[player1], *players_[player2]);
+		//CreateUserInterface(*players_[player2], *players_[player1]);
 
 	}
 }
@@ -151,12 +152,12 @@ void ActorManager::DrawAnimeDebug(int playerType)
 	}
 }
 
-const std::vector<std::unique_ptr<Player>>& ActorManager::GetPlayers(void)
+const std::vector<std::unique_ptr<Player>>& ActorManager::GetPlayers(void)const
 {
 	return players_;
 }
 
-const std::unique_ptr<BossEnemy>& ActorManager::GetBossEnemy(void)
+const std::unique_ptr<BossEnemy>& ActorManager::GetBossEnemy(void)const
 {
 	return bossEnemy_;
 }

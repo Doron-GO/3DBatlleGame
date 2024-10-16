@@ -34,7 +34,7 @@ BeamRifle::BeamRifle(int playerType, int playMode, Player& player):player_(playe
 	transform_.Update();
 	
 	//有効か
-	activeFlag_ = true;
+	isActive_ = true;
 
 	//残弾数を最大に
 	numberofBullets_ = MAX_BULLETS;
@@ -72,7 +72,7 @@ void BeamRifle::Update(void)
 void BeamRifle::Draw(void)
 {
 	//有効状態ならライフルを描画
-	if (activeFlag_)
+	if (isActive_)
 	{
 		MV1DrawModel(transform_.modelId);
 	}

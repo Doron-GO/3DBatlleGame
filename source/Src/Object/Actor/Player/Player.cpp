@@ -41,8 +41,8 @@ static constexpr float RECHARGE_BOOST_COUNT_RATE = 60.0f;
 //ブーストゲージ回復のデルタタイムにかける定数
 static constexpr float RECHARGE_BOOST_RATE = 10.0f;
 
- //ブースト移動のデルタタイムにかける定数
- constexpr float BOOST_MOVE_RATE = 60.0f;
+//ブースト移動のデルタタイムにかける定数
+constexpr float BOOST_MOVE_RATE = 60.0f;
 
 //着地硬直時間
 static constexpr float FALL_STAN_TIME = 40.0f;
@@ -51,7 +51,7 @@ static constexpr float FALL_STAN_RATE = 100.0f;
 //格闘硬直時間
 static constexpr float COMBAT_STAN_TIME = 30.0f;
 //格闘硬直計測デルタタイムにかける定数
- constexpr float COMBAT_STAN_RATE = 100.0f;
+constexpr float COMBAT_STAN_RATE = 100.0f;
 
  //爆発エフェクトの大きさ
 static constexpr VECTOR EFFECT_EXPLOSION_SCALE = { 20.0f,20.0f,20.0f };
@@ -71,29 +71,27 @@ static constexpr int MAX_SUPER_ARMOR = 2;
 //ジャンプ時に使用する、デルタタイムにかけるブーストゲージ減少定数
 static constexpr float JUMP_BOOST_DAMPING_RATE = 60.0f;
 //ジャンプ力
- constexpr float JUMP_POW = 2500.0f;
- //ジャンプ力を徐々に減らすデルタタイムにかける定数
- static constexpr float DECREASE_JUMP_POW_RATE = 100.0f;
+constexpr float JUMP_POW = 2500.0f;
+//ジャンプ力を徐々に減らすデルタタイムにかける定数
+static constexpr float DECREASE_JUMP_POW_RATE = 100.0f;
 
 //カプセル頂点座標
- static constexpr float CAPSULE_TOP = 200.0f;
+static constexpr float CAPSULE_TOP = 200.0f;
 //カプセル底辺座標
- static constexpr float CAPSULE_DOWN = 20.0f;
+static constexpr float CAPSULE_DOWN = 20.0f;
 //カプセル半径
- static constexpr float CAPSULE_RADIUS = 100.0f;
+static constexpr float CAPSULE_RADIUS = 100.0f;
 
- //射撃可能時間計測デルタタイムにかける定数
- static constexpr float SHOT_FRAME_RATE = 6.0f;
- //最射撃可能時間
- static constexpr float SHOT_FRAME_TIME = 5.0f;
+//射撃可能時間計測デルタタイムにかける定数
+static constexpr float SHOT_FRAME_RATE = 6.0f;
+//最射撃可能時間
+static constexpr float SHOT_FRAME_TIME = 5.0f;
 
- //重力判定のライン判定の始まりと終わり
- static constexpr float COLL_CHEAK_START_SCALE = 25.0f;
- static constexpr float COLL_CHEAK_END_SCALE = 10.0f;
+//重力判定のライン判定の始まりと終わり
+static constexpr float COLL_CHEAK_START_SCALE = 25.0f;
+static constexpr float COLL_CHEAK_END_SCALE = 10.0f;
 
- static constexpr float DEFAULT_DISTANCE = 4000.0f;
-
-
+static constexpr float DEFAULT_DISTANCE = 4000.0f;
 
 #pragma endregion
 
@@ -145,9 +143,6 @@ void Player::MakeObjects(void)
 	beamSaber_ = std::make_unique <BeamSaber>(playerType_,transform_);
 	//カプセル当たり判定の生成
 	capsule_ = std::make_unique<CollisionCapsule>(transform_, CAPSULE_TOP, CAPSULE_DOWN, CAPSULE_RADIUS);
-	////UIの生成
-	//userInterface_ = std::make_unique<UserInterface>(resMng_, enemyPos_, enemyDistance_, boostGauge_,
-	//	playerHp_, *enemyHp_,isWin_, beamRifle_->GetNumnberOfBullets() , static_cast<int> (playMode_),playerType_);
 	//エフェクトマネージャーの生成
 	effectManager_ = std::make_unique<EffectManager>(transform_);
 }
@@ -210,7 +205,7 @@ void Player::InitParameter(void)
 	//上半身捻りフラグの初期化
 	isRevertUpperBodyRot_ = false;
 	//射撃フラグの初期化
-	shotFlag_	= false;
+	isShotEnable_	= false;
 	//追尾フラグの初期化
 	isHorming_	= true;
 	//ブーストゲージ回復フラグの初期化
@@ -785,7 +780,7 @@ void Player::PlayerDebugDraw(int playerType)
 		DebugPlayerState();
 
 		std::string str;
-		if (shotFlag_)
+		if (isShotEnable_)
 		{
 			str = "shotFlag:true";
 		}
@@ -1146,16 +1141,16 @@ void Player::RevertRotate(void)
 	if (start== goal)
 	{
 		isRevertUpperBodyRot_ = false;
-		shotFlag_ = false;
+		isShotEnable_ = false;
 	}
 }
 
 void Player::Shot(void)
 {
-	if (input_->IsTriggerd("shot")&&!shotFlag_)
+	if (input_->IsTriggerd("shot")&&!isShotEnable_)
 	{
 		//射撃フラグをtrueに
-		shotFlag_ = true;
+		isShotEnable_ = true;
 		//現在のモデルの向きを格納
 		startUpperQuaRotY_ = transform_.quaRot;
 		//モデルの目線方向から相手方向への角度を測る
@@ -1168,7 +1163,7 @@ void Player::Shot(void)
 		isRevertUpperBodyRot_ = true;
 	}
 	//射撃フラグがtrueなら
-	if (shotFlag_)
+	if (isShotEnable_)
 	{
 		startUpperQuaRotY_ = { startUpperQuaRotY_.w,0.0f,startUpperQuaRotY_.y,0.0f };	
 		startUpperQuaRotY_ = Quaternion::Slerp(startUpperQuaRotY_, goalUpperQuaRotY_, 1.0);
@@ -1177,7 +1172,7 @@ void Player::Shot(void)
 		if (shotFlame_ > SHOT_FRAME_TIME)
 		{
 			shotFlame_ = 0.0f;
-			shotFlag_ = false;
+			isShotEnable_ = false;
 		}
 	}
 	if (isRevertUpperBodyRot_)

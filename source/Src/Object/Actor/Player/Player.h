@@ -43,26 +43,6 @@ public:
 	static constexpr float MOVE_SPEED = 20.0f;
 	static constexpr float MIN_BOOST = 20.0f; //ジャンプに必要なブーストゲージの量
 	static constexpr float FALL_MAX_MOVE_SPEED = 35.0f;//FALL状態時移動スピード
-
-
-	//enum class STATE
-	//{
-	//	NONE,
-	//	RUN,
-	//	JUMP,
-	//	DAMAGE,
-	//	DOWN,
-	//	SHOT,
-	//	IDLE,
-	//	BOOST,
-	//	BOOST_DASH,
-	//	FALL,
-	//	COMBAT,
-	//	COMBAT_RUN,
-	//	WIN,
-	//	LOSE,
-
-	//};	
 	
 	Player(int playerType, int playMode);
 
@@ -363,8 +343,8 @@ private:
 	//次射撃できるまでの時間
 	float shotFlame_;
 
-	//射撃可能フラグ
-	bool shotFlag_;	
+	//射撃可能かどうか
+	bool isShotEnable_;	
 
 	//敵と自分との角度
 	float angle_;

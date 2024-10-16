@@ -47,7 +47,7 @@ protected:
 	int playerType_;
 
 	//—LŒø‚©‚Ç‚¤‚©‚ð”»’è
-	bool activeFlag_;
+	bool isActive_;
 
 };
 

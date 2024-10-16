@@ -7,8 +7,9 @@
 class ResourceManager;
 class Stage;
 class Input;
-class camera;
+class Camera;
 class BeamSaber;
+class SkyDome;
 
 class TitleScene :
     public Scene
@@ -56,6 +57,10 @@ private:
     //ステージ
     const std::unique_ptr<Stage> stage_;
 
+    //スカイドーム
+    std::unique_ptr<SkyDome> skyDome_;
+
+
     //手前のロボット
     Transform frontTransform_;
 
@@ -95,6 +100,9 @@ private:
 
     //カメラの初期設定
     void InitCamera(void);
+
+    //
+    void InitSkyDome(void);
 
 };
 

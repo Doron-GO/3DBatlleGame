@@ -66,7 +66,6 @@ private:
         ONE_MORE_FIGHT
     };
 
-
     ResourceManager& resMng_;
 
     STATE state_;
@@ -121,11 +120,8 @@ private:
     //UIの初期化(actorManagerからプレイヤーとボスを取得してきて、ゲームシーンで作っている)
     void InitUI(void);
 
-    //UIの初期化(actorMnagerで作り、ゲームシーンにmoveしている)
-    void InitUI2(void);
-
     //UIの生成
-    void CreateUserInterface( ActorBase& player, ActorBase& target);
+    void CreateUserInterface(const ActorBase& player, const ActorBase& target);
 
     //シングルモードの描画
     void DrawSingleMode(void);

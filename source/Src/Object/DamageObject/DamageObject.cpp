@@ -4,7 +4,7 @@
 DamageObject::DamageObject(int playernum):resMng_(ResourceManager::GetInstance())
 {
     //非有効化
-    activeFlag_ = false;
+    isActive_ = false;
     //ダメージ量の初期化
     damage_ = 0.0f;
     //クールタイムの初期化
@@ -18,12 +18,12 @@ DamageObject::DamageObject(int playernum):resMng_(ResourceManager::GetInstance()
 void DamageObject::Activate(void)
 {
     //有効化
-    activeFlag_ = true;
+    isActive_ = true;
 }
 
 bool DamageObject::IsActive(void)
 {
-    return activeFlag_;
+    return isActive_;
 }
 
 const void DamageObject::SetPos(VECTOR pos)
@@ -39,7 +39,7 @@ const void DamageObject::SetPos(VECTOR pos)
 
 void DamageObject::InActivate(void)
 {
-    activeFlag_ = false;
+    isActive_ = false;
 }
 
 const float& DamageObject::GetDamage(void) const

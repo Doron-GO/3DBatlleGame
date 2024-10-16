@@ -34,7 +34,7 @@ void ResourceManager::Init(void)
 	resouceMap_.emplace(SRC::PLAYER, res);
 
 	//Stage
-	res = Resource(Resource::TYPE::MODEL, PATH_MODEL + "Stage/Stage.mv1");
+	res = Resource(Resource::TYPE::MODEL, PATH_MODEL + "Stage/Ground.mv1");
 	resouceMap_.emplace(SRC::STAGE, res);
 
 	//ビームライフル

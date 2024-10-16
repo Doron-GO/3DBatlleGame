@@ -1,6 +1,12 @@
 #include "DeathBall.h"
 #include"../Time/DeltaTime.h"
 
+//出現するY座標
+constexpr float POS_DETHBALL_Y = 5500.0f;
+
+constexpr float DAMAGE = 500.0f;
+
+
 DeathBall::DeathBall(int playerType, const VECTOR& pos) :DamageObject(playerType), playerPos_(pos)
 {
 	//モデルの読み込み
@@ -12,9 +18,9 @@ DeathBall::DeathBall(int playerType, const VECTOR& pos) :DamageObject(playerType
 	//回転
 	transform_.quaRot = Quaternion();
 	//非有効化状態にする
-	activeFlag_ = false;
+	isActive_ = false;
 	//ダメージ量の設定
-	damage_ = 500.0f;
+	damage_ = DAMAGE;
 	//更新処理の状態
 	update_ = std::bind(&DeathBall::WaitUpdate, this);
 	//エフェクトマネージャーの生成
@@ -47,7 +53,7 @@ void DeathBall::Activate(void)
 	SetPos(VECTOR{ playerPos_.x, POS_DETHBALL_Y, playerPos_.z });
 
 	//有効化する
-	activeFlag_ = true;
+	isActive_ = true;
 	//当たり判定の更新
 	MV1RefreshCollInfo(transform_.modelId);
 	//エフェクトの再生
@@ -61,7 +67,7 @@ void DeathBall::Activate(void)
 void DeathBall::InActivate(void)
 {
 	//非有効化
-	activeFlag_ = false;
+	isActive_ = false;
 	//当たり判定の更新
 	MV1RefreshCollInfo(transform_.modelId);
 	//エフェクトの再生を停止

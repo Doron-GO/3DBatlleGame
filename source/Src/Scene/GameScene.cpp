@@ -121,7 +121,7 @@ resMng_(ResourceManager::GetInstance())
 	actorManager_->Update();
 
 	//UIの初期化
-	InitUI2();
+	InitUI();
 
 	// 3D設定
 	Init3DSetting();
@@ -217,8 +217,6 @@ void GameScene::InitRender(void)
 
 void GameScene::InitUI(void)
 {
-	//actorManagerから情報取ってこれるのって、良いのかわからない
-
 	//プレイヤー1
 	int player1 = static_cast<int>(ActorBase::ACTOR_TYPE::PLAYER_1);
 
@@ -234,23 +232,16 @@ void GameScene::InitUI(void)
 	{
 		//プレイヤー2
 		int player2 = static_cast<int>(ActorBase::ACTOR_TYPE::PLAYER_2);
-
 		//プレイヤー１とプレイヤー２のUIを生成
 		CreateUserInterface(*players[player1], *players[player2]);
 		CreateUserInterface(*players[player2], *players[player1]);
 	}
 }
 
-void GameScene::InitUI2(void)
-{
-	userInterfaces_ = actorManager_->MoveUI();
-}
-
-void GameScene::CreateUserInterface( ActorBase& player, ActorBase& target)
+void GameScene::CreateUserInterface(const ActorBase& player,const ActorBase& target)
 {
 	//プレイヤータイプ
 	 int playerType = static_cast<int>(player.GetActorType());
-
 	//UIを生成
 	userInterfaces_.emplace_back(
 		std::make_unique<UserInterface>(
@@ -269,49 +260,67 @@ void GameScene::CreateUserInterface( ActorBase& player, ActorBase& target)
 
 void GameScene::DrawSingleMode(void)
 {
+	//勝者が決まっているかどうか判定
 	bool& isDeadAnyPlayer = actorManager_->IsDeadAnyPlayer();
-
+	//スクリーンをクリア
 	ClearDrawScreen();
+	//カメラ描画
 	actorManager_->DrawCamera(SINGLE_PLAY_MODE);
+	//キャラクターの描画
 	actorManager_->Draw();
+	//ステージの描画
 	stage_->Draw();
-	//actorManager_->DrawUI(SINGLE_PLAY_MODE);
+	//UIの描画
 	userInterfaces_[SINGLE_PLAY]->Draw(isDeadAnyPlayer);
+	//エフェクシアのアップデート
 	UpdateEffekseer3D();
+	//エフェクシアの描画
 	DrawEffekseer3D();
 	//共通UI描画(ゲームスタートなど)
-	//actorManager_->DrawCommonUI(startCount_, IsGameSet(), rematchMode_);
 	userInterfaces_[SINGLE_PLAY]->DrawCommonUI(startCount_, isDeadAnyPlayer, rematchMode_);
-
 }
+
 void GameScene::DrawBattleMode(void)
 {
+	//プレイヤーのマックス人数
 	int maxIdx = static_cast<int>(PLAYER_NUM::MAX);
+	//勝者が決まっているかどうか判定
 	bool& isDeadAnyPlayer = actorManager_->IsDeadAnyPlayer();
 	for (int idx = 0; idx < maxIdx; idx++)
 	{
+		//描画するスクリーンをセット
 		SetDrawScreen(cameraScreens_[idx]);
 		// 画面を初期化
 		ClearDrawScreen();
+		//カメラの描画
 		actorManager_->DrawCamera(idx);
+		//キャラクターの描画
 		actorManager_->Draw();
+		//ステージの描画
 		stage_->Draw();
-		//actorManager_->DrawUI(idx);
+		//UIの描画
 		userInterfaces_[idx]->Draw(isDeadAnyPlayer);
+		//エフェクシアのアップデート
 		UpdateEffekseer3D();
+		//エフェクシアの描画
 		DrawEffekseer3D();
 	}
+
+	//二枚のスクリーンを統合した、スクリーンのセット
 	SetDrawScreen(integrationScreen_);
 
 	for (int idx = 0; idx < maxIdx; idx++)
 	{
 		//透過処理は後で見直す
 		PLAYER_NUM key = static_cast<PLAYER_NUM>(idx);
+
+		//各プレイヤーのスクリーンの描画
 		DrawGraph(
 			static_cast<int>(screenPos_[key].x),
 			static_cast<int>(screenPos_[key].y),
 			cameraScreens_[idx], false);
 	}
+
 	//二分割されている画面の真ん中に線を引く
 	DrawLine(
 		static_cast<int>(screenPos_[PLAYER_NUM::P_2].x), 
@@ -324,13 +333,11 @@ void GameScene::DrawBattleMode(void)
 	DrawGraph(0, 0, integrationScreen_, true);
 
 	//共通UI描画(ゲームスタートなど)
-//	actorManager_->DrawCommonUI(startCount_,IsGameSet(),rematchMode_);
 	int player1 = static_cast<int>(ActorBase::ACTOR_TYPE::PLAYER_1);
-
 	userInterfaces_[player1]->DrawCommonUI(startCount_, isDeadAnyPlayer, rematchMode_);
 
-
 }
+
 void GameScene::ChangeGameScene(void)
 {
 	//ゲームシーンに移行
@@ -345,6 +352,7 @@ void GameScene::ChangeTitleScene(void)
 
 bool GameScene::IsGameStart(void)
 {
+	//開始時間を超えていなければ、カウントし続ける
 	if (startCount_ < START_TIME_MAX)
 	{
 		startCount_ += deltaTime_;
@@ -364,19 +372,22 @@ bool GameScene::IsGameSet(void)
 
 bool GameScene::SelectCursor(void)
 {
+	//勝敗が決まっていなければ入る
 	if (!actorManager_->IsDeadAnyPlayer())
 	{
 		return false;
 	}
-
+	//上ボタンを押したら、カーソルを上に動かす
 	if (input_.IsTriggerd("up") && rematchMode_> static_cast<int>(REMATCH_MODE::BACK_TO_TITLE))
 	{
 		rematchMode_--;
 	}
+	//下ボタンを押したら、カーソルを下に動かす
 	else if (input_.IsTriggerd("down") && rematchMode_ < static_cast<int>(REMATCH_MODE::ONE_MORE_FIGHT))
 	{
 		rematchMode_++;
 	}
+	//
 	return SelectDecide();
 }
 
@@ -398,11 +409,9 @@ bool GameScene::SelectDecide(void)
 		SelectTitleOrGame();
 		return true;
 	}
-	//その他ならプレステコンでいう×ボタンの場所のボタン
-	else
-	{
-	}
+
 	return false;
+
 }
 
 void GameScene::SelectTitleOrGame(void)

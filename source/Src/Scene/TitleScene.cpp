@@ -5,6 +5,7 @@
 #include"../Utility/AsoUtility.h"
 #include"Transition/Transitor.h"
 #include"../Object/Stage/Stage.h"
+#include"../Object/Stage/SkyDome.h"
 #include "../Input/Input.h"
 #include"../../Config.h"
 #include "TitleScene.h"
@@ -79,6 +80,8 @@ resMng_(ResourceManager::GetInstance()), camera_(std::make_unique<Camera>()),sta
 	InitImage();
 	//モデルの読み込み
 	InitModel();
+	//スカイドームの読み込み
+	InitSkyDome();
 	//カメラの初期設定
 	InitCamera();
 
@@ -116,7 +119,7 @@ void TitleScene::Update(void)
 	{
 		startFlag_ = true;
 	}
-
+	skyDome_->Update();
 	sceneTransitor_.Update();
 }
 
@@ -125,6 +128,8 @@ void TitleScene::Draw(void)
 	ClearDrawScreen();
 	//カメラの更新
 	camera_->SetBeforeDraw();
+	//
+	skyDome_->Draw();
 	//ステージの描画
 	stage_->Draw();
 	//手前モデルの描画
@@ -314,4 +319,9 @@ void TitleScene::InitCamera(void)
 	camera_->ChangeMode(Camera::MODE::FIXED_POINT);
 	camera_->SetTargetPos(CAMERA_TARGET_POS);
 	camera_->SetCameraPos(CAMERA_POS);
+}
+
+void TitleScene::InitSkyDome(void)
+{
+	skyDome_ = std::make_unique<SkyDome>(frontTransform_);
 }

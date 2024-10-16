@@ -63,7 +63,7 @@ const ActorBase::STATE& ActorBase::GetState(void)
 	return actorState_;
 }
 
-const int& ActorBase::GetNumnberOfBullets(void)
+const int& ActorBase::GetNumnberOfBullets(void) const
 {
 	return numberofBullets_;
 }
@@ -98,7 +98,7 @@ void ActorBase::SetEnemyState(const STATE* enemyState)
 	enemyState_ = enemyState;
 }
 
-const ActorBase::ACTOR_TYPE& ActorBase::GetActorType(void)
+const ActorBase::ACTOR_TYPE& ActorBase::GetActorType(void) const
 {
 	return actorType_;
 }

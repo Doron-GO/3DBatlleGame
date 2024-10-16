@@ -26,7 +26,7 @@ void Saber::Draw(void)
 void Saber::Hit(void)
 {
 	//非有効化する
-	activeFlag_ = false;
+	isActive_ = false;
 	//エフェクトの再生
 	effectManager_->Play(static_cast<int>(SABER_STATE::HIT));
 }

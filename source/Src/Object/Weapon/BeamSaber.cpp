@@ -31,7 +31,7 @@ void BeamSaber::Update(void)
 void BeamSaber::Draw(void)
 {
 	//—LŒø‰»‚³‚ê‚Ä‚¢‚½‚ç•`‰æ‚·‚é
-	if (activeFlag_)
+	if (isActive_)
 	{
 		MV1DrawModel(transform_.modelId);
 	}	

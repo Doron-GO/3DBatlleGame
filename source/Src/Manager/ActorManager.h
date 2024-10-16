@@ -60,9 +60,10 @@ public:
 	void DrawDebug(int playerType);
 	void DrawAnimeDebug(int playerType);
 
-	const std::vector<std::unique_ptr<Player>>& GetPlayers(void);
-
-	const std::unique_ptr<BossEnemy>& GetBossEnemy(void);
+	//UIを生成するときに使うゲット関数
+	const std::vector<std::unique_ptr<Player>>& GetPlayers(void)const;
+	//UIを生成するときに使うゲット関数
+	const std::unique_ptr<BossEnemy>& GetBossEnemy(void)const;
 
 	std::vector<std::unique_ptr<UserInterface>>MoveUI(void);
 	
@@ -70,10 +71,8 @@ public:
 
 private:
 
-	void (ActorManager::* _update)();
 	//状態管理(更新ステップ)
 	std::function<void(void)>update_;
-
 
 	std::vector<std::unique_ptr<Player>> players_;
 

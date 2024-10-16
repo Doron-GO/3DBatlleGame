@@ -58,15 +58,15 @@ public:
 	void Damage(float damage);
 
 	//トランスフォーム
-	const Transform& GetTransform(void)const;
+	const Transform& GetTransform(void) const;
 
 	//カプセルを取得
-	CollisionCapsule& GetCapsule(void)const;
+	CollisionCapsule& GetCapsule(void) const;
 
 	virtual const STATE& GetState(void);
 
 	//ビームライフルの弾数
-	const int& GetNumnberOfBullets(void);
+	const int& GetNumnberOfBullets(void) const;
 
 	//ブーストゲージ
 	const float& GetBoostFuel(void) const;
@@ -87,7 +87,7 @@ public:
 	 void SetEnemyState(const STATE* enemyState);
 
 	 //アクタータイプを取得
-	 const ACTOR_TYPE& GetActorType(void);
+	 const ACTOR_TYPE& GetActorType(void)const;
 
 protected:
 

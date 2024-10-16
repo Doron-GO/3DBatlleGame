@@ -7,9 +7,9 @@ Stage::Stage():resMng_(ResourceManager::GetInstance())
 	//ƒ‚ƒfƒ‹‚Ì“Ç‚İ‚İ
 	transform_.SetModel(resMng_.LoadModelDuplicate(ResourceManager::SRC::STAGE));
 	//‘å‚«‚³
-	transform_.scl = {5.0f,1.0f,5.0f};
+	transform_.scl = {250.0f,250.0f,250.0f };
 	//À•W
-	transform_.pos = { 0.0f, -30.0f, 0.0f };
+	transform_.pos = { 0.0f, -30.0f * 80.0f, 0.0f };
 	//‰ñ“]
 	transform_.quaRot = Quaternion();
 	transform_.quaRotLocal =

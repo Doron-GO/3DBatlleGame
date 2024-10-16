@@ -25,8 +25,6 @@ public:
 
 private:
 
-    //èoåªÇ∑ÇÈYç¿ïW
-    static constexpr float POS_DETHBALL_Y = 5500.0f;
 
     enum class BALL_STATE
     {
@@ -34,7 +32,6 @@ private:
         HIT
     };
 
-    void (DeathBall::* _update)();
     std::function<void(void)> update_;
 
     const VECTOR& playerPos_;

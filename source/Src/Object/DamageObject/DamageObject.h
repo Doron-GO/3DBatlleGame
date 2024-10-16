@@ -50,11 +50,11 @@ protected:
 	//トランスフォーム
 	Transform transform_;
 
-	//有効状態化を判定
-	bool activeFlag_ =false;
-
 	//エフェクト再生マネージャー
 	std::unique_ptr<EffectManager> effectManager_;
+
+	//有効状態化を判定
+	bool isActive_;
 
 	//ダメージ量
 	float damage_;
@@ -69,8 +69,6 @@ protected:
 
 	//プレイヤータイプ
 	int playerType_;
-
-private:
 
 };
 

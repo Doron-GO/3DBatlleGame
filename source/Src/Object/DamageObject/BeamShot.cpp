@@ -21,7 +21,7 @@ BeamShot::BeamShot(int playerType, const bool& isHorming, int num, int playMode)
 	transform_.quaRotLocal =
 		Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(180.0f), 0.0f });
 	//非有効化
-	activeFlag_ = false;
+	isActive_ = false;
 	//待機状態の更新処理にする
 	update_ = std::bind(&BeamShot::WaitUpdate, this);
 	//敵座標の初期化
@@ -74,7 +74,7 @@ void BeamShot::Draw(void)
 void BeamShot::Activate(void)
 {
 	//有効化
-	activeFlag_ = true;
+	isActive_ = true;
 	//当たり判定の更新
 	MV1RefreshCollInfo(transform_.modelId);
 	//ビーム非有効化までの時間の設定
@@ -98,19 +98,19 @@ void BeamShot::Activate(void)
 void BeamShot::InActivate(void)
 {
 	//有効化
-	activeFlag_ = false;
+	isActive_ = false;
 	//ビームエフェクトの再生を止める
 	effectManager_->Stop(static_cast<int>(BEAM_STATE::BEAM));
 	//ホーミング時間のリセット
 	hormingCount_ = 0.0f;
 	//待機状態に変更
-	_update = &BeamShot::WaitUpdate;
+	update_ = std::bind(&BeamShot::WaitUpdate, this);
 }
 
 void BeamShot::Hit(void)
 {
 	//非有効化
-	activeFlag_ = false;
+	isActive_ = false;
 	//弾の生存可能時間をリセット
 	deathCount_ = 0.0f;
 	//ヒットエフェクトの再生
@@ -119,7 +119,6 @@ void BeamShot::Hit(void)
 	effectManager_->Stop(static_cast<int>(BEAM_STATE::BEAM));
 	//
 	update_ = std::bind(&BeamShot::WaitUpdate, this);
-
 }
 
 const int& BeamShot::GetModelId(void) const
