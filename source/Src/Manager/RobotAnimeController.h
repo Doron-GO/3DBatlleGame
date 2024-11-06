@@ -77,7 +77,6 @@ public:
 	//総合アップデート
 	void Update(void);
 
-	void Draw(void);
 
 	//アニメーションを追加する
 	void Add(int type, const std::string& path, float speed,float totalTime);
@@ -90,7 +89,6 @@ public:
 	void LowerBodyPlay(int type, bool priority = false, bool isLoop = true,
 		bool isStop = false, float endStep = -1.0f, float startStep = 0.0f, bool isForce = false);
 
-	void DebugDraw();
 
 	//上半身のアニメーションが再生が終わったかどうか(1ループ終わったら終了とする)
 	bool IsUpperEnd(void);

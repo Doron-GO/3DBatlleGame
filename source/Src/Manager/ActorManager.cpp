@@ -13,7 +13,7 @@ constexpr int PLAYER_TYPE = 0;
 
 constexpr int SINGLE_PLAY = 0;
 
-constexpr float STAGE_OUT_Y = -1000.0f;
+constexpr float STAGE_OUT_Y = -5000.0f;
 
 #pragma endregion
 
@@ -25,14 +25,10 @@ ActorManager::ActorManager(int playMode)
 	InitActor();
 	if (playMode_ == SINGLE_PLAY)
 	{
-		//InitSingleMode();
-		//_update = &ActorManager::UpdateSingleMode;
 		update_ = std::bind(&ActorManager::UpdateSingleMode, this);
 	}
 	else
 	{	
-		//InitActor();
-		//_update = &ActorManager::UpdateBattleMode;
 		update_ = std::bind(&ActorManager::UpdateBattleMode, this);
 	}
 	//どちらかのプレイヤーが死んだかどうかを判定
@@ -50,10 +46,8 @@ void ActorManager::InitActor(void)
 		//配列に格納
 		players_.emplace_back(std::move(player));
 	}
-
 	//プレイヤー1
 	int player1 = static_cast<int>(ActorBase::ACTOR_TYPE::PLAYER_1);
-
 	//シングルモードならプレイヤー１のUIとボスの情報を設定
 	if (playMode_== SINGLE_PLAY)
 	{
@@ -70,24 +64,14 @@ void ActorManager::InitActor(void)
 
 		//ボスの攻撃オブジェクト生成
 		bossEnemy_->MakeSpMoveObjects();
-
-		//プレイヤー1のUIを生成
-		//CreateUserInterface(*players_[player1], *bossEnemy_);
-
 	}
 	else
 	{
 		//プレイヤー2
 		int player2 = static_cast<int>(ActorBase::ACTOR_TYPE::PLAYER_2);
-
 		//敵プレイヤーのパラメータを持ってくる
 		SetEnemyInfo(*players_[player1], *players_[player2]);
 		SetEnemyInfo(*players_[player2], *players_[player1]);
-
-		//プレイヤー１とプレイヤー２のUIを生成
-		//CreateUserInterface(*players_[player1], *players_[player2]);
-		//CreateUserInterface(*players_[player2], *players_[player1]);
-
 	}
 }
 
@@ -97,7 +81,6 @@ void ActorManager::Update()
 	{
 		player->Update();
 	}
-	//(this->*_update)();
 	update_();
 }
 
@@ -120,7 +103,7 @@ void ActorManager::UpdateSingleMode(void)
 	//ボスと弾との当たり判定
 	DmageBossBeamCollision();
 	//勝者が決まったかどうかを判定
-	IsSingleModeWin();         
+	IsSingleModeWin();
 }
 
 void ActorManager::Draw(void)
@@ -136,21 +119,6 @@ void ActorManager::Draw(void)
 	}
 }
 
-void ActorManager::DrawDebug(int playerType)
-{
-	for (auto& player : players_)
-	{
-		player->PlayerDebugDraw(playerType);
-	}
-}
-
-void ActorManager::DrawAnimeDebug(int playerType)
-{
-	for (auto& player : players_)
-	{
-		player->RobotAnimDebugDraw(playerType);
-	}
-}
 
 const std::vector<std::unique_ptr<Player>>& ActorManager::GetPlayers(void)const
 {
@@ -193,6 +161,7 @@ void ActorManager::AddColliders(Collider* collider)
 	for (auto& player : players_)
 	{
 		player->AddCollider(collider);
+		player->InitWeaponCllider();
 	}
 }
 
@@ -376,9 +345,6 @@ void ActorManager::IsSingleModeWin(void)
 		//ボスを死亡状態に移行
 		bossEnemy_->ChangeDeathState();
 	}
-	else
-	{
-	}
 }
 
 bool ActorManager::StageOut(const VECTOR& pos) 
@@ -419,28 +385,6 @@ void ActorManager::SetEnemyInfo(ActorBase& player, ActorBase& target)
 	}
 	//敵の座標情報をセット
 	player.SetEnemyPosition(&target.GetTransform().pos);
-}
-
-void ActorManager::CreateUserInterface(ActorBase& player, ActorBase& target)
-{
-
-	//プレイヤータイプ
-	int playerType = static_cast<int>(player.GetActorType());
-
-	//UIを生成
-	userInterfaces_.emplace_back(
-		std::make_unique<UserInterface>(
-			playMode_,
-			playerType,
-			player.GetEnemyDistance(),
-			player.GetNumnberOfBullets(),
-			player.GetBoostFuel(),
-			player.GetHP(),
-			player.IsWin(),
-			target.GetTransform().pos,
-			target.GetHP()
-			)
-		);
 }
 
 

@@ -2,8 +2,11 @@
 #include "../../Utility/AsoUtility.h"
 #include "SkyDome.h"
 
+constexpr float SCALE = 5.0f;
+constexpr VECTOR SCALES = { SCALE, SCALE, SCALE };
 
-SkyDome::SkyDome(const Transform& syncTransform):syncTransform_(syncTransform)
+
+SkyDome::SkyDome(void)
 {
 	state_ = STATE::NONE;
 	// ÉÇÉfÉãêßå‰ÇÃäÓñ{èÓïÒ
@@ -19,16 +22,15 @@ SkyDome::SkyDome(const Transform& syncTransform):syncTransform_(syncTransform)
 	transform_.quaRotLocal = Quaternion();
 	transform_.Update();
 
-
 }
 
 SkyDome::~SkyDome(void)
 {
+
 }
 
 void SkyDome::Update(void)
 {
-	transform_.pos = syncTransform_.pos;
 	transform_.Update();
 }
 

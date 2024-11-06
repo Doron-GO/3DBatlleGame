@@ -83,6 +83,9 @@ public:
 	 //“G‚ÌHP‚ğİ’è
 	 void SetEnemyHp(const float* enemyHp);
 
+	 //c’e”‚Ìİ’è
+	 void SetNumberofBullets(const int* numberofBullets);
+
 	 //“G‚ÌƒXƒe[ƒg‚ğİ’è
 	 void SetEnemyState(const STATE* enemyState);
 
@@ -124,8 +127,8 @@ protected:
 	//“G‚Æ‚Ì‹——£
 	float enemyDistance_;
 
-	//“G‚Æ‚Ì‹——£
-	int numberofBullets_;
+	//c’e
+	const int* numberofBullets_;
 
 	//Ÿ—˜‚µ‚½‚©‚Ç‚¤‚©”»’è
 	bool isWin_;

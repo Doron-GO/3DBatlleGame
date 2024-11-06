@@ -58,8 +58,7 @@ private:
     const std::unique_ptr<Stage> stage_;
 
     //スカイドーム
-    std::unique_ptr<SkyDome> skyDome_;
-
+    const std::unique_ptr<SkyDome> skyDome_;
 
     //手前のロボット
     Transform frontTransform_;
@@ -68,8 +67,7 @@ private:
     Transform backTransform_;
 
     //ビームサーベル
-   std::vector< std::unique_ptr<BeamSaber>> beamSabers_;
-
+    std::vector< std::unique_ptr<BeamSaber>> beamSabers_;
 
     //画像タイプ配列
     std::map<IMG_TYPE, int> imgType_;
@@ -100,9 +98,6 @@ private:
 
     //カメラの初期設定
     void InitCamera(void);
-
-    //
-    void InitSkyDome(void);
 
 };
 

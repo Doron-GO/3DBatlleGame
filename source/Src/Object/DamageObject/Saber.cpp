@@ -7,7 +7,13 @@ Saber::Saber(int playerType, Transform& transform) :DamageObject(playerType), tr
 	//エフェクトマネージャーを生成
 	effectManager_ = std::make_unique<EffectManager>(transform_);
 	//エフェクトの追加
-	effectManager_->Add(static_cast<int>(SABER_STATE::HIT), HIT_EFFECT_SCARE, false, resMng_.Load(ResourceManager::SRC::HIT).handleId_);
+	effectManager_->Add(static_cast<int>(SABER_STATE::HIT),
+		HIT_EFFECT_SCARE,
+		{ 1.0f,1.0f,1.0f },
+		{ 1.0f,1.0f,1.0f },
+		false,
+		false,
+		resMng_.Load(ResourceManager::SRC::HIT).handleId_);
 }
 
 void Saber::Update(VECTOR enemyPos)

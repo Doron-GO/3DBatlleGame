@@ -23,22 +23,6 @@ void RobotAnimeController::Update(void)
 	DetachAnim();
 }
 
-void RobotAnimeController::Draw(void)
-{
-	DrawFormatStringF(0.0f, 270.0f, 0xffffff, "上半身ブレンドされるRATE : %f", blend_[Body::UP].rate_);
-	DrawFormatStringF(0.0f, 290.0f, 0xffffff, "下半身ブレンドされるRATE: %f", blend_[Body::LOW].rate_);
-	DrawFormatStringF(0.0f, 310.0f, 0xffffff, "上半身ブレンドされるRATE : %f", 1.0f - blend_[Body::UP].rate_);
-	DrawFormatStringF(0.0f, 330.0f, 0xffffff, "下半身ブレンドされるRATE: %f", 1.0f - blend_[Body::LOW].rate_);
-	DrawFormatStringF(0.0f, 350.0f, 0xffffff, "上半身アニメーションアタッチ番号 : %d", playAnim_[Body::UP].attachNo_);
-	DrawFormatStringF(0.0f, 370.0f, 0xffffff, "下半身アニメーションアタッチ番号: %d", playAnim_[Body::LOW].attachNo_);
-	DrawFormatStringF(0.0f, 390.0f, 0xffffff, "上半身ブレンドされるアタッチ番号: %d", blend_[Body::UP].attachNo_);
-	DrawFormatStringF(0.0f, 410.0f, 0xffffff, "下半身ブレンドされるアタッチ番号 : %d", blend_[Body::LOW].attachNo_);
-	DrawFormatStringF(0.0f, 430.0f, 0xffffff, "ブレンド前再生時間: %f", MV1GetAttachAnimTime(modelId_, 0));
-	DrawFormatStringF(0.0f, 450.0f, 0xffffff, "ブレンド後再生時間: %f", MV1GetAttachAnimTime(modelId_, 1));	
-	DrawFormatStringF(0.0f, 470.0f, 0xffffff, "上半身アニメーション再生時間 : %f", playAnim_[Body::UP].step_);
-	DrawFormatStringF(0.0f, 490.0f, 0xffffff, "下半身アニメーション再生時間: %f", playAnim_[Body::LOW].step_);
-	DrawFormatStringF(0.0f, 530.0f, 0xffffff, "上半身優先フラグ: %d", playAnim_[Body::UP].priority_ );
-}
 
 void RobotAnimeController::Add(int type, const std::string& path, float speed, float totalTime)
 {
@@ -373,45 +357,6 @@ void RobotAnimeController::LowerBodyPlay(int type, bool priority , bool isLoop ,
 	}
 }
 
-void RobotAnimeController::DebugDraw()
-{
-	for (auto num =0; num <2; num++)
-	{
-		STATE state = playType_[static_cast<Body>(num)];
-		std::string  st;
-		switch (state)
-		{
-		case RobotAnimeController::STATE::NONE:
-			break;
-		case RobotAnimeController::STATE::RUN:
-			st = "RUN";
-			break;
-		case RobotAnimeController::STATE::JUMP:
-			st = "JUMP";
-			break;
-		case RobotAnimeController::STATE::DAMAGE:
-			st = "DAMAGE";
-			break;
-		case RobotAnimeController::STATE::SHOT:
-			st = "SHOT";
-			break;
-		case RobotAnimeController::STATE::IDLE:
-			st = "IDLE";
-			break;
-		case RobotAnimeController::STATE::BOOST:
-			st = "DASH";
-			break;
-		case RobotAnimeController::STATE::COMBAT1:
-			st = "COMBAT1";
-
-			break;
-		case RobotAnimeController::STATE::COMBAT_RUN:
-			st = "COMBAT_RUN";
-			break;
-		}
-		DrawFormatString(0, 430+(20* num), 0xffffff, "アニメーション:%s", st.c_str());
-	}
-}
 
 bool RobotAnimeController::IsUpperEnd(void)
 {

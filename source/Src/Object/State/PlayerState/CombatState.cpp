@@ -17,7 +17,7 @@ CombatState::CombatState(Player& player):player_(player)
 	//ビームサーベルを有効化
 	player_.GetBeamSaber().GetSaber().Activate();
 	//最高速を設定
-	player_.SetMaxMoveSpeed(player_.MOVE_SPEED);
+	player_.SetMaxMoveSpeed(player_.DEFAULT_MOVE_SPEED);
 	//移動量を0にする
 	player_.SetMoveSpeed(0.0f);
 

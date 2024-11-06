@@ -52,3 +52,8 @@ const int& DamageObject::GetModelId(void) const
 {
     return modelId_;
 }
+
+const VECTOR& DamageObject::GetPos(void) const
+{
+    return transform_.pos;
+}

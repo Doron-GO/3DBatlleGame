@@ -34,7 +34,7 @@ void ResourceManager::Init(void)
 	resouceMap_.emplace(SRC::PLAYER, res);
 
 	//Stage
-	res = Resource(Resource::TYPE::MODEL, PATH_MODEL + "Stage/Ground.mv1");
+	res = Resource(Resource::TYPE::MODEL, PATH_MODEL + "Stage/Ground3.mv1");
 	resouceMap_.emplace(SRC::STAGE, res);
 
 	//ビームライフル
@@ -49,9 +49,21 @@ void ResourceManager::Init(void)
 	res = Resource(Resource::TYPE::EFFEKSEER, PATH_EFFECT + "drill.efkefc");
 	resouceMap_.emplace(SRC::BEAM, res);
 
+	//バーニアエフェクト
+	res = Resource(Resource::TYPE::EFFEKSEER, PATH_EFFECT + "jet.efkefc");
+	resouceMap_.emplace(SRC::VERNIER, res);
+
+	//土煙エフェクト
+	res = Resource(Resource::TYPE::EFFEKSEER, PATH_EFFECT + "DustCloud.efkefc");
+	resouceMap_.emplace(SRC::DUST_CLOUD, res);
+
 	//大爆発エフェクト
 	res = Resource(Resource::TYPE::EFFEKSEER, PATH_EFFECT + "Explosion.efkefc");
 	resouceMap_.emplace(SRC::EXPLOSION, res);
+
+	//バリアドームエフェクト
+	res = Resource(Resource::TYPE::EFFEKSEER, PATH_EFFECT + "Barrior_Dome.efkefc");
+	resouceMap_.emplace(SRC::BARRIOR_DOME, res);
 
 	//ヒットエフェクト
 	res = Resource(Resource::TYPE::EFFEKSEER, PATH_EFFECT + "Hit.efkefc");
@@ -60,6 +72,10 @@ void ResourceManager::Init(void)
 	//斬撃エフェクト
 	res = Resource(Resource::TYPE::EFFEKSEER, PATH_EFFECT + "Slash.efkefc");
 	resouceMap_.emplace(SRC::SLASH, res);
+
+	//ブーストエフェクト
+	res = Resource(Resource::TYPE::EFFEKSEER, PATH_EFFECT + "Boost.efkefc");
+	resouceMap_.emplace(SRC::BOOST, res);
 
 	//デスボールエフェクト
 	res = Resource(Resource::TYPE::EFFEKSEER, PATH_EFFECT + "DeathBall.efkefc");

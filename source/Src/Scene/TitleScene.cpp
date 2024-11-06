@@ -15,60 +15,62 @@
 #pragma region Parameter
 
 //モデルの座標
-static constexpr VECTOR  FRONT_ROBOT_POS = { 0.0f, -25.0f, 0.0f };
-static constexpr VECTOR  BACK_ROBOT_POS = { 0.0f, -25.0f, 5000.0f };
+constexpr VECTOR FRONT_ROBOT_POS = { 0.0f, -25.0f, 0.0f };
+constexpr VECTOR BACK_ROBOT_POS = { 0.0f, -450.0f, 5000.0f };
 
 //カメラ座標
-static constexpr VECTOR  CAMERA_POS = { 100.0f, 10.0f, -130.0f };
-static constexpr VECTOR  CAMERA_TARGET_POS = { 100.0f, 15.0f, 0.0f };
+constexpr VECTOR CAMERA_POS = { 100.0f, 20.0f, -130.0f };
+constexpr VECTOR CAMERA_TARGET_POS = { 100.0f, 15.0f, 0.0f };
 
 //タイトルロゴ画像関係の数値(座標、中心座標、大きさ)
-static constexpr int  TITLE_LOGO_POS_X = 775;
-static constexpr int  TITLE_LOGO_POS_Y = 400;
-static constexpr int  TITLE_LOGO_CENTER_X = 320;
-static constexpr int  TITLE_LOGO_CENTER_Y = 60;
-static constexpr double  TITLE_LOGO_SCALE = 2.5;
+constexpr int TITLE_LOGO_POS_X = 775;
+constexpr int TITLE_LOGO_POS_Y = 400;
+constexpr int TITLE_LOGO_CENTER_X = 320;
+constexpr int TITLE_LOGO_CENTER_Y = 60;
+constexpr double TITLE_LOGO_SCALE = 2.5;
 
 //×ボタンを押してね画像の数値(座標、中心座標、大きさ)
-static constexpr int  PLEASE_CROSS_BUTTON_POS_X = 800;
-static constexpr int  PLEASE_CROSS_BUTTON_POS_Y = 800;
-static constexpr int  PLEASE_CROSS_BUTTON_CENTER_X = 480;
-static constexpr int  PLEASE_CROSS_BUTTON_CENTER_Y = 52;
-static constexpr double  PLEASE_CROSS_BUTTON_SCALE = 1.2;
+constexpr int PLEASE_CROSS_BUTTON_POS_X = 800;
+constexpr int PLEASE_CROSS_BUTTON_POS_Y = 800;
+constexpr int PLEASE_CROSS_BUTTON_CENTER_X = 480;
+constexpr int PLEASE_CROSS_BUTTON_CENTER_Y = 52;
+constexpr double PLEASE_CROSS_BUTTON_SCALE = 1.2;
 
 //Aボタンを押してね画像の数値(座標、中心座標、大きさ)
-static constexpr int  PLEASE_A_BUTTON_POS_X = 800;
-static constexpr int  PLEASE_A_BUTTON_POS_Y = 800;
-static constexpr int  PLEASE_A_BUTTON_CENTER_X = 395;
-static constexpr int  PLEASE_A_BUTTON_CENTER_Y = 34;
-static constexpr double  PLEASE_A_BUTTON_SCALE = 1.2;
+constexpr int PLEASE_A_BUTTON_POS_X = 800;
+constexpr int PLEASE_A_BUTTON_POS_Y = 800;
+constexpr int PLEASE_A_BUTTON_CENTER_X = 395;
+constexpr int PLEASE_A_BUTTON_CENTER_Y = 34;
+constexpr double PLEASE_A_BUTTON_SCALE = 1.2;
 
 //モード選択画像の数値(座標、中心座標、大きさ)
 //一人用
-static constexpr int  SINGLE_MODE_POS_X = 775;
-static constexpr int  SINGLE_MODE_POS_Y = 400;
-static constexpr int  SINGLE_MODE_CENTER_X = 165;
-static constexpr int  SINGLE_MODE_CENTER_Y = 30;
-static constexpr double  SINGLE_MODE_SCALE = 2.0;
+constexpr int SINGLE_MODE_POS_X = 775;
+constexpr int SINGLE_MODE_POS_Y = 400;
+constexpr int SINGLE_MODE_CENTER_X = 165;
+constexpr int SINGLE_MODE_CENTER_Y = 30;
+constexpr double SINGLE_MODE_SCALE = 2.0;
 //二人用
-static constexpr int  MULTI_PLAY_POS_X = 775;
-static constexpr int  MULTI_PLAY_POS_Y = 600;
-static constexpr int  MULTI_PLAY_CENTER_X = 165;
-static constexpr int  MULTI_PLAY_CENTER_Y = 52;
-static constexpr double  MULTI_PLAY_SCALE = 2.0;
+constexpr int MULTI_PLAY_POS_X = 775;
+constexpr int MULTI_PLAY_POS_Y = 600;
+constexpr int MULTI_PLAY_CENTER_X = 165;
+constexpr int MULTI_PLAY_CENTER_Y = 52;
+constexpr double MULTI_PLAY_SCALE = 2.0;
 
 //選択カーソル画像の数値(座標、中心座標、大きさ)
-static constexpr int  TRIANGLE_POS_X = 1200;
-static constexpr int  TRIANGLE_POS_Y = 400;
-static constexpr int  TRIANGLE_CENTER_X = 280;
-static constexpr int  TRIANGLE_CENTER_Y = 63;
-static constexpr int  TRIANGLE_OFFSET = 200;
-static constexpr double  TRIANGLE_SCALE = 1.2;
+constexpr int TRIANGLE_POS_X = 1200;
+constexpr int TRIANGLE_POS_Y = 400;
+constexpr int TRIANGLE_CENTER_X = 280;
+constexpr int TRIANGLE_CENTER_Y = 63;
+constexpr int TRIANGLE_OFFSET = 200;
+constexpr double TRIANGLE_SCALE = 1.2;
 
 #pragma endregion
 
 TitleScene::TitleScene(SceneManager& manager, Transitor& transit, Input& input) :Scene(manager,  transit,input),
-resMng_(ResourceManager::GetInstance()), camera_(std::make_unique<Camera>()),stage_(std::make_unique<Stage>())
+resMng_(ResourceManager::GetInstance()), camera_(std::make_unique<Camera>()),stage_(std::make_unique<Stage>()),
+skyDome_(std::make_unique<SkyDome>())
+
 {
 	sceneTransitor_.Start();
 	//モード選択の初期カーソル位置を一人用に設定
@@ -80,8 +82,6 @@ resMng_(ResourceManager::GetInstance()), camera_(std::make_unique<Camera>()),sta
 	InitImage();
 	//モデルの読み込み
 	InitModel();
-	//スカイドームの読み込み
-	InitSkyDome();
 	//カメラの初期設定
 	InitCamera();
 
@@ -182,13 +182,19 @@ void TitleScene::DrawPleaseButton(void)
 
 void TitleScene::DrawModeSelect(void)
 {
+	//現在接続されているコントローラの数
+	int joyPadNum = GetJoypadNum();
+
 	//シングルモード選択画像
 	DrawRotaGraph2(SINGLE_MODE_POS_X, SINGLE_MODE_POS_Y,
 		SINGLE_MODE_CENTER_X, SINGLE_MODE_CENTER_Y, SINGLE_MODE_SCALE, 0.0, imgType_[IMG_TYPE::SINGLE_MODE], true, false);
 
-	//対戦モード選択画像
-	DrawRotaGraph2(MULTI_PLAY_POS_X, MULTI_PLAY_POS_Y,
-		MULTI_PLAY_CENTER_X, MULTI_PLAY_CENTER_Y, MULTI_PLAY_SCALE, 0.0, imgType_[IMG_TYPE::MULTI_PLAY], true, false);
+	if (joyPadNum >= 2)
+	{
+		//対戦モード選択画像
+		DrawRotaGraph2(MULTI_PLAY_POS_X, MULTI_PLAY_POS_Y,
+			MULTI_PLAY_CENTER_X, MULTI_PLAY_CENTER_Y, MULTI_PLAY_SCALE, 0.0, imgType_[IMG_TYPE::MULTI_PLAY], true, false);
+	}
 	
 	//カーソル選択画像
 	DrawRotaGraph2(TRIANGLE_POS_X, TRIANGLE_POS_Y + (TRIANGLE_OFFSET * playMode_),
@@ -228,18 +234,21 @@ bool TitleScene::ButtonPush(void)
 
 bool TitleScene::SelectCursor(void)
 {
+	//現在接続されているコントローラの数
+	int joyPadNum = GetJoypadNum();
+
 	//上ボタンか十字キー上を押したら、カーソルを上に動かす
 	if (input_.IsTriggerd("up") && playMode_ > static_cast<int>(GAME_MODE::SINGLE))
 	{
 		playMode_--;
 	}
 	//下ボタンか十字キー下を押したら、カーソルを上に動かす
-	else if (input_.IsTriggerd("down") && playMode_ < static_cast<int>(GAME_MODE::MULTI))
+	else if (joyPadNum>=2&&
+			input_.IsTriggerd("down") &&
+			playMode_ < static_cast<int>(GAME_MODE::MULTI)
+			)
 	{
 		playMode_++;
-	}
-	else
-	{
 	}
 	return ButtonPush();
 }
@@ -321,7 +330,3 @@ void TitleScene::InitCamera(void)
 	camera_->SetCameraPos(CAMERA_POS);
 }
 
-void TitleScene::InitSkyDome(void)
-{
-	skyDome_ = std::make_unique<SkyDome>(frontTransform_);
-}

@@ -36,13 +36,15 @@ public:
 	virtual const float& GetDamage(void)const;
 	//モデルIDの取得
 	virtual const int& GetModelId(void)const;
+	//座標取得
+	virtual const VECTOR& GetPos(void)const;
 	//有効状態かどうかを取得
 	virtual bool IsActive(void);
 
 protected:
 
 	//ヒットエフェクトの大きさ
-	static constexpr VECTOR HIT_EFFECT_SCARE = { 35.0f,35.0f,35.0f };
+	static constexpr VECTOR HIT_EFFECT_SCARE = { 45.0f,45.0f,45.0f };
 
 	//リソースマネージャー
 	ResourceManager& resMng_;

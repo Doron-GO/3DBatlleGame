@@ -14,84 +14,130 @@
 #include"../../DamageObject/BeamShot.h"
 #include "Player.h"
 
-
 #pragma region Parameter
 
 //デルタタイムにかける定数(60.0f)
-static constexpr float DEFAULT_RATE = 60.0f;
+constexpr float DEFAULT_RATE = 60.0f;
 
  //プレイヤーの初期ヒットポイント
-static constexpr float MAX_PLAYER_HP = 1000.0f;
+constexpr float MAX_PLAYER_HP = 300.0f;
 
-static constexpr float GRAVITY_POW = 30.0f;
+//プレイヤーの初期方向（回転）
+constexpr VECTOR PLAYER_INIT_ROT = { 0.0f,180 * DX_PI_F / 180 ,0.0f };
+constexpr float GRAVITY_POW = 30.0f;
 //重力デルタタイムにかける定数
-static constexpr float GRAVITY_RATE = 100.0f;
+constexpr float GRAVITY_RATE = 100.0f;
  //重力の最大値
-static constexpr float MAX_GRAVITY_POW = 30.0f;
+constexpr float MAX_GRAVITY_POW = 30.0f;
 
 //ブーストゲージの最大量
-static constexpr float MAX_BOOST_GAGE = 100.0f;
+constexpr float MAX_BOOST_GAGE = 100.0f;
 //初期重力値
-static constexpr float DEFAULT_GRAVITY_POW = 3.0f;
+constexpr float DEFAULT_GRAVITY_POW = 3.0f;
 
 //ブーストゲージが回復し始めるまでの時間
-static constexpr float RECHARGE_BOOST_DELAY = 100.0f;
+constexpr float RECHARGE_BOOST_DELAY = 100.0f;
 //ブーストゲージ回復カウントのデルタタイムにかける定数
-static constexpr float RECHARGE_BOOST_COUNT_RATE = 60.0f;
+constexpr float RECHARGE_BOOST_COUNT_RATE = 60.0f;
 //ブーストゲージ回復のデルタタイムにかける定数
-static constexpr float RECHARGE_BOOST_RATE = 10.0f;
+constexpr float RECHARGE_BOOST_RATE = 10.0f;
 
 //ブースト移動のデルタタイムにかける定数
 constexpr float BOOST_MOVE_RATE = 60.0f;
 
 //着地硬直時間
-static constexpr float FALL_STAN_TIME = 40.0f;
+constexpr float FALL_STAN_TIME = 40.0f;
  //着地硬直計測デルタタイムにかける定数
-static constexpr float FALL_STAN_RATE = 100.0f;
+constexpr float FALL_STAN_RATE = 100.0f;
 //格闘硬直時間
-static constexpr float COMBAT_STAN_TIME = 30.0f;
+constexpr float COMBAT_STAN_TIME = 30.0f;
 //格闘硬直計測デルタタイムにかける定数
 constexpr float COMBAT_STAN_RATE = 100.0f;
 
  //爆発エフェクトの大きさ
-static constexpr VECTOR EFFECT_EXPLOSION_SCALE = { 20.0f,20.0f,20.0f };
+constexpr VECTOR EFFECT_EXPLOSION_SCALE = { 20.0f,20.0f,20.0f };
+//爆発エフェクトのオフセット
+constexpr VECTOR EFFECT_EXPLOSION_OFFSET = { 1.0f,1.0f,1.0f };
+//爆発エフェクトの回転
+constexpr VECTOR EFFECT_EXPLOSION_ROT = { 1.0f,1.0f,1.0f };
+
+//右ジェットパックエフェクトの大きさ
+constexpr VECTOR EFFECT_JETPACK_RIGHT_SCALE = { 10.0f, 40.0f, 20.0f };
+//右ジェットパックエフェクトのオフセット
+constexpr VECTOR EFFECT_JETPACK_RIGHT_OFFSET = { 15.5f,157.0f,-19.0f };
+//右ジェットパックエフェクトの回転
+constexpr VECTOR EFFECT_JETPACK_RIGHT_ROT = { -40.0f * DX_PI_F / 180,0.0f,0.0f };
+
+//左ジェットパックエフェクトの大きさ
+constexpr VECTOR EFFECT_JETPACK_LEFT_SCALE = { 10.0f, 40.0f, 20.0f };
+//左ジェットパックエフェクトのオフセット
+constexpr VECTOR EFFECT_JETPACK_LEFT_OFFSET = { -4.5f,157.0f,-19.0f };
+//左ジェットパックエフェクトの回転
+constexpr VECTOR EFFECT_JETPACK_LEFT_ROT = { -40.0f * DX_PI_F / 180,0.0f,0.0f };
+
+//ブースとエフェクトの大きさ
+constexpr VECTOR EFFECT_BOOST_SCALE = { 40.0f,40.0f,40.0f };
+//爆発エフェクトのオフセット
+constexpr VECTOR EFFECT_BOOST_OFFSET = { -4.5f, 157.0f, -19.0f };
+
+//土煙エフェクトの大きさ
+constexpr VECTOR EFFECT_DUST_SCALE = { 20.0f,20.0f,20.0f };
 
 //一人用モードボスの座標補正値
-static constexpr float OFFSET_BOSS_ENEMY = 1000.0f;
+constexpr float OFFSET_BOSS_ENEMY = 1000.0f;
 
 //二人人用モード座標補正値(値なし)
-static constexpr float OFFSET_ENEMY = 0.0f;
+constexpr float OFFSET_ENEMY = 0.0f;
 
- //プレイヤーの初期位置
-static constexpr VECTOR DEFAULT_POS = { 0.0f, -30.0f, 800.0f };
+  //プレイヤーの初期位置
+constexpr VECTOR DEFAULT_BOSS_POS = { 0.0f, 37.0f, -4000.0f };
+
+constexpr VECTOR DEFAULT_PLAYER2_POS = { 0.0f, -750.0f, 4000.0f };
+
+//プレイヤー2回転
+constexpr VECTOR DEFAULT_PLAYER2_ROT = { 0.0f, 180.0f, 0.0f };
 
  //スーパーアーマーの最大値
-static constexpr int MAX_SUPER_ARMOR = 2;
+constexpr int MAX_SUPER_ARMOR = 2;
 
 //ジャンプ時に使用する、デルタタイムにかけるブーストゲージ減少定数
-static constexpr float JUMP_BOOST_DAMPING_RATE = 60.0f;
+constexpr float JUMP_BOOST_DAMPING_RATE = 60.0f;
 //ジャンプ力
 constexpr float JUMP_POW = 2500.0f;
 //ジャンプ力を徐々に減らすデルタタイムにかける定数
-static constexpr float DECREASE_JUMP_POW_RATE = 100.0f;
+constexpr float DECREASE_JUMP_POW_RATE = 100.0f;
 
 //カプセル頂点座標
-static constexpr float CAPSULE_TOP = 200.0f;
+constexpr float CAPSULE_TOP = 200.0f;
 //カプセル底辺座標
-static constexpr float CAPSULE_DOWN = 20.0f;
+constexpr float CAPSULE_DOWN = 20.0f;
 //カプセル半径
-static constexpr float CAPSULE_RADIUS = 100.0f;
+constexpr float CAPSULE_RADIUS = 100.0f;
 
 //射撃可能時間計測デルタタイムにかける定数
-static constexpr float SHOT_FRAME_RATE = 6.0f;
+constexpr float SHOT_FRAME_RATE = 6.0f;
 //最射撃可能時間
-static constexpr float SHOT_FRAME_TIME = 5.0f;
+constexpr float SHOT_FRAME_TIME = 5.0f;
 
 //重力判定のライン判定の始まりと終わり
-static constexpr float COLL_CHEAK_START_SCALE = 25.0f;
-static constexpr float COLL_CHEAK_END_SCALE = 10.0f;
+constexpr float COLL_CHEAK_START_SCALE = 25.0f;
+constexpr float COLL_CHEAK_END_SCALE = 10.0f;
 
-static constexpr float DEFAULT_DISTANCE = 4000.0f;
+constexpr float STAGE_OUT = 5000.0f;
+
+//ステージの中心座標
+constexpr VECTOR STAGE_CENTER = { 0.0f,0.0f,0.0f };
+
+//重力方向
+constexpr VECTOR GRAVITY_DIR = { 0.0f,-1.0f,0.0f };
+//逆重力方向
+constexpr VECTOR GRAVITY_UP_DIR = { 0.0f,1.0f,0.0f };
+
+//アングル制御角度
+constexpr float LIMIT_ANGLE = 70.0f;
+
+//ブースト燃料
+constexpr float BOOST_FUEL = 100.0f;
 
 #pragma endregion
 
@@ -113,7 +159,6 @@ state_(nullptr),input_(std::make_unique<Input>(padNum_)),camera_(std::make_uniqu
 	{
 		offsetEnemy_ = OFFSET_ENEMY;
 	}	
-	InitParameter();
 }
 
 Player::~Player()
@@ -126,9 +171,13 @@ void Player::Init(void)
 	//モデルの生成
 	InitTransform();
 	//オブジェクトの生成
-	MakeObjects();
+	MakeObjects();	
+	//
+	InitParameter();
 	//アニメーションの追加
 	InitAnimation();
+	//エフェクトの追加
+	InitEffect();
 	//カメラの初期化
 	InitCamera();
 }
@@ -154,16 +203,17 @@ void Player::InitTransform(void)
 	//大きさ
 	transform_.scl = AsoUtility::VECTOR_ONE;
 	//座標
-	transform_.pos = { DEFAULT_POS.x, DEFAULT_POS.y, (DEFAULT_POS.z * playerType_) };
+	transform_.pos = { DEFAULT_BOSS_POS.x, DEFAULT_BOSS_POS.y, DEFAULT_BOSS_POS.z  };
 	//回転
 	transform_.quaRot = Quaternion();
-	transform_.quaRotLocal =
-		Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(180.0f), 0.0f });
+	transform_.quaRotLocal = Quaternion::Euler(PLAYER_INIT_ROT);
 	//プレイヤータイプによって回転、座標を変える
 	if (playerType_ == static_cast<int>(PLAYER_TYPE::PLAYER_2))
 	{
-		moveQua_ =Quaternion::Euler({ 0.0f, AsoUtility::Deg2RadF(180.0f), 0.0f });
-		transform_.pos.z += DEFAULT_DISTANCE;
+		transform_.pos = { DEFAULT_PLAYER2_POS.x, DEFAULT_PLAYER2_POS.y, DEFAULT_PLAYER2_POS.z };
+		moveQua_ =Quaternion::Euler({ DEFAULT_PLAYER2_ROT.x,
+					 AsoUtility::Deg2RadF(DEFAULT_PLAYER2_ROT.y),
+					  DEFAULT_PLAYER2_ROT.z });
 	}
 	movedPos_ = transform_.pos;
 	transform_.Update();
@@ -177,12 +227,10 @@ void Player::InitParameter(void)
 	padNum_ = playerType_ + 1;
 	//移動量
 	movePow_ = AsoUtility::VECTOR_ZERO;
-	//移動後座標
-	movedPos_ = AsoUtility::VECTOR_ZERO;
 	//重力方向
-	dirGravity_ = { 0.0f,-1.0f,0.0f };
+	dirGravity_ = GRAVITY_DIR;
 	//重力の逆方向
-	dirUpGravity_ = { 0.0f,1.0f,0.0f };
+	dirUpGravity_ = GRAVITY_UP_DIR;
 	startUpperQuaRotY_ = transform_.quaRot;
 	//ブーストゲージの値の初期化
 	boostFuel_ = MAX_BOOST_GAGE;
@@ -210,6 +258,8 @@ void Player::InitParameter(void)
 	isHorming_	= true;
 	//ブーストゲージ回復フラグの初期化
 	rechargeBoostFlag_ = false;
+
+	numberofBullets_ = &beamRifle_->GetNumnberOfBullets();
 }
 
 void Player::InitAnimation(void)
@@ -228,99 +278,54 @@ void Player::InitAnimation(void)
 	robotAnimeController_->Add(static_cast<int>(STATE::WIN), PATH_ANIMATION_PLAYER + "Win.mv1", 60.0f, 170.0f);
 
 	robotAnimeController_->Update();
+}
+
+void Player::InitEffect(void)
+{
 	//エフェクトの追加
-	effectManager_->Add(static_cast<int>(STATE::LOSE), EFFECT_EXPLOSION_SCALE, false,
-		resMng_.Load(ResourceManager::SRC::EXPLOSION).handleId_);
+	effectManager_->Add(static_cast<int>(EFFECT_TYPE::LOSE),
+		EFFECT_EXPLOSION_SCALE,
+		EFFECT_EXPLOSION_OFFSET,
+		EFFECT_EXPLOSION_ROT,
+		false,
+		false,
+		resMng_.Load(ResourceManager::SRC::EXPLOSION).handleId_);	
 
-}
+	//バックパック右バーニア
+	effectManager_->Add(static_cast<int>(EFFECT_TYPE::JET_BACK_RIGHT),
+		EFFECT_JETPACK_RIGHT_SCALE,
+		EFFECT_JETPACK_RIGHT_OFFSET,
+		EFFECT_JETPACK_RIGHT_ROT,
+		false,
+		true,
+		resMng_.Load(ResourceManager::SRC::VERNIER).handleId_);
 
-void Player::UpdateBattleMode(void)
-{
-	//カメラに敵の座標を渡す
-	camera_->SetTargetPos(*enemyPos_);
+	//バックパック左バーニア
+	effectManager_->Add(static_cast<int>(EFFECT_TYPE::JET_BACK_LEFT),
+		EFFECT_JETPACK_LEFT_SCALE,
+		EFFECT_JETPACK_LEFT_OFFSET,
+		EFFECT_JETPACK_LEFT_ROT,
+		false,
+		true,
+		resMng_.Load(ResourceManager::SRC::VERNIER).handleId_);
 
-	//ブーストゲージ回復
-	RecoverBoostGauge();
+	//ブースト
+	effectManager_->Add(static_cast<int>(EFFECT_TYPE::BOOST),
+		EFFECT_BOOST_SCALE,
+		EFFECT_BOOST_OFFSET,
+		AsoUtility::VECTOR_ZERO,
+		false,
+		false,
+		resMng_.Load(ResourceManager::SRC::BOOST).handleId_);
 
-	if (playMode_ == PLAY_MODE::BATTLE_MODE)
-	{
-		//現在の敵の状態を調べる
-		EnemyState();
-	}
-	//現在のステートのアップデート
-	state_->Update();
-
-	//無敵時間があればそれを減らしていく
-	if (!IsSafeTimeSufficient())
-	{
-		CountSafeTime(deltaTime_ * 50.0f);
-	}
-
-	//行動不能時間計測
-	CountCombatStanTime();
-
-	//敵との距離に応じてホーミングの有無を決める
-	Range();
-
-	// アニメーション再生
-	robotAnimeController_->Update();
-
-	//エフェクト再生
-	effectManager_->Update();
-
-	//地面との当たり判定
-	CollisionGravity();
-
-	//座標移動、モデル回転などの更新
-	TransformUpdate();
-
-	//各武器のアップデート
-	WeaponUpdate();
-
-	//自分の体力が０なら敗北状態に変える
-	IsDead();
-
-}
-
-void Player::UpdateSingleMode(void)
-{
-	VECTOR enemyPos = { enemyPos_->x,enemyPos_->y + offsetEnemy_,enemyPos_->z };
-	//カメラに敵の座標を渡す
-	camera_->SetTargetPos(enemyPos);
-	//ブーストゲージ回復
-	RecoverBoostGauge();
-
-	//プレイヤーの現在のステートのアップデート
-	state_->Update();
-
-	if (!IsSafeTimeSufficient())
-	{
-		CountSafeTime(deltaTime_ * 50.0f);
-	}
-
-	//行動不能時間計測
-	CountCombatStanTime();
-
-	//敵との距離に応じてホーミングの有無を決める
-	Range();
-
-	// アニメーション再生
-	robotAnimeController_->Update();
-
-	//エフェクト再生
-	effectManager_->Update();
-
-	//地面との当たり判定
-	CollisionGravity();
-
-	//座標移動、モデル回転などの更新
-	TransformUpdate();
-
-	//各武器のアップデート
-	WeaponUpdate();
-
-	//自分の体力が０なら敗北状態に変える
-	IsDead();
+	//土煙
+	effectManager_->Add(static_cast<int>(EFFECT_TYPE::DUST_CLOUD),
+		EFFECT_DUST_SCALE,
+		AsoUtility::VECTOR_ZERO,
+		AsoUtility::VECTOR_ZERO,
+		false,
+		false,
+		resMng_.Load(ResourceManager::SRC::DUST_CLOUD).handleId_);
 
 }
 
@@ -343,7 +348,7 @@ void Player::Update()
 	if (playMode_ == PLAY_MODE::BATTLE_MODE)
 	{
 		//現在の敵の状態を調べる
-		EnemyState();
+		StopHomingIfBoosted();
 	}
 	//現在のステートのアップデート
 	state_->Update();
@@ -358,31 +363,33 @@ void Player::Update()
 	CountCombatStanTime();
 
 	//敵との距離に応じてホーミングの有無を決める
-	Range();
+	RangeDistance();
 
 	// アニメーション再生
 	robotAnimeController_->Update();
 
-	//エフェクト再生
-	effectManager_->Update();
-
 	//地面との当たり判定
 	CollisionGravity();
 
+	//ステージ外に出られない処理
+	StageOut();
+
 	//座標移動、モデル回転などの更新
 	TransformUpdate();
+
+	//エフェクト再生
+	effectManager_->Update();
 
 	//各武器のアップデート
 	WeaponUpdate();
 
 	//自分の体力が０なら敗北状態に変える
 	IsDead();
-
 }
 
 void Player::TransformUpdate(void)
 {
- 	movePow_ = VAdd(movePow_, jumpPow_);
+	movePow_ = VAdd(movePow_, jumpPow_);
 	movedPos_ = VAdd(movedPos_, movePow_);
 	transform_.pos = movedPos_;
 	transform_.quaRot = quaRot_;
@@ -406,7 +413,7 @@ void Player::RangeDistance(void)
 
 }
 
-void Player::Range(void)
+void Player::HormingRange(void)
 {
 	//相手との距離によって、追尾するかを決める
 	RangeDistance();
@@ -422,7 +429,7 @@ void Player::Range(void)
 bool Player::IsDead(void)
 {
 	//HPが0以下なら死亡する
-	if (!IsGaugeSufficient(hp_,-1))
+	if (!IsValueSufficient(hp_,-1))
 	{
 		return true;
 		//敗北状態にする
@@ -451,6 +458,7 @@ const Player::STATE& Player::GetState(void)
 
 void Player::DamageSuperArmor(void)
 {
+	//スーパーアーマーを減らす
 	superArmor_ --;
 }
 
@@ -461,10 +469,14 @@ void Player::Draw(void)
 	beamSaber_->Draw();
 }
 
-
-void Player::PlayEffect(STATE state)
+void Player::PlayEffect(EFFECT_TYPE effectType)
 {
-	effectManager_-> Play(static_cast<int>(state));
+	effectManager_-> Play(static_cast<int>(effectType));
+}
+
+void Player::StopEffect(EFFECT_TYPE effectType)
+{
+	effectManager_->Stop(static_cast<int>(effectType));
 }
 
 void Player::CameraDraw()
@@ -479,6 +491,7 @@ const Transform& Player::GetTransform(void) const
 
 void Player::CollisionGravity(void)
 {
+	//
 	VECTOR checkPos = VAdd(transform_.pos, VScale(transform_.GetUp(), COLL_CHEAK_START_SCALE));
 	VECTOR checkDPos = VAdd(transform_.pos, VScale(dirGravity_, COLL_CHEAK_END_SCALE));
 	for(auto& collider:colliders_)
@@ -575,6 +588,14 @@ void Player::InitCamera(void)
 	camera_->Init();
 }
 
+void Player::InitWeaponCllider(void)
+{
+	for (auto& collider : colliders_)
+	{
+		beamRifle_->AddCollider(collider);
+	}
+}
+
 BeamRifle& Player::GetBeamRifle(void) const
 {
 	return *beamRifle_;
@@ -600,86 +621,13 @@ void Player::ChangeState(std::unique_ptr<StateBase> state)
 	state_=std::move(state) ;
 } 
 
-void Player::DebugPlayerState()
+
+void Player::StopHomingIfBoosted(void)
 {
-	switch (actorState_)
+	if (*enemyState_ ==STATE::BOOST)
 	{
-	case Player::STATE::RUN:
-		debugString_ = "RUN";
-		break;
-	case Player::STATE::JUMP:
-		debugString_ = "JUMP";
-		break;
-	case Player::STATE::DAMAGE:
-		debugString_ = "DAMAGE";
-		break;
-	case Player::STATE::SHOT:
-		debugString_ = "SHOT";
-		break;
-	case Player::STATE::IDLE:
-		debugString_ = "IDLE";
-		break;
-	case Player::STATE::BOOST:
-		debugString_ = "BOOST";
-		break;
-	case Player::STATE::BOOST_DASH:
-		debugString_ = "BOOST_DASH";
-		break;
-	case Player::STATE::FALL:
-		debugString_ = "FALL";
-		break;
-	case Player::STATE::COMBAT:
-		debugString_ = "COMBAT1";
-		break;
-	case Player::STATE::COMBAT_RUN:
-		debugString_ = "COMBAT_RUN";
-		break;
-	default:
-		break;
-	}
-
-}
-
-void Player::EnemyState(void)
-{
-	switch (*enemyState_)
-	{
-	case Player::STATE::RUN:
-		enemyDebugString_ = "RUN";
-		break;
-	case Player::STATE::JUMP:
-		enemyDebugString_ = "JUMP";
-		break;
-	case Player::STATE::DAMAGE:
-		enemyDebugString_ = "DAMAGE";
-		break;
-	case Player::STATE::SHOT:
-		enemyDebugString_ = "SHOT";
-		break;
-	case Player::STATE::IDLE:
-		enemyDebugString_ = "IDLE";
-		break;
-	case Player::STATE::BOOST:
-		enemyDebugString_ = "BOOST";
 		beamRifle_->InActivateHorming();
-		break;
-	case Player::STATE::BOOST_DASH:
-		enemyDebugString_ = "BOOST_DASH";
-		break;
-	case Player::STATE::FALL:
-		enemyDebugString_ = "FALL";
-		break;
-	case Player::STATE::COMBAT:
-		enemyDebugString_ = "COMBAT1";
-		break;
-	case Player::STATE::COMBAT_RUN:
-		enemyDebugString_ = "COMBAT_RUN";
-		beamRifle_->InActivateHorming();
-		break;
-	default:
-		break;
 	}
-
 }
 
 void Player::SpeedAdd(void)
@@ -702,107 +650,13 @@ void Player::Move(void)
 	quaRot_ = Quaternion::LookRotation(xOutQuaRot.GetForward());
 }
 
-void Player::MoveBoodtDash(void)
+void Player::MoveBoostDash(void)
 {
 	movePow_ = VScale(moveBoostQua_.GetForward(), moveSpeed_ * (deltaTime_ * DEFAULT_RATE));
 	Quaternion xOutQuaRot = moveBoostQua_;
 	xOutQuaRot.x = moveBoostQua_.x = 0.0f;
 	quaRot_ = Quaternion::LookRotation(xOutQuaRot.GetForward());
 
-}
-
-void Player::RobotAnimDebugDraw(int playerType)
-{
-	if (playerType  == playerType_)
-	{
-
-		robotAnimeController_->Draw();
-	}
-}
-
-void Player::PlayerDebugDraw(int playerType)
-{
-	if (playerType  == playerType_)
-	{
-		// ほしい値は－1～1なので1000で割る
-		float padX = input_->keyLx_ / 1000.0f;
-		// 上下反転させる
-		float padY = input_->keyLy_ * -1.0f / 1000.0f;
-
-		// Y軸なし方向ベクトル
-		VECTOR padDir = {};
-		padDir = { padX,0.0f,padY };
-		DrawFormatStringF(0.0f, 0.0f, 0xffffff, "x = %f,y = %f,z = %f",
-			transform_.pos.x, transform_.pos.y, transform_.pos.z);
-		DrawFormatStringF(0.0f, 160.0f, 0xffffff, "movePow:x = %f,y = %f,z = %f",
-			movePow_.x, movePow_.y, movePow_.z);
-		DrawFormatStringF(0.0f, 180.0f, 0xffffff, "movedPos_:x = %f,y = %f,z = %f",
-			movedPos_.x, movedPos_.y, movedPos_.z);
-		DrawFormatStringF(0.0f, 30.0f, 0xffffff, "deltatime = %f", deltaTime_);
-		DrawFormatStringF(0.0f, 100.0f, 0xffffff, "RX = %d,RY =%d", input_->keyRx_, input_->keyRy_);
-		DrawFormatStringF(0.0f, 120.0f, 0xffffff, "LX = %d,LY =%d", input_->keyLx_, input_->keyLy_);
-		DrawFormatStringF(0.0f, 200.0f, 0xffffff, "padDir:LX = %d,LY =%d", padX, padY);
-		DrawFormatStringF(0.0f, 140.0f, 0xffffff, "%s", debugString_.c_str());
-		DrawFormatStringF(0.0f, 230.0f, 0xffffff, "セットされているアニメーションの数:%d", MV1GetAnimNum(transform_.modelId));
-		auto vec = VNorm(VSub(*enemyPos_, transform_.pos));
-
-		DrawFormatStringF(0.0f, 60.0f, 0xffffff, "敵との角度:%f", angle_);
-		DrawFormatStringF(0.0f, 80.0f, 0xffffff, "GetForward:%f,%f,%f", transform_.GetForward().x, transform_.GetForward().y, transform_.GetForward().z);
-		DrawFormatStringF(0.0f, 270.0f, 0xffffff, "goalUpperQuaRotY_:%f,%f,%f,%f", goalUpperQuaRotY_.w, goalUpperQuaRotY_.x, goalUpperQuaRotY_.y, goalUpperQuaRotY_.z);
-		DrawFormatStringF(0.0f, 290.0f, 0xffffff, "startUpperQuaRotY_:%f,%f,%f,%f", startUpperQuaRotY_.w, startUpperQuaRotY_.x, startUpperQuaRotY_.y, startUpperQuaRotY_.z);
-		DrawFormatStringF(0.0f, 310.0f, 0xffffff, "QuaRot_:%f,%f.%f", quaRot_.x, quaRot_.y, quaRot_.z);
-
-		//元々のモデルのmatrix(背骨)
-		MATRIX frameLocalMatrix = MV1GetFrameBaseLocalMatrix(transform_.modelId, 61);
-		//モデルのローカルの向き(クォータニオン)
-		Quaternion frameLocalQua = Quaternion::GetRotation(frameLocalMatrix);
-		DrawFormatStringF(0.0f, 330.0f, 0xffffff, "frameLocalQua:%f,%f.%f", frameLocalQua.x, frameLocalQua.y, frameLocalQua.z);
-		DrawFormatStringF(0.0f, 350.0f, 0xffffff, "jumpPow_:%f,%f.%f", jumpPow_.x, jumpPow_.y, jumpPow_.z);
-		DrawFormatStringF(0.0f, 370.0f, 0xffffff, "gravityPow_:%f", gravityPow_);
-		DrawFormatStringF(0.0f, 390.0f, 0xffffff, "jumpAdd_:%f", jumpSpeed_);
-		robotAnimeController_->DebugDraw();
-		camera_->DrawDebug();
-		float dot = VDot(dirGravity_, jumpPow_);
-		DrawFormatStringF(0.0f, 470.0f, 0xffffff, "jumpdot:%f", dot);
-		DrawFormatStringF(0.0f, 500.0f, 0xffffff, "boostGauge_:%f", boostFuel_);
-		DrawFormatStringF(0.0f, 590.0f, 0xffffff, "shotFlame_:%f", shotFlame_);
-		DrawFormatStringF(0.0f, 610.0f, 0xffffff, "recoverBoostCount_:%f", rechargeBoostCount_);
-		DrawFormatStringF(0.0f, 630.0f, 0xffffff, "landingStanTime_:%f", landingStanTime_);
-		DrawFormatStringF(0.0f, 650.0f, 0xffffff, "combatStanTime_:%f",combatStanTime_);
-		DrawFormatStringF(0.0f, 650.0f, 0xffffff, "moveSpeed_:%f", moveSpeed_);
-		DrawFormatStringF(0.0f, 670.0f, 0xffffff, "moveQua_:%f,%f.%f", moveQua_.x, moveQua_.y, moveQua_.z);
-		DrawFormatStringF(0.0f, 690.0f, 0xffffff, "moveBoostQua_:%f,%f.%f", moveBoostQua_.x, moveBoostQua_.y, moveBoostQua_.z);
-		DrawFormatStringF(0.0f, 750.0f, 0xffffff, "enemyDistance_%f", enemyDistance_);
-		DrawFormatStringF(0.0f, 810.0f, 0xffffff, "safeTime_:%f", safeTime_);
-		DrawFormatStringF(0.0f, 820.0f, 0xffffff, "debugString_%s", debugString_.c_str());
-		DrawFormatStringF(0.0f, 840.0f, 0xffffff, "jumpAdd_%f", jumpSpeed_*deltaTime_);
-		DrawFormatStringF(0.0f, 860.0f, 0xffffff, "gravityPow_%f", gravityPow_*deltaTime_);
-		DebugPlayerState();
-
-		std::string str;
-		if (isShotEnable_)
-		{
-			str = "shotFlag:true";
-		}
-		else
-		{
-			str = "shotFlag:false";
-		}
-		DrawFormatStringF(0.0f, 710.0f, 0xffffff, "%s", str.c_str());
-		if (isRevertUpperBodyRot_)
-		{
-			str = "revertFlag_:true";
-		}
-		else
-		{
-			str = "revertFlag_:false";
-		}
-		DrawFormatStringF(0.0f, 730.0f, 0xffffff, "%s", str.c_str());
-		for (auto& beam : GetBeamRifle().GetBeams())
-		{
-			beam->Draw();
-		}
-	}
 }
 
 void Player::Combat(void)
@@ -858,7 +712,7 @@ const int& Player::GetNumnberOfBullets(void)
 void Player::Jump(void)
 {
 	//ブーストゲージが一定以上残っていればジャンプする
-	if (IsGaugeSufficient(boostFuel_, MIN_JUMP_BOOST))
+	if (IsValueSufficient(boostFuel_, MIN_JUMP_COST))
 	{
 		//ジャンプ力を設定
 		jumpSpeed_ = JUMP_POW;
@@ -867,7 +721,6 @@ void Player::Jump(void)
 		//重力を0にする
 		gravityPow_ = 0.0f;
 		//ブーストゲージを減らす
-		//boostGauge_ -= JUMP_BOOST_DAMPING_RATE*(deltaTime_ );
 		ConsumeBoostGauge(JUMP_BOOST_DAMPING_RATE * (deltaTime_));
 		//ブーストゲージ回復を止める
 		rechargeBoostCount_ = 0;
@@ -902,6 +755,55 @@ void Player::CalcGravity()
 
 }
 
+void Player::StageOut(void)
+{
+	//float posX = abs(transform_.pos.x);
+	//float posZ = abs(transform_.pos.z);
+
+	//stageDistance_ =(posX*posX) + (posZ * posZ);
+
+	//float distance = 17000.0f * 17000.0f;
+
+	////一定以上外にはいけない
+	//if (IsValueSufficient(stageDistance_, distance))
+	//{
+	//	//ステージの中心座標
+	//	VECTOR stageCenter = { 250.0f,0.0f,250.0f };
+	//	//プレイヤー座標
+	//	VECTOR pos {transform_.pos.x,0.0f,transform_.pos.z };
+
+	//	//プレイヤーからステージへの中心へのベクトル
+	//	VECTOR vec = VNorm(VSub(stageCenter, pos));
+	//	movedPos_ = VAdd(movedPos_, VScale(vec, 1.0f));
+	//	MoveStop();
+	//}
+
+	const float LEN = 17000.0f;
+	const float LEN_POW = LEN * LEN;
+
+	//ステージの中心座標
+	const VECTOR stageCenter = { 250.0f,0.0f,250.0f };
+
+	VECTOR pos = movedPos_;
+
+	//ステージからプレイヤー
+	float diffX = (pos.x - stageCenter.x);
+	float diffZ = (pos.z - stageCenter.z);
+
+	stageDistance_ = (diffX * diffX) + (diffZ * diffZ);
+
+	//一定以上外にはいけない
+	if (IsValueSufficient(stageDistance_, LEN_POW))
+	{
+		//プレイヤーからステージへの中心へのベクトル
+		VECTOR outDir = VNorm(VECTOR(diffX, 0.0f, diffZ));
+		movedPos_ = VAdd(stageCenter, VScale(outDir, LEN));
+		movedPos_.y = pos.y;
+		//MoveStop();
+	}
+
+}
+
 void Player::ResetShotFlame(void)
 {
 	shotFlame_ = 7.0f;
@@ -915,30 +817,30 @@ void Player::RecoverBoostGauge(void)
 		return;
 	}
 	//ブーストゲージ回復開始時間を計測する
-	if (!IsGaugeSufficient(rechargeBoostCount_, RECHARGE_BOOST_DELAY))
+	if (!IsValueSufficient(rechargeBoostCount_, RECHARGE_BOOST_DELAY))
 	{
 		rechargeBoostCount_+= (deltaTime_ * RECHARGE_BOOST_COUNT_RATE);
 	}
 	else
 	{
 		//ブーストゲージを回復する
-		if (!IsGaugeSufficient(boostFuel_, MAX_BOOST_GAGE))
+		if (!IsValueSufficient(boostFuel_, MAX_BOOST_GAGE))
 		{
 			boostFuel_+= 10.0f*(deltaTime_ * RECHARGE_BOOST_RATE);
 			rechargeBoostCount_ = RECHARGE_BOOST_DELAY;
 		}
 		else//一定を超えてら止める
 		{
-			boostFuel_ = 100.0f;
+			boostFuel_ = BOOST_FUEL;
 			rechargeBoostFlag_ = false;
 		}
 	}	
 }
 
 
-const bool Player::IsGaugeSufficient(float Gauge, float RequiredGaugeAmount) const
+const bool Player::IsValueSufficient(float Gauge, float RequiredGaugeAmount) const
 {
-	//引数1が引数2異常かどうかを判定する
+	//引数1が引数2以上かどうかを判定する
 	if(Gauge >= RequiredGaugeAmount)
 	{
 		return true;
@@ -952,7 +854,7 @@ const bool Player::IsGaugeSufficient(float Gauge, float RequiredGaugeAmount) con
  bool Player::IsBoostGaugeSufficient(float RequiredGaugeAmount) 
 {
 	 //ブーストゲージが一定量を超えているかを判定
-	return IsGaugeSufficient(boostFuel_,RequiredGaugeAmount);
+	return IsValueSufficient(boostFuel_,RequiredGaugeAmount);
 }
 
  bool Player::IsSafeTimeSufficient(void)
@@ -1115,7 +1017,7 @@ void Player::CalculateAngleToTarget(void)
 	angle_ = AsoUtility::Rad2DegF(goalUpperQuaRotY_.ToEuler().y);
 
 	//敵との角度が一定以上以下なら既定の角度にする
-	if (angle_ >= 70.0f)
+	if (angle_ >= LIMIT_ANGLE)
 	{
 		goalUpperQuaRotY_ = Quaternion::Euler(goalUpperQuaRotY_.x,AsoUtility::Deg2RadF(120.0f), 0.0f);
 		goalUpperQuaRotY_ = Quaternion::Euler(goalUpperQuaRotY_.x,AsoUtility::Deg2RadF(120.0f), 0.0f);
@@ -1292,7 +1194,7 @@ void Player::BoostQuaRot(void)
 void Player::Boost(void)
 {
 	// 移動処理
-	movePow_ = VScale(quaRot_.GetForward(), BOOST_MOVE_SPEED * (deltaTime_ * BOOST_MOVE_RATE));
+	movePow_ = VScale(quaRot_.GetForward(), MOVE_SPEED_BOOST * (deltaTime_ * BOOST_MOVE_RATE));
 	StopRechargeBoost();
 }
 

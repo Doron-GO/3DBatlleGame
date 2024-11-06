@@ -12,7 +12,12 @@ JumpState::JumpState(Player& player):player_(player)
 	//重力を0にする
 	player_.SetGravityPow(0.0f);
 	//ブーストゲージを減らす
-	player_.ConsumeBoostGauge(Player::JUMP_FAST_RATE);
+	player_.ConsumeBoostGauge(Player::JUMP_FAST_RATE);	
+	//バーニアエフェクトを起動
+	player_.PlayEffect(Player::EFFECT_TYPE::JET_BACK_LEFT);
+	//バーニアエフェクトを起動
+	player_.PlayEffect(Player::EFFECT_TYPE::JET_BACK_RIGHT);
+
 }
 
 void JumpState::Update(void)
@@ -23,14 +28,18 @@ void JumpState::Update(void)
 	player_.Shot();
 	//移動処理
 	player_.Move();
+
 	//ジャンプボタンが押されていて、ブーストゲージが一定以上あったら
-	if (player_.GetInput().IsPrassed("jump") && player_.IsBoostGaugeSufficient(player_.MIN_JUMP_BOOST))
+	if (player_.GetInput().IsPrassed("jump") && player_.IsBoostGaugeSufficient(player_.MIN_JUMP_COST))
 	{
+		player_.PlayAnim(static_cast<int>(Player::STATE::JUMP), true, false);
 		//ジャンプ処理
 		player_.Jump();
 	}
 	else //でなければフォール状態に移行
 	{
+		player_.StopEffect(Player::EFFECT_TYPE::JET_BACK_LEFT);
+		player_.StopEffect(Player::EFFECT_TYPE::JET_BACK_RIGHT);
 		player_.ChangeState(std::make_unique<FallState>(player_));
 		return;
 	}

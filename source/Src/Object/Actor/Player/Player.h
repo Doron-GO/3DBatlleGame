@@ -19,36 +19,55 @@ class Camera;
 
 class Player:
 	public ActorBase
-
 {
 
 public:
-
-	//ジャンプ中の前後左右への最大移動スピード
-	static constexpr float MAX_JUMP_MOVE_SPEED = 20.0f;
 
 	//小無敵時間
 	static constexpr float BIG_SAFE_TIME = 100.0f;
 	//小無敵時間
 	static constexpr float SMALL_SAFE_TIME = 70.0f;
 
-
 	//ジャンプするときの最初の減少量
 	static constexpr float JUMP_FAST_RATE = 10.0f; 
 	//ブーストゲージ消費量定数
 	static constexpr float BOOST_RATE = 20.0f; 
-	static constexpr float BOOST_DASH_MOVE_SPEED = 50.0f;
-	static constexpr int	MIN_JUMP_BOOST = 1; //ジャンプに必要なブーストゲージの量
-	static constexpr float BOOST_MOVE_SPEED = 60.0f;
-	static constexpr float MOVE_SPEED = 20.0f;
-	static constexpr float MIN_BOOST = 20.0f; //ジャンプに必要なブーストゲージの量
-	static constexpr float FALL_MAX_MOVE_SPEED = 35.0f;//FALL状態時移動スピード
+	//ブーストダッシュ中の移動スピード
+	static constexpr float MOVE_SPEED_BOOST_DASH = 50.0f;
+
+	//ジャンプに必要なブーストゲージの量
+	static constexpr int	MIN_JUMP_COST = 1; 
+	//ブーストに必要なブーストゲージの量
+	static constexpr float MIN_BOOST_COST = 20.0f; 
+
+	//ブースト時の移動スピード
+	static constexpr float MOVE_SPEED_BOOST = 60.0f;
+	//通常移動スピード
+	static constexpr float DEFAULT_MOVE_SPEED = 20.0f;
+	//FALL状態時移動スピード
+	static constexpr float FALL_MAX_MOVE_SPEED = 35.0f;
+	//ジャンプ中の前後左右への最大移動スピード
+	static constexpr float MAX_JUMP_MOVE_SPEED = 20.0f;
+
+	enum class EFFECT_TYPE
+	{
+		JET_LEG_RIGHT,
+		JET__LEG_LEFT,
+		JET_BACK_RIGHT,
+		JET_BACK_LEFT,
+		LOSE,
+		BOOST,
+		DUST_CLOUD
+	};
 	
 	Player(int playerType, int playMode);
 
 	~Player(void);
 
 	void Init(void);
+
+	//武器に当たり判定を行うものCollider情報を渡す
+	void InitWeaponCllider(void);
 
 	//更新
 	void Update(void);
@@ -57,7 +76,10 @@ public:
 	void Draw(void);
 
 	//エフェクトの再生
-	void PlayEffect(STATE state);
+	void PlayEffect(EFFECT_TYPE effectType);
+
+	//エフェクトのストップ
+	void StopEffect(EFFECT_TYPE effectType);
 
 	//ビームライフルの取得
 	BeamRifle &GetBeamRifle(void)const;
@@ -139,7 +161,7 @@ public:
 	void Move(void);
 
 	//移動する関数
-	void MoveBoodtDash(void);
+	void MoveBoostDash(void);
 
 	//ジャンプする関数
 	void Jump(void);
@@ -168,7 +190,6 @@ public:
 
 	//JumpPowを徐々に減らしていく
 	void JumpPowZero(void);
-
 
 	//重力_を0にする
 	void GravityOne(void);
@@ -200,14 +221,9 @@ public:
 	//重力を加算する
 	void CalcGravity();
 
+
 	//射撃クールタイムのリセット
 	void ResetShotFlame(void);
-
-	//アニメーションコントローラーのパラメータを表示(デバッグ用)
-	void RobotAnimDebugDraw(int playerType);
-
-	//プレイヤーの各種パラメータを表示(デバッグ用)
-	void PlayerDebugDraw(int playerType);
 
 	//格闘攻撃状態に移行させる関数
 	void Combat(void);
@@ -239,9 +255,6 @@ public:
 	//スーパーアーマーが残っているかどうかを判定
 	bool IsSuperArmor(void);
 
-	////UIを渡す関数
-	//std::unique_ptr<UserInterface> MoveUI(void);
-
 	//ブーストゲージ
 	const float& GetBoostFuel(void) const;
 
@@ -254,7 +267,7 @@ public:
 	//回転の設定用変数
 	Quaternion quaRot_;
 
-	////プレイヤーの現在の状態
+	//プレイヤーの現在の状態
 	STATE actorState_;
 
 private:
@@ -275,9 +288,6 @@ private:
 	bool isHorming_;
 
 	PLAY_MODE playMode_;
-
-	//UI
-	std::unique_ptr<UserInterface> userInterface_;
 
 	//エフェクト再生
 	std::unique_ptr<EffectManager> effectManager_;
@@ -320,10 +330,6 @@ private:
 
 	//ジャンプのスピード
 	float jumpSpeed_;
-
-	//デバッグ用文字列
-	std::string debugString_;
-	std::string enemyDebugString_;
 
 	//左スティック入力をプレイヤーの移動方向と対応させるもの
 	VECTOR padDir_;
@@ -372,6 +378,8 @@ private:
 	//重力の逆向き
 	VECTOR dirUpGravity_;
 
+	float stageDistance_;
+
 	//足元当たり判定用
 	float jumpDot_;	
 
@@ -393,21 +401,16 @@ private:
 	//近接攻撃硬直時間
 	float combatStanTime_;
 
-	//勝利したかどうかを判定
-	bool isWin_;
-
 	//格闘移行状態時に受け止められる弾の数
 	int superArmor_;
 
 	/// ゲージが任意の数値以上かどうかを判定する
 	/// <returns>true:以上である false:未満である</returns>
-	const bool IsGaugeSufficient(float Gauge, float RequiredGaugeAmount)const;
+	const bool IsValueSufficient(float Gauge, float RequiredGaugeAmount)const;
+
 
 	//プレイヤーの状態によって移動スピード等を変える
-	void DebugPlayerState(void);
-
-	//プレイヤーの状態によって移動スピード等を変える
-	void EnemyState(void);
+	void StopHomingIfBoosted(void);
 
 	//スピードを徐々に加速させる
 	void SpeedAdd(void);
@@ -439,6 +442,8 @@ private:
 	//スティック入力がされていないときにspeedを徐々に減らしていく
 	void MoveSpeedZero(void);
 
+	//ステージの外に出られないようにする
+	void StageOut(void);
 
 	bool StickAdjustment(VECTOR v1, VECTOR v2);
 
@@ -453,21 +458,26 @@ private:
 	void RangeDistance(void);
 
 	//相手との距離によって弾が相手を追従するかどうかを判定する
-	void Range(void);
+	void HormingRange(void);
 
+	//オブジェクトたちの生成
 	void MakeObjects(void); 
 
+	//トランスフォームの初期化
 	void InitTransform(void);
 
+	//パラメータの初期化
 	void InitParameter(void);
 
+	//アニメーションの初期化
 	virtual void InitAnimation(void) override;
+	
+	//エフェクトの初期化
+	void InitEffect(void) ;
 
+	//カメラの初期化
 	void InitCamera(void);
 
-	void UpdateBattleMode(void);
-
-	void UpdateSingleMode(void);
 
 };	
 

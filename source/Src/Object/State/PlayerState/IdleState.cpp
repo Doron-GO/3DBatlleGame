@@ -36,20 +36,17 @@ void IdleState::Update(void)
 			return;
 		}
 		//ブーストボタンを押していて、ブーストゲージが一定以上あればブースト状態に移行
-		else if (player_.GetInput().IsDoublePrassed("jump") && player_.IsBoostGaugeSufficient(player_.MIN_BOOST))
+		else if (player_.GetInput().IsDoublePrassed("jump") && player_.IsBoostGaugeSufficient(player_.MIN_BOOST_COST))
 		{
 			player_.ChangeState(std::make_unique<BoostState>(player_));
 			return;
 		}
 		//ジャンプボタンを押していて、ブーストゲージが一定以上あればジャンプ状態に移行
-		else if (player_.GetInput().IsHold("jump") && player_.IsBoostGaugeSufficient(player_.MIN_JUMP_BOOST))
+		else if (player_.GetInput().IsHold("jump") && player_.IsBoostGaugeSufficient(player_.MIN_JUMP_COST))
 		{
 			player_.PlayAnim(static_cast<int>(Player::STATE::JUMP), true, false, true);
 			player_.ChangeState(std::make_unique<JumpState>(player_));
 			return;
-		}
-		else
-		{
 		}
 	}
 	//スティックの向いている向きを取得

@@ -41,7 +41,7 @@ CombatTransitionState::CombatTransitionState(Player& player,VECTOR & playerPos, 
 	player_.GetBeamSaber().Activate();
 
 	//移動スピードとMax最大スピードを設定
-	player_.SetMaxMoveSpeed(player_.MOVE_SPEED);
+	player_.SetMaxMoveSpeed(player_.DEFAULT_MOVE_SPEED);
 	player_.SetMoveSpeed(0.0f);
 
 	//相手との距離をとる
@@ -69,7 +69,7 @@ void CombatTransitionState::Update(void)
 		return;
 	}
 	//ジャンプボタンが二回押されて、ブーストゲージが一定以上あったら
-	else if(player_.GetInput().IsDoublePrassed("jump") && player_.IsBoostGaugeSufficient(player_.MIN_BOOST))
+	else if(player_.GetInput().IsDoublePrassed("jump") && player_.IsBoostGaugeSufficient(player_.MIN_BOOST_COST))
 	{
 		//ビームサーベルを非有効化
 		player_.GetBeamSaber().InActivate();

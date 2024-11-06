@@ -57,8 +57,6 @@ public:
 	const bool& IsDeadAnyPlayer(void)const;
 
 	//デバッグ用
-	void DrawDebug(int playerType);
-	void DrawAnimeDebug(int playerType);
 
 	//UIを生成するときに使うゲット関数
 	const std::vector<std::unique_ptr<Player>>& GetPlayers(void)const;
@@ -118,7 +116,5 @@ private:
 	//敵の情報をセットする
 	void SetEnemyInfo(ActorBase& player, ActorBase& target);
 
-	//Interfaceクラスの生成
-	void CreateUserInterface(ActorBase& player, ActorBase& target);
 
 };

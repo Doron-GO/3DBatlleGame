@@ -8,11 +8,14 @@ class WeaponBase
 {
 public:
 
-	//モデルの右手フレーム番号
-	static constexpr int ATTACH_RIGHT_HAND_FRAME = 93;
-	
+	//右手親指フレーム番号
+	static constexpr int RIGHT_HAND_THUMB_FRAME = 96;
+
 	//モデルの左手手フレーム番号
 	static constexpr int ATTACH_LEFT_HAND = 71;
+
+	//モデルの右手フレーム番号
+	static constexpr int RIGHT_HAND_FRAME = 93;
 
 	WeaponBase(int playerType, const Transform& playerTransform);
 	virtual ~WeaponBase(void) {};
@@ -32,6 +35,9 @@ public:
 	//ロボットモデルと座標、回転を同期
 	virtual void SyncPosition(void);
 
+	void AddCollider(Collider* collider);
+
+
 protected:
 
 	// シングルトン参照
@@ -48,6 +54,10 @@ protected:
 
 	//有効かどうかを判定
 	bool isActive_;
+
+	//ステージなどの障害物当たり判定用
+	std::vector<Collider*>colliders_;
+
 
 };
 

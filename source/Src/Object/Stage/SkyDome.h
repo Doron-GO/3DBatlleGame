@@ -5,8 +5,6 @@ class SkyDome
 {
 public:
 
-	static constexpr float SCALE = 0.5f;
-	static constexpr VECTOR SCALES = { SCALE, SCALE, SCALE };
 
 	// 状態
 	enum class STATE
@@ -16,7 +14,7 @@ public:
 		FOLLOW
 	};
 
-	SkyDome(const Transform& syncTransform);	//プレイヤーに追従する場合はこっち
+	SkyDome(void);	//プレイヤーに追従する場合はこっち
 	~SkyDome(void);
 
 	void Update(void);
@@ -24,10 +22,6 @@ public:
 	void Release(void);
 
 private:
-
-	// プレイヤーの情報
-	const Transform& syncTransform_;
-
 	// 状態
 	STATE state_;
 

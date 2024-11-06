@@ -1,4 +1,6 @@
 #pragma once
+#include<vector>
+#include"../../Manager/EffectManager.h"
 #include"../Common/Transform.h"
 
 class ResourceManager;
@@ -23,5 +25,9 @@ private:
 	//トランスフォーム
 	Transform transform_;
 
+	//エフェクト再生
+	std::unique_ptr<EffectManager> effectManager_;
+
+	std::vector<VECTOR> sPos_;
 };
 

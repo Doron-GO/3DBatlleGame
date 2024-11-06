@@ -13,27 +13,9 @@ class Camera
 
 public:
 
-	// FIXED_POINT : カメラの初期座標
-	static constexpr VECTOR DEFAULT_CAMERA_POS = { 0.0f, 100.0f, -500.0f };
 
-	// FOLLOW : カメラ位置(追従対象との相対座標)
-	static constexpr VECTOR RELATIVE_CAMERA_POS_FOLLOW = { 800.0f, 600.0f, 800.0f };
 
-	// FOLLOW : カメラ位置(追従対象との相対座標)
-	static constexpr float SYNC_PLATER_POS_OFFSET =300.0f;
 
-	// FOLLOW : 注視点(追従対象との相対座標)
-	static constexpr VECTOR RELATIVE_TARGET_POS = { 0.0f, 100.0f, 500.0f };
-
-	// カメラのX回転上限度角
-	static constexpr float LIMIT_X_UP_RAD = 40.0f * (DX_PI_F / 180.0f);
-	static constexpr float LIMIT_X_DW_RAD = 15.0f * (DX_PI_F / 180.0f);
-	
-	// 追従対象との調整座標
-	static constexpr VECTOR RELATIVE_TRANSFORM_POS = { 0.0f, 20.0f, 0.0f };
-	
-	// カメラ回転スピード
-	static constexpr float SPEED = 2.0f;
 
 	// カメラモード
 	enum class MODE
@@ -57,9 +39,6 @@ public:
 
 	//追従カメラ
 	void SetBeforeDrawFollow(void);
-
-	//確認用描画
-	void DrawDebug(void);
 
 	//トランスフォームの設定
 	void SetTransform(const Transform* transform);

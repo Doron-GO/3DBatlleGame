@@ -11,9 +11,13 @@ BoostDashState::BoostDashState(Player& player) : player_(player)
 	//アニメーションをBOOSTにする
 	player_.PlayAnim(static_cast<int>(Player::STATE::BOOST), false, true, true);
 	//最高速を設定
-	player_.SetMaxMoveSpeed(player_.BOOST_DASH_MOVE_SPEED);
+	player_.SetMaxMoveSpeed(player_.MOVE_SPEED_BOOST_DASH);
 	//移動速度を設定
-	player_.SetMoveSpeed(player_.BOOST_DASH_MOVE_SPEED);
+	player_.SetMoveSpeed(player_.MOVE_SPEED_BOOST_DASH);
+	//バーニアエフェクトを起動
+	player_.PlayEffect(Player::EFFECT_TYPE::JET_BACK_LEFT);
+	//バーニアエフェクトを起動
+	player_.PlayEffect(Player::EFFECT_TYPE::JET_BACK_RIGHT);
 }
 
 void BoostDashState::Update(void)
@@ -26,16 +30,18 @@ void BoostDashState::Update(void)
 	player_.ConsumeBoostGauge(player_.BOOST_RATE * delta);
 
 	//ブーストゲージが一定以上あり、ジャンプボタンが押されていたら
-	if ( player_.IsBoostGaugeSufficient(player_.MIN_JUMP_BOOST)&&player_.GetInput().IsPrassed("jump") )
+	if ( player_.IsBoostGaugeSufficient(player_.MIN_JUMP_COST)&&player_.GetInput().IsPrassed("jump") )
 	{
 		//ブーストゲージの回復を止める
 		player_.StopRechargeBoost();
 		//ブーストダッシュ処理
-		player_.MoveBoodtDash();
+		player_.MoveBoostDash();
 	}
 	//ジャンプボタンが押されておらず、スティックが倒されていたら
 	else if((player_.GetInput().isStickTilted(Input::STICK_LR::L)))
 	{
+		player_.StopEffect(Player::EFFECT_TYPE::JET_BACK_LEFT);
+		player_.StopEffect(Player::EFFECT_TYPE::JET_BACK_RIGHT);
 		//ブーストダッシュ終了処理
 		player_.BoostDashEnd();
 		//ムーブ状態に移行
@@ -44,6 +50,8 @@ void BoostDashState::Update(void)
 	}
 	else
 	{
+		player_.StopEffect(Player::EFFECT_TYPE::JET_BACK_LEFT);
+		player_.StopEffect(Player::EFFECT_TYPE::JET_BACK_RIGHT);
 		//ブーストダッシュ終了処理
 		player_.BoostDashEnd();
 		//アニメーションをIDLEにする

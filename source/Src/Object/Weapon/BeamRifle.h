@@ -19,6 +19,7 @@ public:
     //•`‰æ
     virtual void Draw(void) override;
 
+
     //’e‚ğ”­Ë‚·‚é
     void Trigger(void);
 
@@ -29,7 +30,7 @@ public:
    const std::vector<std::unique_ptr<BeamShot>>& GetBeams()const;
 
    //c’e”‚ğæ“¾
-   const int& GetNumnberOfBullets(void);
+   const int& GetNumnberOfBullets(void)const;
 
 private:
 
@@ -56,6 +57,8 @@ private:
     
     //’e‚ğˆê”­‘•“U‚·‚é
     void Reload(void);
+
+    void CollisionStage(void);
 
 };
 

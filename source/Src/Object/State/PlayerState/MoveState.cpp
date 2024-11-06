@@ -12,7 +12,7 @@ MoveState::MoveState(Player& player):player_(player)
 	//アニメーションをRUNにする
 	player_.PlayAnim(static_cast<int>(Player::STATE::RUN), false, true);
 	//マックススピードを設定
-	player_.SetMaxMoveSpeed(player_.MOVE_SPEED);
+	player_.SetMaxMoveSpeed(player_.DEFAULT_MOVE_SPEED);
 }
 
 void MoveState::Update(void)
@@ -46,14 +46,14 @@ void MoveState::Update(void)
 			return;
 		}
 		//ジャンプボタンが二回押されていて、ブーストゲージが一定以上あったら
-		else if (player_.GetInput().IsDoublePrassed("jump")&& player_.IsBoostGaugeSufficient(player_.MIN_BOOST))
+		else if (player_.GetInput().IsDoublePrassed("jump")&& player_.IsBoostGaugeSufficient(player_.MIN_BOOST_COST))
 		{
 			//ブースト状態に移行
 			player_.ChangeState(std::make_unique<BoostState>(player_));
 			return;
 		}
 		//ジャンプボタンが押されていて、ブーストゲージが一定以上あったら
-		else if (player_.GetInput().IsHold("jump") && player_.IsBoostGaugeSufficient(player_.MIN_JUMP_BOOST))
+		else if (player_.GetInput().IsHold("jump") && player_.IsBoostGaugeSufficient(player_.MIN_JUMP_COST))
 		{
 			//アニメーションをJUMPにする
 			player_.PlayAnim(static_cast<int>(Player::STATE::JUMP), false, false, true);

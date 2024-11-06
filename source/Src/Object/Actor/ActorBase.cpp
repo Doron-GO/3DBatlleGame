@@ -9,7 +9,7 @@ ActorBase::ActorBase() :resMng_(ResourceManager::GetInstance())
 	boostFuel_ = 0.0f;
 	deltaTime_ = 0.0f;
 	hp_ = 0.0f;
-	numberofBullets_ = 0;
+	numberofBullets_ = nullptr;
 	enemyDistance_ = 0.0f;
 	enemyPos_ = nullptr;
 	enemyHp_ = nullptr;
@@ -65,7 +65,7 @@ const ActorBase::STATE& ActorBase::GetState(void)
 
 const int& ActorBase::GetNumnberOfBullets(void) const
 {
-	return numberofBullets_;
+	return *numberofBullets_;
 }
 
 const float& ActorBase::GetBoostFuel(void) const
@@ -91,6 +91,11 @@ void ActorBase::SetEnemyPosition(const VECTOR* enemyPos)
 void ActorBase::SetEnemyHp(const float* enemyHp)
 {
 	enemyHp_ = enemyHp;
+}
+
+void ActorBase::SetNumberofBullets(const int* numberofBullets)
+{
+	numberofBullets = numberofBullets;
 }
 
 void ActorBase::SetEnemyState(const STATE* enemyState)

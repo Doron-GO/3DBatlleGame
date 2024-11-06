@@ -1,6 +1,9 @@
 #include "WeaponBase.h"
 #include"../Actor/Player/Player.h"
 
+
+
+
 WeaponBase::WeaponBase(int playerType, const Transform& playerTransform):resMng_(ResourceManager::GetInstance()),
 playerTransform_(playerTransform), playerType_(playerType)
 {
@@ -22,7 +25,7 @@ void WeaponBase::InActivate(void)
 void WeaponBase::SyncPosition(void)
 {
 	//右手の行列
-	MATRIX rightHandMat = MV1GetFrameLocalWorldMatrix(playerTransform_.modelId, ATTACH_RIGHT_HAND_FRAME);
+	MATRIX rightHandMat = MV1GetFrameLocalWorldMatrix(playerTransform_.modelId, RIGHT_HAND_FRAME);
 	//武器のローカル回転
 	Quaternion quaLocal = transform_.quaRotLocal;
 	//武器のローカル座標
@@ -31,5 +34,10 @@ void WeaponBase::SyncPosition(void)
 	rightHandMat = MMult(quaLocal.ToMatrix(), MMult(offset, rightHandMat));
 	//武器のモデルの行列を設定
 	MV1SetMatrix(transform_.modelId, MMult(transform_.matScl, rightHandMat));
-	transform_.pos = MV1GetFramePosition(playerTransform_.modelId, 96);
+	transform_.pos = MV1GetFramePosition(playerTransform_.modelId, RIGHT_HAND_THUMB_FRAME);
+}
+
+void WeaponBase::AddCollider(Collider* collider)
+{
+	colliders_.push_back(collider);
 }

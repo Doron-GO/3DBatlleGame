@@ -6,16 +6,18 @@
 
 #pragma region Parameter
 //ビームが発射可能になるまでの時間
-static constexpr float RELOAD_COUNT_TIME = 100.0f;
+constexpr float RELOAD_COUNT_TIME = 100.0f;
 
 //ビームの再発射可能時間を計測するデルタタイムにかける定数
-static constexpr float RELOAD_COUNT_RATE = 60.0f;
+constexpr float RELOAD_COUNT_RATE = 60.0f;
 
 //装弾数
-static constexpr int MAX_BULLETS = 5;
+constexpr int MAX_BULLETS = 5;
 
 //ビームライフルの大きさ
-static constexpr VECTOR SCALE = { 0.07f,0.07f,0.07f };
+constexpr VECTOR SCALE = { 0.07f,0.07f,0.07f };
+
+constexpr VECTOR BEAM_RIFLE_ = { -90.0f,90.0f,180.0f };
 
 #pragma endregion
 
@@ -25,12 +27,16 @@ BeamRifle::BeamRifle(int playerType, int playMode, Player& player):player_(playe
 	//モデルの読み込み
 	transform_.SetModel(resMng_.LoadModelDuplicate(ResourceManager::SRC::BEAMRIFLE));
 	//座標
-	transform_.pos = MV1GetFramePosition(player_.GetTransform().modelId, ATTACH_RIGHT_HAND_FRAME);
+	transform_.pos = MV1GetFramePosition(player_.GetTransform().modelId, RIGHT_HAND_FRAME);
 	//大きさ
 	transform_.scl = SCALE;
 	//回転
 	transform_.quaRotLocal =
-		Quaternion::Euler(AsoUtility::Deg2RadF(-90.0f), AsoUtility::Deg2RadF(90.0f), AsoUtility::Deg2RadF(180.0f));
+		Quaternion::Euler(
+			AsoUtility::Deg2RadF(BEAM_RIFLE_.x),
+			AsoUtility::Deg2RadF(BEAM_RIFLE_.y),
+			AsoUtility::Deg2RadF(BEAM_RIFLE_.z));
+
 	transform_.Update();
 	
 	//有効か
@@ -67,6 +73,7 @@ void BeamRifle::Update(void)
 
 	//クールタイムの更新
 	CoolTimeCount();
+	CollisionStage();
 }
 
 void BeamRifle::Draw(void)
@@ -75,6 +82,10 @@ void BeamRifle::Draw(void)
 	if (isActive_)
 	{
 		MV1DrawModel(transform_.modelId);
+		for (auto& beam: beams_)
+		{
+			beam->Draw();
+		}
 	}
 }
 
@@ -122,7 +133,7 @@ const std::vector<std::unique_ptr<BeamShot>>& BeamRifle::GetBeams() const
 	return beams_;
 }
 
-const int& BeamRifle::GetNumnberOfBullets(void)
+const int& BeamRifle::GetNumnberOfBullets(void) const
 {
 	//残弾数を返す
 	return numberofBullets_;
@@ -177,5 +188,29 @@ void BeamRifle::Reload(void)
 			numberofBullets_ = MAX_BULLETS;
 		}
 	}
+}
+
+void BeamRifle::CollisionStage(void)
+{
+	for (auto& beam : beams_)
+	{
+		//弾がアクティブでなければ抜ける
+		if (!beam->IsActive())
+		{
+			continue;
+		}
+		const VECTOR& pos = beam->GetPos();
+		//弾が地面と当たったら、弾を消す
+		for (auto stage : colliders_)
+		{
+			auto hits = MV1CollCheck_Sphere(stage->modelId_, -1, pos, 20);
+			MV1CollResultPolyDimTerminate(hits);
+			if (hits.HitNum > 0)
+			{
+				beam->Hit();
+			}
+		}
+	}
+
 }
 

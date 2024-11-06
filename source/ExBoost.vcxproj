@@ -24,7 +24,8 @@
     <ProjectGuid>{7d44c722-582e-4134-813d-b2673547604d}</ProjectGuid>
     <RootNamespace>ExBoost</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>ExBoost</ProjectName>
+    <ProjectName>
+    </ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -171,7 +172,6 @@
     <ClCompile Include="Src\Object\DamageObject\DamageObject.cpp" />
     <ClCompile Include="Src\Object\DamageObject\DeathBall.cpp" />
     <ClCompile Include="Src\Object\DamageObject\Saber.cpp" />
-    <ClCompile Include="Src\Object\Effect\Effect.cpp" />
     <ClCompile Include="Src\Object\Actor\Enemy\BossEnemy.cpp" />
     <ClCompile Include="Src\Object\Actor\Player\Player.cpp" />
     <ClCompile Include="Src\Object\Stage\SkyDome.cpp" />
@@ -228,7 +228,6 @@
     <ClInclude Include="Src\Object\DamageObject\DamageObject.h" />
     <ClInclude Include="Src\Object\DamageObject\DeathBall.h" />
     <ClInclude Include="Src\Object\DamageObject\Saber.h" />
-    <ClInclude Include="Src\Object\Effect\Effect.h" />
     <ClInclude Include="Src\Object\Actor\Enemy\BossEnemy.h" />
     <ClInclude Include="Src\Object\Actor\Player\Player.h" />
     <ClInclude Include="Src\Object\Stage\SkyDome.h" />

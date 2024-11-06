@@ -17,12 +17,12 @@ public:
 
 private:
 
-
     enum class SABER_STATE
     {
         SLASH,
         HIT
     };
+
     Transform& transform_;
 };
 

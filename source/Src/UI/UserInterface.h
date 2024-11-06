@@ -65,7 +65,7 @@ private:
  	const float& enemyHpGauge_;
 
 	//c’e”
-	const int& numnberofBullets_;
+	const int * numnberofBullets_;
 
 	//“G‚Æ‚Ì‹——£
 	const float& enemyDistance_;

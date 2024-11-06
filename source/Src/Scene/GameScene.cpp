@@ -6,6 +6,7 @@
 #include "../Scene/SceneManager.h"
 #include"../Object/Actor/Enemy/BossEnemy.h"
 #include"../Object/Actor/Player/Player.h"
+#include"../Object/Stage/SkyDome.h"
 #include"../UI/UserInterface.h"
 #include"../Object/Stage/Stage.h"
 #include"Transition/Transitor.h"
@@ -109,6 +110,9 @@ resMng_(ResourceManager::GetInstance())
 	screenPos_.emplace(PLAYER_NUM::P_2, VECTOR(SCREEN_SIZE.x / 2, 0));
 
 	//ステージの生成
+	skyDome_ = std::make_unique<SkyDome>();
+
+	//ステージの生成
 	stage_ = std::make_unique<Stage>();
 
 	//プレイヤーとボスを管理するマネージャ―の生成
@@ -169,16 +173,20 @@ void GameScene::Init3DSetting(void)
 
 	// バックカリングを有効にする
 	SetUseBackCulling(true);
+
 	// ライトの設定
+	SetUseLighting(true);
 	ChangeLightTypeDir({ 0.3f, -0.7f, 0.8f });
 
 	// 背景色設定
 	SetBackgroundColor(0, 139, 139);
 
-	// フォグ設定
-	SetFogEnable(true);
-	SetFogColor(5, 5, 5);
-	SetFogStartEnd(10000.0f, 20000.0f);
+	//要確認
+	//フォグ設定
+	//SetFogEnable(true);
+	//SetFogColor(5, 5, 5);
+	//SetFogStartEnd(10000.0f, 20000.0f);
+
 }
 
 void GameScene::InitImage(void)
@@ -219,9 +227,9 @@ void GameScene::InitUI(void)
 {
 	//プレイヤー1
 	int player1 = static_cast<int>(ActorBase::ACTOR_TYPE::PLAYER_1);
-
+	//
 	 auto& players=  actorManager_->GetPlayers();
-	 
+	//
 	if (playMode_ == SINGLE_PLAY)
 	{
 		auto& bossEnemy = actorManager_->GetBossEnemy();
@@ -236,6 +244,11 @@ void GameScene::InitUI(void)
 		CreateUserInterface(*players[player1], *players[player2]);
 		CreateUserInterface(*players[player2], *players[player1]);
 	}
+}
+
+void GameScene::InitCollider(void)
+{
+
 }
 
 void GameScene::CreateUserInterface(const ActorBase& player,const ActorBase& target)
@@ -270,6 +283,7 @@ void GameScene::DrawSingleMode(void)
 	actorManager_->Draw();
 	//ステージの描画
 	stage_->Draw();
+	skyDome_->Draw();
 	//UIの描画
 	userInterfaces_[SINGLE_PLAY]->Draw(isDeadAnyPlayer);
 	//エフェクシアのアップデート
@@ -290,6 +304,7 @@ void GameScene::DrawBattleMode(void)
 	{
 		//描画するスクリーンをセット
 		SetDrawScreen(cameraScreens_[idx]);
+		
 		// 画面を初期化
 		ClearDrawScreen();
 		//カメラの描画
@@ -298,12 +313,15 @@ void GameScene::DrawBattleMode(void)
 		actorManager_->Draw();
 		//ステージの描画
 		stage_->Draw();
-		//UIの描画
-		userInterfaces_[idx]->Draw(isDeadAnyPlayer);
+		//スカイドームの描画
+		skyDome_->Draw();
 		//エフェクシアのアップデート
 		UpdateEffekseer3D();
 		//エフェクシアの描画
 		DrawEffekseer3D();
+		//UIの描画
+		userInterfaces_[idx]->Draw(isDeadAnyPlayer);
+
 	}
 
 	//二枚のスクリーンを統合した、スクリーンのセット
@@ -373,7 +391,7 @@ bool GameScene::IsGameSet(void)
 bool GameScene::SelectCursor(void)
 {
 	//勝敗が決まっていなければ入る
-	if (!actorManager_->IsDeadAnyPlayer())
+	if (!IsGameSet())
 	{
 		return false;
 	}

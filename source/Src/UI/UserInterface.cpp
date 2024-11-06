@@ -30,7 +30,6 @@ static constexpr int BOOST_GAUGE_OFFSET_Y_MULTI = 30;
 static constexpr VECTOR HP_GAUGE_POS_MULTI = {25.0f,800.0f,0.0f};
  static constexpr VECTOR HP_GAUGE_POS_SINGLE = {4.0f,750.0f,0.0f};
 
-
  //残弾数表示の数値
  static constexpr VECTOR NUMBER_OF_BULLETS_POS_SINGLE = {1300.0f,650.0f,0.0f};
  static constexpr VECTOR NUMBER_OF_BULLETS_POS_MULTI = {600.0f,700.0f,0.0f};
@@ -129,7 +128,7 @@ UserInterface::UserInterface(
 	const VECTOR& enemyPos,
 	const float& enemyHp) :
 	resMng_(ResourceManager::GetInstance()), enemyPos_(enemyPos), enemyDistance_(distance),
-	boostGauge_(boostGauge), hpGauge_(hpGauge),enemyHpGauge_(enemyHp), isWin_(isWin), numnberofBullets_(bulletNum)
+	boostGauge_(boostGauge), hpGauge_(hpGauge),enemyHpGauge_(enemyHp), isWin_(isWin), numnberofBullets_(&bulletNum)
 {
 	//プレイモードを保存
 	playMode_ = playMode;
@@ -307,10 +306,9 @@ void UserInterface::DrawNumnberOfBullets(void)
 {
 	int PosX = static_cast<int>(numberOfBulletsPos_.x);
 	int PosY = static_cast<int>(numberOfBulletsPos_.y);
-	int geuge = static_cast<int>(numnberofBullets_);
 
 	//残弾表示(数字)
-	DrawFormatStringToHandle(PosX, PosY - NUMBER_OF_BULLETS_OFFSET, 0xffffff, fontBullets_, "%d", static_cast<int>(numnberofBullets_));
+	DrawFormatStringToHandle(PosX, PosY - NUMBER_OF_BULLETS_OFFSET, 0xffffff, fontBullets_, "%d", *numnberofBullets_);
 	//残弾表示(武器)
 	DrawRotaGraph2(PosX, PosY, NUMBER_OF_BULLETS_CENTER_X, NUMBER_OF_BULLETS_CENTER_Y, 
 		numberOfBulletsScale_, 0.0, uiImgH_[IMG_TYPE::RIFLE_IMAGE], true, false);

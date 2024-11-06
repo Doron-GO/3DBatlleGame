@@ -5,6 +5,28 @@
 #include "../Common/Transform.h"
 #include "Camera.h"
 
+// FIXED_POINT : カメラの初期座標
+constexpr VECTOR DEFAULT_CAMERA_POS = { 0.0f, 100.0f, -500.0f };
+
+// FOLLOW : カメラ位置(追従対象との相対座標)
+constexpr VECTOR RELATIVE_CAMERA_POS_FOLLOW = { 800.0f, 600.0f, 800.0f };
+
+// FOLLOW : カメラ位置(追従対象との相対座標)
+constexpr float SYNC_PLATER_POS_OFFSET = 300.0f;
+
+// FOLLOW : 注視点(追従対象との相対座標)
+constexpr VECTOR RELATIVE_TARGET_POS = { 0.0f, 100.0f, 500.0f };
+
+// カメラのX回転上限度角
+constexpr float LIMIT_X_UP_RAD = 40.0f * (DX_PI_F / 180.0f);
+constexpr float LIMIT_X_DW_RAD = 15.0f * (DX_PI_F / 180.0f);
+
+// 追従対象との調整座標
+constexpr VECTOR RELATIVE_TRANSFORM_POS = { 0.0f, 20.0f, 0.0f };
+
+// カメラ回転スピード
+constexpr float SPEED = 2.0f;
+
 Camera::Camera()
 {
 	angles_ = VECTOR();
@@ -30,7 +52,7 @@ void Camera::Init()
 void Camera::SetBeforeDraw(void)
 {
 	// クリップ距離を設定する(SetDrawScreenでリセットされる)
-	SetCameraNearFar(10.0f, 30000.0f);
+	SetCameraNearFar(10.0f, 45000.0f);
 
 	switch (mode_)
 	{
@@ -41,14 +63,12 @@ void Camera::SetBeforeDraw(void)
 		SetBeforeDrawFollow();
 		break;
 	}
-
 	// カメラの設定
 	SetCameraPositionAndTargetAndUpVec(
 		cameraPos_,
 		targetPos_,
 		cameraUp_
 	);
-
 	Effekseer_Sync3DSetting();
 }
 
@@ -60,39 +80,6 @@ void Camera::SetBeforeDrawFixedPoint(void)
 void Camera::SetBeforeDrawFollow(void)
 {
 	SyncEnemyTransform();
-}
-
-void Camera::DrawDebug()
-{
-
-	//追従視点
-	DrawSphere3D(targetPos_, 20.0f, 10, 0x00ff00, 0x00ff00, true);
-	// 同期先の位置
-	VECTOR syncPos = syncTransform_->pos;
-
-	//相手に向かってベクトルを作る
-	auto enemyVec_ = VSub(enemyPos_, syncPos);
-
-	//自分の前方ベクトルと相手に向かってのベクトル間の回転量をとる
-	auto  goalQuaRot_ = Quaternion::FromToRotation(VSub(syncPos, cameraPos_), enemyVec_);
-
-	//自分から敵への角度
-	auto angleY = AsoUtility::Rad2DegF(goalQuaRot_.ToEuler().y);
-	auto angleX = AsoUtility::Rad2DegF(goalQuaRot_.ToEuler().x);
-
-	DrawFormatString(0, 530, 0xffffff, "angleY:%f", angleY);
-	DrawFormatString(0, 550, 0xffffff, "angleX:%f", angleX);
-
-	DrawLine3D(syncPos, targetPos_, 0xffffff);
-	DrawSphere3D(syncTransform_->pos, 20.0f, 20.0f, 0xffffff, 0xff0000, true);
-
-	//相手に向かってベクトルを作る
-	auto enemyVec= VSub(targetPos_, cameraPos_);
-	enemyVec = VNorm(enemyVec_);
-	//enemyVec_ = { -enemyVec_.x,enemyVec_.y*400.0f,-enemyVec_.z*800.0f};
-	enemyVec = { -enemyVec.x,-(enemyVec.y *30.0f),-enemyVec.z };
-
-	DrawFormatString(0, 570, 0xffffff, "enemyVec:%f,%f,%f", enemyVec.x, enemyVec.y, enemyVec.z);
 }
 
 void Camera::SetTransform(const Transform* transform)
