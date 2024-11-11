@@ -41,3 +41,8 @@ void WeaponBase::AddCollider(Collider* collider)
 {
 	colliders_.push_back(collider);
 }
+
+const Transform& WeaponBase::GetTransform(void) const
+{
+	return transform_;
+}

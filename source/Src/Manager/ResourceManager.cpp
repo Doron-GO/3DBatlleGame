@@ -156,7 +156,15 @@ void ResourceManager::Init(void)
 	//ターゲット(赤)画像
 	res = Resource(Resource::TYPE::IMG, PATH_IMAGE + "Ui/Target_Red.png");
 	resouceMap_.emplace(SRC::TARGET_RED, res);
-	
+
+	//雷エフェクト
+	res = Resource(Resource::TYPE::EFFEKSEER, PATH_EFFECT + "Lightning.efkefc");
+	resouceMap_.emplace(SRC::LIGHTNING, res);
+
+	//エフェクト
+	res = Resource(Resource::TYPE::EFFEKSEER, PATH_EFFECT + "Atomosphere.efkefc");
+	resouceMap_.emplace(SRC::ATOMOSPHERE, res);
+
 }
 
 void ResourceManager::Release(void)

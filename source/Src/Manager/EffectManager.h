@@ -31,7 +31,7 @@ public:
 
 	};
 
-	EffectManager(Transform& transform);
+	EffectManager(const Transform& transform);
 	~EffectManager();
 	//エフェクトの追加
 	void Add(int type, VECTOR scale,VECTOR offset, VECTOR rot,bool loop, bool isSync,int handlId);
@@ -48,7 +48,7 @@ public:
 
 private:
 
-	Transform& transform_;
+	const Transform& transform_;
 
 	// 種類別のアニメーションデータ
 	//キー：エフェクトタイプ,バリュー：エフェクトデータ

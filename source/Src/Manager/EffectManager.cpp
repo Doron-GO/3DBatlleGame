@@ -3,7 +3,7 @@
 #include"../Manager/ResourceManager.h"
 #include"../Utility/AsoUtility.h"
 
-EffectManager::EffectManager(Transform& transform):transform_(transform)
+EffectManager::EffectManager(const Transform& transform):transform_(transform)
 {
 }
 
@@ -60,36 +60,53 @@ void EffectManager::Update()
 		}
 
 		//オイラー角からクォータニオンに変換
-		Quaternion eRot= Quaternion::Euler(efects_[efect.first].rot_);
+		Quaternion eRot = Quaternion::Euler(efects_[efect.first].rot_);
 
 		//エフェクトの回転を同期先の回転と合成
 		eRot = transform_.quaRot.Mult(eRot);
 
 		//オイラー角に変換
-		VECTOR rot= Quaternion::ToEuler(eRot);
+		VECTOR rot = Quaternion::ToEuler(eRot);
 
 		//位置を設定
 		SetPosPlayingEffekseer3DEffect(efects_[efect.first].playHandleId_,
 			pos.x, pos.y, pos.z);
-		
+
 		//角度を設定
 		SetRotationPlayingEffekseer3DEffect(efects_[efect.first].playHandleId_,
-			rot.x, rot.y,rot.z);
+			rot.x, rot.y, rot.z);
 
 		//大きさを設定
 		SetScalePlayingEffekseer3DEffect(efects_[efect.first].playHandleId_,
 			efects_[efect.first].scale_.x, efects_[efect.first].scale_.y, efects_[efect.first].scale_.z);
 
-		//エフェクトループ再生じゃなく、再生が終わっていたらエフェクトを止める
-		if (!(efects_[efect.first].isLoop) &&IsEffekseer3DEffectPlaying(efects_[efect.first].playHandleId_)==-1)
+		////エフェクトループ再生じゃなく、再生が終わっていたらエフェクトを止める
+		//if (!(efects_[efect.first].isLoop) &&IsEffekseer3DEffectPlaying(efects_[efect.first].playHandleId_)==-1)
+		//{
+		//	//エフェクトの再生をストップ
+		//	StopEffekseer3DEffect(efects_[efect.first].playHandleId_);
+		//	//再生中フラグをfalseにする
+		//	efects_[efect.first].isPlay_ = false;
+		//}
+
+		//エフェクト再生の1ループが終わったときに
+		if (IsEffekseer3DEffectPlaying(efects_[efect.first].playHandleId_) == -1)
 		{
-			//エフェクトの再生をストップ
-			StopEffekseer3DEffect(efects_[efect.first].playHandleId_);
-			//再生中フラグをfalseにする
-			efects_[efect.first].isPlay_ = false;
+			//ループ再生フラグがtrueなら
+			if (efects_[efect.first].isLoop)
+			{
+				//再生
+				efects_[efect.first].playHandleId_ = PlayEffekseer3DEffect(efects_[efect.first].resHandleId_);
+			}
+			else
+			{
+				//再生中フラグをfalseにする
+				efects_[efect.first].isPlay_ = false;
+				//エフェクトの再生をストップ
+				StopEffekseer3DEffect(efects_[efect.first].playHandleId_);
+			}
 		}
 	}
-	
 }
 
 void EffectManager::Play(int type)

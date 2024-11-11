@@ -2,9 +2,11 @@
 #include "../Object/Common/Transform.h"
 #include<memory>
 #include<vector>
+#include<map>
 #include "Scene.h"
 
 class ResourceManager;
+class EffectManager;
 class Stage;
 class Input;
 class Camera;
@@ -60,6 +62,9 @@ private:
     //スカイドーム
     const std::unique_ptr<SkyDome> skyDome_;
 
+    //エフェクト再生
+    std::map<int,std::unique_ptr<EffectManager>> effectManagers_;
+
     //手前のロボット
     Transform frontTransform_;
 
@@ -98,6 +103,9 @@ private:
 
     //カメラの初期設定
     void InitCamera(void);
+
+    //エフェクトの初期設定
+    void InitEffect(void);
 
 };
 

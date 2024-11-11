@@ -1,3 +1,4 @@
+#include<EffekseerForDXLib.h>
 #include"../Manager/ResourceManager.h"
 #include"../Object/Weapon/BeamSaber.h"
 #include "../Object/Camera/Camera.h"
@@ -6,6 +7,7 @@
 #include"Transition/Transitor.h"
 #include"../Object/Stage/Stage.h"
 #include"../Object/Stage/SkyDome.h"
+#include"../Manager/EffectManager.h"
 #include "../Input/Input.h"
 #include"../../Config.h"
 #include "TitleScene.h"
@@ -13,6 +15,10 @@
 #include<DxLib.h>
 
 #pragma region Parameter
+
+
+constexpr int TYPE_ROBOT_FRONT = 0;
+constexpr int TYPE_ROBOT_BACK = 1;
 
 //モデルの座標
 constexpr VECTOR FRONT_ROBOT_POS = { 0.0f, -25.0f, 0.0f };
@@ -65,6 +71,31 @@ constexpr int TRIANGLE_CENTER_Y = 63;
 constexpr int TRIANGLE_OFFSET = 200;
 constexpr double TRIANGLE_SCALE = 1.2;
 
+
+const int EFFECT_TYPE_LIGHTNING = 0;
+const int EFFECT_TYPE_ATOMOSPHERE = 1;
+
+constexpr VECTOR EFFECT_LIGHTNING_FRONT_SCALE = { 5.0f,5.0f,10.0f };
+
+constexpr VECTOR EFFECT_LIGHTNING_FRONT_OFFSET = { 30.0f, 10.0f, 20.0f };
+
+constexpr VECTOR EFFECT_LIGHTNING_FRONT_ROT = { 0.0f, 0.0f, 0.0f };
+
+
+constexpr VECTOR EFFECT_LIGHTNING_BACK_SCALE = { 10.0f,15.0f,10.0f };
+
+constexpr VECTOR EFFECT_LIGHTNING_BACK_OFFSET = { -50.0f, 50.0f, 0.0f };
+
+constexpr VECTOR EFFECT_LIGHTNING_BACK_ROT = { 0.0f, 0.0f, 0.0f };
+
+
+constexpr VECTOR EFFECT_ATOMOSPHERE_SCALE = { 280.0f,280.0f,280.0f };
+
+constexpr VECTOR EFFECT_ATOMOSPHERE_OFFSET = { 0.0f, -100.0f, 100.0f };
+
+constexpr VECTOR EFFECT_ATOMOSPHERE_ROT = { 0.0f, 0.0f, 0.0f };
+
+
 #pragma endregion
 
 TitleScene::TitleScene(SceneManager& manager, Transitor& transit, Input& input) :Scene(manager,  transit,input),
@@ -84,7 +115,8 @@ skyDome_(std::make_unique<SkyDome>())
 	InitModel();
 	//カメラの初期設定
 	InitCamera();
-
+	//エフェクトの初期化
+	InitEffect();
 	// Zバッファを有効にする
 	SetUseZBuffer3D(true);
 
@@ -120,6 +152,13 @@ void TitleScene::Update(void)
 		startFlag_ = true;
 	}
 	skyDome_->Update();
+	//エフェクトマネージャーの更新
+	for (auto& effectManager: effectManagers_)
+	{
+		effectManager.second->Update();
+	}
+	//エフェクシアのアップデート
+	UpdateEffekseer3D();
 	sceneTransitor_.Update();
 }
 
@@ -141,6 +180,9 @@ void TitleScene::Draw(void)
 	{
 		beamSaber->Draw();
 	}
+	//エフェクシアの描画
+	DrawEffekseer3D();
+
 	//ボタンを押してね画像描画
 	DrawPleaseButton();
 	//ボタンがなにも押されていなければ、タイトルロゴを描画
@@ -320,6 +362,7 @@ void TitleScene::InitModel(void)
 		beamSaber->Activate();
 		beamSaber->Update();
 	}
+
 }
 
 void TitleScene::InitCamera(void)
@@ -328,5 +371,54 @@ void TitleScene::InitCamera(void)
 	camera_->ChangeMode(Camera::MODE::FIXED_POINT);
 	camera_->SetTargetPos(CAMERA_TARGET_POS);
 	camera_->SetCameraPos(CAMERA_POS);
+}
+
+void TitleScene::InitEffect(void)
+{
+
+	effectManagers_.emplace(
+					TYPE_ROBOT_FRONT,
+					std::make_unique <EffectManager>(beamSabers_[TYPE_ROBOT_FRONT]->GetTransform()) );
+
+	effectManagers_[TYPE_ROBOT_FRONT]->Add(EFFECT_TYPE_LIGHTNING,
+		EFFECT_LIGHTNING_FRONT_SCALE,
+		EFFECT_LIGHTNING_FRONT_OFFSET,	
+		EFFECT_LIGHTNING_FRONT_ROT,
+		true,
+		true,
+		resMng_.Load(ResourceManager::SRC::LIGHTNING).handleId_
+	);
+
+	effectManagers_[TYPE_ROBOT_FRONT]->Add(EFFECT_TYPE_ATOMOSPHERE,
+		EFFECT_ATOMOSPHERE_SCALE,
+		EFFECT_ATOMOSPHERE_OFFSET,
+		EFFECT_ATOMOSPHERE_ROT,
+		true,
+		true,
+		resMng_.Load(ResourceManager::SRC::ATOMOSPHERE).handleId_
+	);
+
+	//雷エフェクト
+	effectManagers_[TYPE_ROBOT_FRONT]->Play(EFFECT_TYPE_LIGHTNING);
+	//霧のようなエフェクト
+	effectManagers_[TYPE_ROBOT_FRONT]->Play(EFFECT_TYPE_ATOMOSPHERE);
+
+
+
+	effectManagers_.emplace(
+		TYPE_ROBOT_BACK,
+		std::make_unique <EffectManager>(beamSabers_[TYPE_ROBOT_BACK]->GetTransform()));
+
+	effectManagers_[TYPE_ROBOT_BACK]->Add(EFFECT_TYPE_LIGHTNING,
+		EFFECT_LIGHTNING_BACK_SCALE,
+		EFFECT_LIGHTNING_BACK_OFFSET,
+		EFFECT_LIGHTNING_BACK_ROT,
+		true,
+		false,
+		resMng_.Load(ResourceManager::SRC::LIGHTNING).handleId_
+	);
+	effectManagers_[TYPE_ROBOT_BACK]->Play(EFFECT_TYPE_LIGHTNING);
+
+
 }
 

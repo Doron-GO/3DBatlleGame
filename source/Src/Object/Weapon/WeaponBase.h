@@ -37,6 +37,8 @@ public:
 
 	void AddCollider(Collider* collider);
 
+	const Transform& GetTransform(void) const;
+
 
 protected:
 
