@@ -27,7 +27,6 @@ IrisTransitor::~IrisTransitor()
 void IrisTransitor::Update()
 {
 	if (frame_ < interval_) {
-		//++frame_;
 		frame_ += 120.0f* DeltaTime::GetInstsnce().GetDeltaTime();
 		SetDrawScreen(newRT_);
 	}
@@ -54,7 +53,7 @@ void IrisTransitor::Draw()
 	SetDrawScreen(handleForMaskScreen_);
 	ClearDrawScreen();
 
-	VECTOR pos = { 1600 / 2,1000 / 2 };
+	VECTOR pos = { 1600.0f / 2.0f, 1000.0f / 2.0f };
 	DrawCircleAA(pos.x, pos.y, radius, 32, 0xffffff, true);
 
 	//隠し関数(現在のグラフィックハンドルをマスクスクリーンに転送)

@@ -218,7 +218,6 @@ void GameScene::InitRender(void)
 		//ƒvƒŒƒCƒ„[‚P‚Æ‚Q‚Ì‰æ–Ê‚ğì‚é
 		cameraScreens_.emplace_back(MakeScreen(SCX / 2, SCY, true));
 		cameraScreens_.emplace_back(MakeScreen(SCX / 2, SCY, true));
-		//draw_ = &GameScene::DrawBattleMode;
 		funcDraw_ = std::bind(&GameScene::DrawBattleMode, this);
 	}
 }
