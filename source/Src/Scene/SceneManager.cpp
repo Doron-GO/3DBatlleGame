@@ -1,8 +1,6 @@
+#include <EffekseerForDXLib.h>
+#include "../Scene/Scene.h"
 #include "SceneManager.h"
-#include"../Scene/Scene.h"
-#include"../_debug/_DebugConOut.h"
-#include"../_debug/_DebugDispOut.h"
-#include<EffekseerForDXLib.h>
 
 void SceneManager::ChangeScene(std::shared_ptr<Scene> scene)
 {
@@ -33,13 +31,11 @@ void SceneManager::PushScene(std::shared_ptr<Scene>scene)
 
 void SceneManager::Update(void)
 {
-	_dbgStartDraw();
 
 	if (!scenes_.empty())
 	{
 		scenes_.front()->Update();
 	}
-
 
 }
 
@@ -51,5 +47,4 @@ void SceneManager::Draw()
 		(*rit)->Draw();
 
 	}
-
 }

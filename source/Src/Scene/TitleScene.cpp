@@ -103,7 +103,6 @@ resMng_(ResourceManager::GetInstance()), camera_(std::make_unique<Camera>()),sta
 skyDome_(std::make_unique<SkyDome>())
 
 {
-	sceneTransitor_.Start();
 	//モード選択の初期カーソル位置を一人用に設定
 	playMode_=0;
 	//ボタンを押してねの状態にする(押されたら選択画面へ)
@@ -130,6 +129,8 @@ skyDome_(std::make_unique<SkyDome>())
 
 	// 背景色設定
 	SetBackgroundColor(0, 139, 139);
+
+	sceneTransitor_.Start();
 
 }
 

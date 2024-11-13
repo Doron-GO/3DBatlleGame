@@ -1,7 +1,5 @@
 #include<DxLib.h>
 #include<EffekseerForDXLib.h>
-#include"Src/_debug/_DebugConOut.h"
-#include"Src/_debug/_DebugDispOut.h"
 #include"Src/Scene/SceneManager.h"
 #include"Src/Manager/ResourceManager.h"
 #include"Src/Scene/Transition/IrisTransitor.h"
@@ -20,7 +18,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	ChangeWindowMode(true);
 
-	_dbgSetup(1200, 800, 256);
 	SetDrawScreen(DX_SCREEN_BACK);
 	SetUseDirect3DVersion(DX_DIRECT3D_11);
 	if (DxLib_Init() == -1)
@@ -63,8 +60,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	// ゲームループ
 	while (ProcessMessage() ==0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
-	{		
-		_dbgDraw();
+	{
+
 		//デルタタイムの更新
 		DeltaTime::GetInstsnce().Update();
 		

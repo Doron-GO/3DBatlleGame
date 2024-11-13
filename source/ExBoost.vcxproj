@@ -202,8 +202,6 @@
     <ClCompile Include="Src\Scene\Transition\Transitor.cpp" />
     <ClCompile Include="Src\UI\UserInterface.cpp" />
     <ClCompile Include="Src\Utility\AsoUtility.cpp" />
-    <ClCompile Include="Src\_debug\_DebugConOut.cpp" />
-    <ClCompile Include="Src\_debug\_DebugDispOut.cpp" />
     <ClCompile Include="Src\Object\State\PlayerState\IdleState.cpp" />
     <ClCompile Include="Src\Object\Weapon\WeaponBase.cpp" />
   </ItemGroup>
@@ -259,8 +257,6 @@
     <ClInclude Include="Src\Scene\Transition\Transitor.h" />
     <ClInclude Include="Src\UI\UserInterface.h" />
     <ClInclude Include="Src\Utility\AsoUtility.h" />
-    <ClInclude Include="Src\_debug\_DebugConOut.h" />
-    <ClInclude Include="Src\_debug\_DebugDispOut.h" />
     <ClInclude Include="Src\Object\Weapon\WeaponBase.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

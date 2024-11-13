@@ -24,3 +24,8 @@ bool Transitor::IsEnd() const
 {
 	return frame_ >= interval_;
 }
+
+int Transitor::GetMainScreen() const
+{
+	return mainScreen_;
+}

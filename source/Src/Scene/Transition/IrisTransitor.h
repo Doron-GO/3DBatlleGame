@@ -17,5 +17,8 @@ private:
 	bool irisOut_ = false;//アイリスアウトフラグ(falseならアイリスイン)
 	bool isTiled_;
 	int gHandle_;
+	int imgMaskHandle_;
+	int imgFrameHandle_;
+	float angle_;
 };
 

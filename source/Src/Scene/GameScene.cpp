@@ -90,8 +90,6 @@ GameScene::GameScene(SceneManager& manager, int playMode, Transitor& transit, In
 resMng_(ResourceManager::GetInstance())
 {
 
-	// トランジッションの開始
-	sceneTransitor_.Start();
 	
 	//タイトルシーンで決まったゲームモードを格納
 	playMode_ = playMode;
@@ -135,7 +133,9 @@ resMng_(ResourceManager::GetInstance())
 
 	//描画スクリーンと描画ステップ
 	InitRender();
-	
+	// トランジッションの開始
+	sceneTransitor_.Start();
+
 }
 
 GameScene::~GameScene(void)
@@ -159,6 +159,7 @@ void GameScene::Update(void)
 
 void GameScene::Draw(void)
 {	
+
 	funcDraw_();
 	sceneTransitor_.Draw();
 }
@@ -304,7 +305,7 @@ void GameScene::DrawBattleMode(void)
 		//描画するスクリーンをセット
 		SetDrawScreen(cameraScreens_[idx]);
 		
-		// 画面を初期化
+		//// 画面を初期化
 		ClearDrawScreen();
 		//カメラの描画
 		actorManager_->DrawCamera(idx);
@@ -324,7 +325,7 @@ void GameScene::DrawBattleMode(void)
 	}
 
 	//二枚のスクリーンを統合した、スクリーンのセット
-	SetDrawScreen(integrationScreen_);
+	SetDrawScreen(sceneTransitor_.GetMainScreen());
 
 	for (int idx = 0; idx < maxIdx; idx++)
 	{
@@ -343,11 +344,6 @@ void GameScene::DrawBattleMode(void)
 		static_cast<int>(screenPos_[PLAYER_NUM::P_2].x), 
 		0, 
 		static_cast<int>(screenPos_[PLAYER_NUM::P_2].x), LINE_THICKNES, 0x000000, true);
-
-	SetDrawScreen(DX_SCREEN_BACK);
-
-	//プレイヤーごとに分割されたスクリーンをまとめて描画
-	DrawGraph(0, 0, integrationScreen_, true);
 
 	//共通UI描画(ゲームスタートなど)
 	int player1 = static_cast<int>(ActorBase::ACTOR_TYPE::PLAYER_1);
