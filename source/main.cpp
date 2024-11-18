@@ -38,17 +38,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 #pragma endregion
 
+
 	//操作するコントローラ番号
 	int padNum = 1;
 
 	//シーンマネージャーの生成
 	SceneManager sceneManager;
 
+	//リソースマネージャーを生成
+	ResourceManager::CreateInstance();
+
 	//トラんじったーの生成
 	IrisTransitor irisTransitor;
 
-	//リソースマネージャーを生成
-	ResourceManager::CreateInstance();
 	//インプットの生成
 	Input input(padNum);
 

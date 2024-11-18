@@ -28,6 +28,8 @@ public:
 
 private:
 
+	static constexpr  int MAX_HP_IMAGE_NUM = 10;
+
 	//画像タイプ
 	enum class IMG_TYPE
 	{
@@ -55,11 +57,17 @@ private:
 	//UI画像ハンドル
 	std::map<IMG_TYPE, int> uiImgH_;
 
+	int* hpImg_;
+
 	//ブーストゲージの数値
 	const float& boostGauge_;
 
 	//HPの数値
 	const float& hpGauge_;
+
+	float hpScale_;
+
+	float hpOffset_;
 
 	//敵HPの数値
  	const float& enemyHpGauge_;

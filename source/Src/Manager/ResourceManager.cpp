@@ -161,9 +161,21 @@ void ResourceManager::Init(void)
 	res = Resource(Resource::TYPE::EFFEKSEER, PATH_EFFECT + "Lightning.efkefc");
 	resouceMap_.emplace(SRC::LIGHTNING, res);
 
+	//トランジションX画像
+	res = Resource(Resource::TYPE::IMG, PATH_IMAGE + "Ui/X_2.png");
+	resouceMap_.emplace(SRC::TRANSITION, res);
+
+	//トランジションX枠画像
+	res = Resource(Resource::TYPE::IMG, PATH_IMAGE + "Ui/X_Frame_2.png"); 
+	resouceMap_.emplace(SRC::TRANSITION_FRAME, res);
+
 	//エフェクト
 	res = Resource(Resource::TYPE::EFFEKSEER, PATH_EFFECT + "Atomosphere.efkefc");
 	resouceMap_.emplace(SRC::ATOMOSPHERE, res);
+
+	//HP数字画像
+	res = Resource(Resource::TYPE::IMGS, PATH_IMAGE + "Ui/HpNum.png",10,1,80,80);
+	resouceMap_.emplace(SRC::HP_NUM, res);
 
 }
 

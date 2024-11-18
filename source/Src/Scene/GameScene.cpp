@@ -90,7 +90,6 @@ GameScene::GameScene(SceneManager& manager, int playMode, Transitor& transit, In
 resMng_(ResourceManager::GetInstance())
 {
 
-	
 	//タイトルシーンで決まったゲームモードを格納
 	playMode_ = playMode;
 

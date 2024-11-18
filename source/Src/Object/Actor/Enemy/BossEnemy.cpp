@@ -194,7 +194,6 @@ void BossEnemy::Update(void)
 	capsule_->Update();
 	//エフェクトマネージャーの更新
 	effectManager_->Update();
-	DrawFormatStringF(0.0f, 880.0f, 0xffffff, "playerHp_%f", hp_);
 
 }
 
