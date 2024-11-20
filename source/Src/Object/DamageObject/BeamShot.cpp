@@ -34,7 +34,7 @@ constexpr VECTOR EFECT_BEAM_POS = { 0.0f,0.0f,0.0f };
 constexpr VECTOR DEFAULT_HORMING_VEC = { 0.0f,0.0f,0.0f };
 
 //通常ダメージ
-constexpr float DAMAGE_NORMAL = 1.0f;
+constexpr float DAMAGE_NORMAL = 50.0f;
 //大ダメージ
 constexpr float DAMAGE_BIG = 200.0f;
 

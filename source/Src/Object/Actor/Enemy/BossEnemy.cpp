@@ -22,7 +22,7 @@ constexpr VECTOR DEFAULT_BOSS_POS = { 0.0f, -500.0f, 1600.0f };
 constexpr int ENEMY_TYPE = 1;
 
 //ボスHP
-constexpr float ENEMY_HP = 100.0f;
+constexpr float ENEMY_HP = 600.0f;
 
 //当たり判定カプセルの半径
 constexpr float CAPSUL_RADIUS = 300.0f;

@@ -173,9 +173,13 @@ void ResourceManager::Init(void)
 	res = Resource(Resource::TYPE::EFFEKSEER, PATH_EFFECT + "Atomosphere.efkefc");
 	resouceMap_.emplace(SRC::ATOMOSPHERE, res);
 
-	//HP”š‰æ‘œ
-	res = Resource(Resource::TYPE::IMGS, PATH_IMAGE + "Ui/HpNum.png",10,1,80,80);
-	resouceMap_.emplace(SRC::HP_NUM, res);
+	//”š‰æ‘œ
+	res = Resource(Resource::TYPE::IMGS, PATH_IMAGE + "Ui/BulletNum.png",10,1,80,80);
+	resouceMap_.emplace(SRC::NUMBER, res);
+
+	//c’e”š‰æ‘œ
+	res = Resource(Resource::TYPE::IMG, PATH_IMAGE + "Ui/Hp_Back.png");
+	resouceMap_.emplace(SRC::HP_BACK, res);
 
 }
 

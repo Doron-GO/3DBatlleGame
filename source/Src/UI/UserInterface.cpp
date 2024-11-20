@@ -19,61 +19,87 @@ constexpr float ENEMY_HP_GAUGE_OFFSET_Y = 400.0f;
  //ブーストゲージ画像の座標
 constexpr VECTOR BOOST_GAUGE_IMG_POS_MULTI= { 400.0f,850.0f,0.0f };
 constexpr VECTOR BOOST_GAUGE_IMG_POS_SINGLE = { 1100.0f,850.0f,0.0f };
+//大きさ
 constexpr double BOOST_GAUGE_CASE_SCALE_SINGLE= 2.5;
 constexpr double BOOST_GAUGE_CASE_SCALE_MULTI= 2.0;
+//オフセット
 constexpr int BOOST_GAUGE_OFFSET_X_SINGLE = 5;
 constexpr int BOOST_GAUGE_OFFSET_Y_SINGLE = 40;
 constexpr int BOOST_GAUGE_OFFSET_X_MULTI = 4;
 constexpr int BOOST_GAUGE_OFFSET_Y_MULTI = 30;
 
-//HPゲージ表示の数値
-constexpr VECTOR HP_GAUGE_POS_MULTI = {170.0f,850.0f,0.0f};
-constexpr VECTOR HP_GAUGE_POS_SINGLE = {250.0f,850.0f,0.0f};
+//HP表示の数値
+constexpr VECTOR HP_VALUE_POS_MULTI = {170.0f,850.0f,0.0f};
+constexpr VECTOR HP_VALUE_POS_SINGLE = {250.0f,850.0f,0.0f};
 //HP表示の大きさ
-constexpr float HP_GAUGE_SCALE_SINGLE = 2.0f;
-constexpr float HP_GAUGE_SCALE_MULTI = 1.7f;
+constexpr float HP_VALUE_SCALE_SINGLE = 2.0f;
+constexpr float HP_VALUE_SCALE_MULTI = 1.7f;
 //HP表示の大きさ
-constexpr float HP_GAUGE_OFFSET_SINGLE = 120;
-constexpr float HP_GAUGE_OFFSET_MULTI = 100;
+constexpr int HP_VALUE_OFFSET_SINGLE = 120;
+constexpr int HP_VALUE_OFFSET_MULTI = 100;
 
-//残弾数表示の数値
-constexpr VECTOR NUMBER_OF_BULLETS_POS_SINGLE = {1300.0f,650.0f,0.0f};
-constexpr VECTOR NUMBER_OF_BULLETS_POS_MULTI = {600.0f,700.0f,0.0f};
-constexpr int NUMBER_OF_BULLETS_CENTER_X= 140;
-constexpr int NUMBER_OF_BULLETS_CENTER_Y=100;
-constexpr int NUMBER_OF_BULLETS_OFFSET = 10;
-constexpr double NUMBER_OF_BULLETS_SCALE_MULTI = 0.4;
-constexpr double NUMBER_OF_BULLETS_SCALE_SINGLE= 0.6;
+//HP背面画像表示の数値
+constexpr VECTOR HP_BACK_POS_MULTI = { 170.0f,850.0f,0.0f };
+constexpr VECTOR HP_BACK_POS_SINGLE = { 250.0f,850.0f,0.0f };
+//HP背面画像の大きさ
+constexpr float HP_BACK_SCALE_SINGLE = 1.2f;
+constexpr float HP_BACK_SCALE_MULTI = 1.0f;
+//HP背面画像中心の数値
+constexpr int HP_BACK_CENTER_X = 160;
+constexpr int HP_BACK_CENTER_Y = 80;
+
+//残弾表示の数値
+constexpr VECTOR BULLET_POS_MULTI = { 600.0f,690.0f,0.0f };
+constexpr VECTOR  BULLET_POS_SINGLE = { 1300.0f,690.0f,0.0f };
+//残弾表示の大きさ
+constexpr float BULLET_SCALE_SINGLE = 1.0f;
+constexpr float BULLET_SCALE_MULTI = 0.7f;
+//残弾表示の大きさ
+constexpr float  BULLET_OFFSET_SINGLE = 120;
+constexpr float  BULLET_OFFSET_MULTI = 100;
+//残弾表示の数値
+constexpr int BULLET_CENTER_X = 40;
+constexpr int BULLET_CENTER_Y = 40;
+constexpr int BULLET_OFFSET = 10;
+
+//ライフル表示の数値
+constexpr VECTOR RIFLE_POS_MULTI = { 670.0f,670.0f,0.0f };
+constexpr VECTOR  RIFLE_POS_SINGLE = { 1420.0f,660.0f,0.0f };
+//ライフル表示の大きさ
+constexpr float RIFLE_SCALE_SINGLE = 0.6f;
+constexpr float RIFLE_SCALE_MULTI = 0.4f;
+//ライフル表示の大きさ
+constexpr float  RIFLE_OFFSET = 10;
+//ライフル表示の数値
+constexpr int RIFLE_CENTER_X = 320;
+constexpr int RIFLE_CENTER_Y =160;
 
  //タイトルに戻る画像
-constexpr int BACK_TO_TITLE_POS_X = 800;
-constexpr int BACK_TO_TITLE_POS_Y = 500;
+constexpr VECTOR BACK_TO_TITLE_POS = { 800.0f,500.0f,0.0f };
 constexpr int BACK_TO_TITLE_CENTER_X = 250;
 constexpr int BACK_TO_TITLE_CENTER_Y = 50;
 constexpr double BACK_TO_TITLE_SCALE = 1.5;
 
  //もう一戦画像
-constexpr int ONE_MOR_FIGHT_POS_X = 800;
-constexpr int ONE_MOR_FIGHT_POS_Y = 700;
+constexpr VECTOR ONE_MOR_FIGHT_POS = { 800.0f,700.0f };
 constexpr int ONE_MOR_FIGHT_CENTER_X = 273;
 constexpr int ONE_MOR_FIGHT_CENTER_Y = 54;
 constexpr double ONE_MOR_FIGHT_SCALE = 1.5;
 
  //×ボタンを押してくれ画像
-constexpr int  PLEASE_CROSS_BUTTON_POS_X = 800;
-constexpr int  PLEASE_CROSS_BUTTON_POS_Y = 900;
-constexpr int  PLEASE_CROSS_BUTTON_CENTER_X = 480;
-constexpr int  PLEASE_CROSS_BUTTON_CENTER_Y = 52;
-constexpr double  PLEASE_CROSS_BUTTON_SCALE = 1.2;
+constexpr VECTOR PLEASE_CROSS_BUTTON_POS = { 800.0f,900.0f };
+constexpr int PLEASE_CROSS_BUTTON_CENTER_X = 480;
+constexpr int PLEASE_CROSS_BUTTON_CENTER_Y = 52;
+constexpr double PLEASE_CROSS_BUTTON_SCALE = 1.2;
 
  //Aボタンを押してくれ画像
-constexpr int  PLEASE_A_BUTTON_POS_X = 800;
-constexpr int  PLEASE_A_BUTTON_POS_Y = 800;
-constexpr int  PLEASE_A_BUTTON_CENTER_X = 395;
-constexpr int  PLEASE_A_BUTTON_CENTER_Y = 34;
+constexpr VECTOR PLEASE_A_BUTTON_POS = { 800.0f,800.0f };
+constexpr int PLEASE_A_BUTTON_CENTER_X = 395;
+constexpr int PLEASE_A_BUTTON_CENTER_Y = 34;
 constexpr double  PLEASE_A_BUTTON_SCALE = 1.2;
 
  //セレクト画像の数値
+constexpr VECTOR TRIANGLE_POS = { 1200.0f,500.0f };
 constexpr int  TRIANGLE_POS_X = 1200;
 constexpr int  TRIANGLE_POS_Y = 500;
 constexpr int  TRIANGLE_CENTER_X = 280;
@@ -204,79 +230,119 @@ void UserInterface::InitImage(void)
 	uiImgH_.emplace(IMG_TYPE::BOOST_GAUGE, resMng_.Load(ResourceManager::SRC::BOOSTGAUGE_IMAGE).handleId_);
 	uiImgH_.emplace(IMG_TYPE::ENEMY_HP_GAUGE, resMng_.Load(ResourceManager::SRC::ENEMY_HP_GAUGE).handleId_);
 	uiImgH_.emplace(IMG_TYPE::BOOST_GAUGE_CASE, resMng_.Load(ResourceManager::SRC::BOOSTGAUGE_CASE_IMAGE).handleId_);
+	uiImgH_.emplace(IMG_TYPE::HP_BACK, resMng_.Load(ResourceManager::SRC::HP_BACK).handleId_);
+	numberImg_ = resMng_.Load(ResourceManager::SRC::NUMBER).handleIds_;
 
-	hpImg_ = resMng_.Load(ResourceManager::SRC::HP_NUM).handleIds_;
+	//タイトルへ戻る画像の情報
+	imgInfo_.emplace(IMG_TYPE::BACK_TO_TITLE,
+		Info(BACK_TO_TITLE_POS,
+			BACK_TO_TITLE_SCALE,
+			BACK_TO_TITLE_CENTER_X,
+			BACK_TO_TITLE_CENTER_Y));
+	//もう一戦画像の情報
+	imgInfo_.emplace(IMG_TYPE::ONE_MOR_FIGHT,
+		Info(ONE_MOR_FIGHT_POS,
+			ONE_MOR_FIGHT_SCALE,
+			ONE_MOR_FIGHT_CENTER_X,
+			ONE_MOR_FIGHT_CENTER_Y));
+	//選択画像の情報
+	imgInfo_.emplace(IMG_TYPE::TRIANGLE,
+		Info(TRIANGLE_POS,
+			TRIANGLE_SCALE,
+			TRIANGLE_CENTER_X,
+			TRIANGLE_CENTER_Y,
+			TRIANGLE_OFFSET));
+
+	//HPゲージ画像の情報
+	imgInfo_.emplace(IMG_TYPE::PLEASE_A,
+		Info(PLEASE_A_BUTTON_POS,
+			PLEASE_CROSS_BUTTON_SCALE,
+			PLEASE_A_BUTTON_CENTER_X,
+			PLEASE_A_BUTTON_CENTER_Y,
+			PLEASE_A_BUTTON_SCALE));
+	
+	imgInfo_.emplace(IMG_TYPE::PLEASE_CROSS,
+		Info(PLEASE_CROSS_BUTTON_POS,
+			PLEASE_CROSS_BUTTON_SCALE,
+			PLEASE_CROSS_BUTTON_CENTER_X,
+			PLEASE_CROSS_BUTTON_CENTER_Y,
+			PLEASE_CROSS_BUTTON_SCALE));
 
 	//シングルプレイモード時の初期化
 	if (playMode_ == PLAY_MODE)
 	{
-		//HPゲージの画像の座標
-		hpGaugePos_ = HP_GAUGE_POS_SINGLE;
+		//HPゲージ画像の情報
+		imgInfo_.emplace(IMG_TYPE::HP_BACK,
+			Info(HP_BACK_POS_SINGLE,
+				HP_BACK_SCALE_SINGLE,
+				HP_BACK_CENTER_X,
+				HP_BACK_CENTER_Y));
+		//残弾数表示の情報
+		imgInfo_.emplace(IMG_TYPE::BULLET_NUM,
+			Info(BULLET_POS_SINGLE,
+				BULLET_SCALE_SINGLE,
+				BULLET_CENTER_X,
+				BULLET_CENTER_Y, 
+				BULLET_OFFSET_SINGLE));
+		//ライフル画像情報
+		imgInfo_.emplace(IMG_TYPE::RIFLE_IMAGE,
+			Info(RIFLE_POS_SINGLE,
+				RIFLE_SCALE_SINGLE,
+				RIFLE_CENTER_X,
+				RIFLE_CENTER_Y));
+		//ブートゲージ画像情報
+		imgInfo_.emplace(IMG_TYPE::BOOST_GAUGE,
+			Info(BOOST_GAUGE_IMG_POS_SINGLE,
+				BOOST_GAUGE_CASE_SCALE_SINGLE,
+				BOOST_GAUGE_OFFSET_X_SINGLE,
+				BOOST_GAUGE_OFFSET_Y_SINGLE));
 
-		hpOffset_ = HP_GAUGE_OFFSET_SINGLE;
+		//ブートゲージ画像情報
+		imgInfo_.emplace(IMG_TYPE::WIN,
+			Info(SINGLEMODE_IMG_POS));
 
-		//勝敗画像の座標
-		victoryOrDefeatPos_ = SINGLEMODE_IMG_POS;
-
-		//ブーストゲージ画像の座標
-		boostGaugePos_ = BOOST_GAUGE_IMG_POS_SINGLE;
-
-		//ブーストゲージ枠画像の大きさ
-		boostGaugeCaseScale_ = BOOST_GAUGE_CASE_SCALE_SINGLE;
-
-		//ブーストゲージ画像位置調整用数値
-		boostGaugeOffsetX_ = BOOST_GAUGE_OFFSET_X_SINGLE;
-		boostGaugeOffsetY_ = BOOST_GAUGE_OFFSET_Y_SINGLE;
-
-		//残弾表示画像座標
-		numberOfBulletsPos_ = NUMBER_OF_BULLETS_POS_SINGLE;
-
-		//残弾表示画像の大きさ
-		numberOfBulletsScale_ = NUMBER_OF_BULLETS_SCALE_SINGLE;
-
-		//HP表示のフォント設定
-		fontHp_ = CreateFontToHandle(NULL, 250, 3);
-
-		//残弾表示のフォント設定
-		fontBullets_ = CreateFontToHandle(NULL, 150, 3);
-
-		hpScale_ = HP_GAUGE_SCALE_SINGLE;
+		//HP表示のオフセット値
+		hpValueOffset_ = HP_VALUE_OFFSET_SINGLE;
+		//HP表示の大きさ
+		hpValueScale_ = HP_VALUE_SCALE_SINGLE;
 
 	}
 	else//対戦モード時の初期化
 	{
-		//HPゲージの画像の座標
-		hpGaugePos_ = HP_GAUGE_POS_MULTI;
 
+		//HPゲージ画像の情報
+		imgInfo_.emplace(IMG_TYPE::HP_BACK,
+			Info(HP_VALUE_POS_MULTI,
+				HP_BACK_SCALE_MULTI,
+				HP_BACK_CENTER_X,
+				HP_BACK_CENTER_Y));
+		//残弾数表示情報
+		imgInfo_.emplace(IMG_TYPE::BULLET_NUM,
+			Info(BULLET_POS_MULTI,
+				BULLET_SCALE_MULTI,
+				BULLET_CENTER_X,
+				BULLET_CENTER_Y,
+				BULLET_OFFSET_MULTI));
+		//ライフル画像
+		imgInfo_.emplace(IMG_TYPE::RIFLE_IMAGE,
+			Info(RIFLE_POS_MULTI,
+				RIFLE_SCALE_MULTI,
+				RIFLE_CENTER_X,
+				RIFLE_CENTER_Y));
+		//ブートゲージ画像情報
+		imgInfo_.emplace(IMG_TYPE::BOOST_GAUGE, Info(BOOST_GAUGE_IMG_POS_MULTI,
+			BOOST_GAUGE_CASE_SCALE_MULTI,
+			BOOST_GAUGE_OFFSET_X_MULTI,
+			BOOST_GAUGE_OFFSET_Y_MULTI));
+
+		//ブートゲージ画像情報
+		imgInfo_.emplace(IMG_TYPE::WIN, Info(MULTI_MODE_IMG_POS));
+
+		//HP表示のオフセット
+		hpValueOffset_ = HP_VALUE_OFFSET_MULTI;
 		//HP表示の大きさ
-		hpScale_ = HP_GAUGE_SCALE_MULTI;
+		hpValueScale_ = HP_VALUE_SCALE_MULTI;
 
-		hpOffset_ = HP_GAUGE_OFFSET_MULTI;
-
-		//勝敗画像の座標
-		victoryOrDefeatPos_ = MULTI_MODE_IMG_POS;
-
-		//ブーストゲージ画像の座標
-		boostGaugePos_ = BOOST_GAUGE_IMG_POS_MULTI;
-		
-		//ブーストゲージ枠画像の大きさ
-		boostGaugeCaseScale_ = BOOST_GAUGE_CASE_SCALE_MULTI;
-
-		//ブーストゲージ画像位置調整用数値
-		boostGaugeOffsetX_ = BOOST_GAUGE_OFFSET_X_MULTI;
-		boostGaugeOffsetY_ = BOOST_GAUGE_OFFSET_Y_MULTI;
-
-		//残弾表示画像座標
-		numberOfBulletsPos_ = NUMBER_OF_BULLETS_POS_MULTI;
-
-		//残弾表示画像の大きさ
-		numberOfBulletsScale_ = NUMBER_OF_BULLETS_SCALE_MULTI;
-
-		//HP表示のフォント設定
-		fontHp_ = CreateFontToHandle(NULL, 150, 3);
-		
-		//残弾表示のフォント設定
-		fontBullets_ = CreateFontToHandle(NULL, 100, 3);
 	}
 }
 
@@ -295,8 +361,8 @@ void UserInterface::InitCommonUI(void)
 void UserInterface::DrawBoostGauge(void)
 {
 	int x = static_cast<int>(boostGauge_);
-	int PosX = static_cast<int>(boostGaugePos_.x);
-	int PosY = static_cast<int>(boostGaugePos_.y);
+	int PosX = static_cast<int>(imgInfo_[IMG_TYPE::BOOST_GAUGE].pos_.x);
+	int PosY = static_cast<int>(imgInfo_[IMG_TYPE::BOOST_GAUGE].pos_.y);
 	int color = 0;
 	//ゲージ残量半分以上は緑色
 	if (x>50)
@@ -314,60 +380,67 @@ void UserInterface::DrawBoostGauge(void)
 		color = GetColor(255, 0, 0);
 	}
 	//ブーストゲージの表示
-	DrawFillBox(PosX, PosY, PosX+ (x * boostGaugeOffsetX_), PosY + boostGaugeOffsetY_, color);
+	DrawFillBox(PosX, PosY, PosX+ (x * imgInfo_[IMG_TYPE::BOOST_GAUGE].centerX_), PosY + imgInfo_[IMG_TYPE::BOOST_GAUGE].centerY_, color);
 	//ブーストゲージ枠の表示
-	DrawRotaGraph2(PosX, PosY, 0, 0, boostGaugeCaseScale_, 0.0, uiImgH_[IMG_TYPE::BOOST_GAUGE_CASE], true, false);
+	DrawRotaGraph2(PosX, PosY, 0, 0, imgInfo_[IMG_TYPE::BOOST_GAUGE].scale_, 0.0, uiImgH_[IMG_TYPE::BOOST_GAUGE_CASE], true, false);
 }
 
 void UserInterface::DrawNumnberOfBullets(void)
 {
-	int PosX = static_cast<int>(numberOfBulletsPos_.x);
-	int PosY = static_cast<int>(numberOfBulletsPos_.y);
+	int PosX = static_cast<int>(imgInfo_[IMG_TYPE::BULLET_NUM].pos_.x);
+	int PosY = static_cast<int>(imgInfo_[IMG_TYPE::BULLET_NUM].pos_.y);
+	int riflePosX = static_cast<int>(imgInfo_[IMG_TYPE::RIFLE_IMAGE].pos_.x);
+	int riflePosY = static_cast<int>(imgInfo_[IMG_TYPE::RIFLE_IMAGE].pos_.y);
+
+	//残弾表示(武器)
+	DrawRotaGraph2(riflePosX, riflePosY, imgInfo_[IMG_TYPE::RIFLE_IMAGE].centerX_, imgInfo_[IMG_TYPE::RIFLE_IMAGE].centerY_,
+		imgInfo_[IMG_TYPE::RIFLE_IMAGE].scale_, 0.0, uiImgH_[IMG_TYPE::RIFLE_IMAGE], true, false);
 
 	//残弾表示(数字)
-	DrawFormatStringToHandle(PosX, PosY - NUMBER_OF_BULLETS_OFFSET, 0xffffff, fontBullets_, "%d", *numnberofBullets_);
-	//残弾表示(武器)
-	DrawRotaGraph2(PosX, PosY, NUMBER_OF_BULLETS_CENTER_X, NUMBER_OF_BULLETS_CENTER_Y, 
-		numberOfBulletsScale_, 0.0, uiImgH_[IMG_TYPE::RIFLE_IMAGE], true, false);
+	DrawRotaGraph2(PosX ,PosY,
+					imgInfo_[IMG_TYPE::BULLET_NUM].centerX_,imgInfo_[IMG_TYPE::BULLET_NUM].centerX_,
+		imgInfo_[IMG_TYPE::BULLET_NUM].scale_, 0.0, numberImg_[*numnberofBullets_], true, false);
 
 }
 
 void UserInterface::DrawHPGauge(void)
 {
-	int PosX = static_cast<int>(hpGaugePos_.x);
-	int PosY = static_cast<int>(hpGaugePos_.y );
+	int PosX = static_cast<int>(imgInfo_[IMG_TYPE::HP_BACK].pos_.x);
+	int PosY = static_cast<int>(imgInfo_[IMG_TYPE::HP_BACK].pos_.y );
 	int hp = static_cast<int>(hpGauge_);
 
 	//百の桁の数字
-	int singleDigit = hpGauge_ / 100.0f;
+	int singleDigit = hp/ 100;
 	//十の桁の数字
-	int twoDigit = hpGauge_;
+	int twoDigit = hp;
 	twoDigit = (twoDigit % 100 ) / 10;
 	//十の桁の数字
-	int threeDigit = hpGauge_;
+	int threeDigit = hp;
 	threeDigit = (threeDigit % 100)%10;
 
+	//HP背面画像
+	DrawRotaGraph2(PosX, PosY, imgInfo_[IMG_TYPE::HP_BACK].centerX_, imgInfo_[IMG_TYPE::HP_BACK].centerY_,
+		imgInfo_[IMG_TYPE::HP_BACK].scale_, 0.0, uiImgH_[IMG_TYPE::HP_BACK], true, false);
 
-	DrawFormatStringToHandle(PosX, PosY , 0xffffff, fontHp_, "%d", hp);
 
 	//HP表示(百の桁)
-	DrawRotaGraph2(PosX - hpOffset_, PosY, 40, 40,
-		hpScale_, 0.0, hpImg_[singleDigit], true, false);
+	DrawRotaGraph2(PosX - hpValueOffset_, PosY, 40, 40,
+		hpValueScale_, 0.0, numberImg_[singleDigit], true, false);
 
 	//HP表示(十の桁)
 	DrawRotaGraph2(PosX, PosY, 40, 40,
-		hpScale_, 0.0, hpImg_[twoDigit], true, false);
+		hpValueScale_, 0.0, numberImg_[twoDigit], true, false);
 
 	//HP表示(一の桁)
-	DrawRotaGraph2(PosX + hpOffset_, PosY, 40, 40,
-		hpScale_, 0.0, hpImg_[threeDigit], true, false);
+	DrawRotaGraph2(PosX + hpValueOffset_, PosY, 40, 40,
+		hpValueScale_, 0.0, numberImg_[threeDigit], true, false);
 
 }
 
 void UserInterface::VictoryOrDefeat(void)
 {
-	int posX = static_cast<int>(victoryOrDefeatPos_.x);
-	int posY = static_cast<int>(victoryOrDefeatPos_.y);
+	int posX = static_cast<int>(imgInfo_[IMG_TYPE::WIN].pos_.x);
+	int posY = static_cast<int>(imgInfo_[IMG_TYPE::WIN].pos_.y);
 	if (isWin_)
 	{	//勝利画像表示
 		DrawRotaGraph2(posX, posY, 140, 100, 2.0, 0.0, uiImgH_[IMG_TYPE::WIN], true, false);
@@ -453,26 +526,38 @@ void UserInterface::DrawUIGameSet(const bool& isGameSet, const int& rematchMode)
 		return;
 	}
 
+	int titleX = static_cast<int>(imgInfo_[IMG_TYPE::BACK_TO_TITLE].pos_.x);
+	int titleY = static_cast<int>(imgInfo_[IMG_TYPE::BACK_TO_TITLE].pos_.y);
+	int fightX = static_cast<int>(imgInfo_[IMG_TYPE::ONE_MOR_FIGHT].pos_.x);
+	int fightY = static_cast<int>(imgInfo_[IMG_TYPE::ONE_MOR_FIGHT].pos_.y);
+
+
 	//タイトルへ戻る画像表示
-	DrawRotaGraph2(BACK_TO_TITLE_POS_X, BACK_TO_TITLE_POS_Y,
-		BACK_TO_TITLE_CENTER_X, BACK_TO_TITLE_CENTER_Y, BACK_TO_TITLE_SCALE, 0.0, uiImgH_[IMG_TYPE::BACK_TO_TITLE], true, false);
+	DrawRotaGraph2(titleX, titleY,
+		imgInfo_[IMG_TYPE::BACK_TO_TITLE].centerX_,
+		imgInfo_[IMG_TYPE::BACK_TO_TITLE].centerY_,
+		imgInfo_[IMG_TYPE::BACK_TO_TITLE].scale_, 0.0, uiImgH_[IMG_TYPE::BACK_TO_TITLE], true, false);
 	//もう一戦画像表示
-	DrawRotaGraph2(ONE_MOR_FIGHT_POS_X, ONE_MOR_FIGHT_POS_Y,
-		ONE_MOR_FIGHT_CENTER_X, ONE_MOR_FIGHT_CENTER_Y, ONE_MOR_FIGHT_SCALE, 0.0, uiImgH_[IMG_TYPE::ONE_MOR_FIGHT], true, false);
+	DrawRotaGraph2(fightX, fightY,
+		imgInfo_[IMG_TYPE::ONE_MOR_FIGHT].centerX_,
+		imgInfo_[IMG_TYPE::ONE_MOR_FIGHT].centerY_,
+		imgInfo_[IMG_TYPE::ONE_MOR_FIGHT].scale_, 0.0, uiImgH_[IMG_TYPE::ONE_MOR_FIGHT], true, false);
 
 	//接続されたコントローラがPsなら×ボタン表記
 	if (JOYPAD_TYPE:: DUAL_SHOCK_4 == joyPadType_ || JOYPAD_TYPE::DUAL_SENSE == joyPadType_)
 	{
 
-		DrawRotaGraph2(PLEASE_CROSS_BUTTON_POS_X, PLEASE_CROSS_BUTTON_POS_Y,
-			PLEASE_CROSS_BUTTON_CENTER_X, PLEASE_CROSS_BUTTON_CENTER_Y, PLEASE_CROSS_BUTTON_SCALE, 0.0, uiImgH_[IMG_TYPE::PLEASE_CROSS], true, false);
+		DrawRotaGraph2(imgInfo_[IMG_TYPE::PLEASE_CROSS].pos_.x, imgInfo_[IMG_TYPE::PLEASE_CROSS].pos_.y,
+			imgInfo_[IMG_TYPE::PLEASE_CROSS].centerX_, imgInfo_[IMG_TYPE::PLEASE_CROSS].centerY_,
+			imgInfo_[IMG_TYPE::PLEASE_CROSS].scale_, 0.0, uiImgH_[IMG_TYPE::PLEASE_CROSS], true, false);
 	}//それ以外ならAボタン表記
 	else
 	{
-		DrawRotaGraph2(PLEASE_A_BUTTON_POS_X, PLEASE_A_BUTTON_POS_Y,
-			PLEASE_A_BUTTON_CENTER_X, PLEASE_A_BUTTON_CENTER_Y, PLEASE_A_BUTTON_SCALE, 0.0, uiImgH_[IMG_TYPE::PLEASE_A], true, false);
+		DrawRotaGraph2(imgInfo_[IMG_TYPE::PLEASE_A].pos_.x, imgInfo_[IMG_TYPE::PLEASE_A].pos_.y,
+			imgInfo_[IMG_TYPE::PLEASE_A].centerX_, imgInfo_[IMG_TYPE::PLEASE_A].centerY_,
+			imgInfo_[IMG_TYPE::PLEASE_A].scale_, 0.0, uiImgH_[IMG_TYPE::PLEASE_A], true, false);
 	}
 	//カーソルの表示
-	DrawRotaGraph2(TRIANGLE_POS_X, TRIANGLE_POS_Y + (TRIANGLE_OFFSET * rematchMode),
-		TRIANGLE_CENTER_X, TRIANGLE_CENTER_Y, TRIANGLE_SCALE, 0.0, uiImgH_[IMG_TYPE::TRIANGLE], true, false);
+	DrawRotaGraph2(imgInfo_[IMG_TYPE::TRIANGLE].pos_.x, imgInfo_[IMG_TYPE::TRIANGLE].pos_.y + (imgInfo_[IMG_TYPE::TRIANGLE].offset_ * rematchMode),
+		imgInfo_[IMG_TYPE::TRIANGLE].centerX_, imgInfo_[IMG_TYPE::TRIANGLE].centerY_, imgInfo_[IMG_TYPE::TRIANGLE].scale_, 0.0, uiImgH_[IMG_TYPE::TRIANGLE], true, false);
 }

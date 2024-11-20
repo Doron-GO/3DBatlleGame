@@ -53,7 +53,8 @@ public:
 		ATOMOSPHERE,
 		TRANSITION,
 		TRANSITION_FRAME,
-		HP_NUM
+		NUMBER,
+		HP_BACK
 	};
 
 

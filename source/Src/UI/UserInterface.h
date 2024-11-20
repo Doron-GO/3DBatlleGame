@@ -47,9 +47,24 @@ private:
 		PLEASE_A,
 		TRIANGLE,
 		READY,
-		FIGHT
+		FIGHT,
+		HP_BACK,
+		BULLET_NUM
 
 	};
+
+	struct Info
+	{
+		VECTOR pos_;
+		float scale_;
+		int centerX_;
+		int centerY_;		
+		float offset_;		
+
+
+	};
+
+	std::map<IMG_TYPE, Info> imgInfo_;
 
 	// シングルトン参照
 	ResourceManager& resMng_;
@@ -57,17 +72,18 @@ private:
 	//UI画像ハンドル
 	std::map<IMG_TYPE, int> uiImgH_;
 
-	int* hpImg_;
+	//数字画像
+	int* numberImg_;
 
 	//ブーストゲージの数値
 	const float& boostGauge_;
-
 	//HPの数値
 	const float& hpGauge_;
 
-	float hpScale_;
-
-	float hpOffset_;
+	//HP数字の大きさ
+	float hpValueScale_;
+	//HP数字のオフセット
+	int hpValueOffset_;
 
 	//敵HPの数値
  	const float& enemyHpGauge_;
@@ -81,36 +97,8 @@ private:
 	//プレイモード
 	int playMode_;
 
-	//Hp表示
-	int fontHp_;
-
-	//残弾数表示表示
-	int fontBullets_;
-
 	//プレイヤーが勝利したか敗北したかの判定
 	const bool& isWin_;
-
-	//勝利、敗北画像の座標
-	VECTOR victoryOrDefeatPos_;
-
-	//ブーストゲージ画像の座標
-	VECTOR boostGaugePos_;
-
-	//ブーストゲージ画像座標調整用
-	int boostGaugeOffsetX_;
-	int boostGaugeOffsetY_;
-
-	//ブーストゲージ画像の座標
-	double boostGaugeCaseScale_;
-
-	//HPの座標
-	VECTOR hpGaugePos_;
-
-	//残弾表示画像の座標
-	VECTOR numberOfBulletsPos_;
-
-	//残弾表示画像の大きさ
-	double numberOfBulletsScale_;
 
 	//プレイヤー１のパッドの種類
 	JOYPAD_TYPE joyPadType_;
