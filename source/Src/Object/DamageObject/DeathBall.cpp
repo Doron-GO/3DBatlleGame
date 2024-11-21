@@ -84,7 +84,7 @@ void DeathBall::Activate(void)
 	//当たり判定の更新
 	MV1RefreshCollInfo(transform_.modelId);
 	//エフェクトの再生
-	effectManager_->Play(static_cast<int>(BALL_STATE::BALL));
+	effectManager_->Play(static_cast<int>(BALL_STATE::BALL),true);
 	//アップデートをNormalUpdateに変更
 	update_ = std::bind(&DeathBall::NormalUpdate, this);
 

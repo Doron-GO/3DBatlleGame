@@ -76,7 +76,10 @@ public:
 	void Draw(void);
 
 	//エフェクトの再生
-	void PlayEffect(EFFECT_TYPE effectType);
+	void PlayEffect(EFFECT_TYPE effectType, bool posSync = false);
+
+	//エフェクトの再生
+	void PriorityPlayEffect(EFFECT_TYPE effectType,bool posSync = false);
 
 	//エフェクトのストップ
 	void StopEffect(EFFECT_TYPE effectType);

@@ -20,8 +20,10 @@ public:
 		bool isPlay_ =false;
 		//ループ再生かどうか
 		bool isLoop = false;
-		//プレイヤーのジェットのように回転などに応じて、座標もも追従させるかどうか
-		bool isSync_ = false;
+		//プレイヤーのジェットのように回転と同期させるか
+		bool isRotSync_ = false;
+		//座標を同期させるかどうか
+		bool isPosSync_ = false;
 		//座標調整用数値
 		VECTOR offset_;
 		//座標
@@ -38,13 +40,13 @@ public:
 	//アップデート
 	void Update();
 	//エフェクトを再生する
-	void Play(int type);
+	void Play(int type,bool posSync =false);
+	//優先して出したいエフェクトを再生する
+	void PriorityPlay(int type, bool posSync = false);
 	//エフェクトの再生を止める
 	void Stop(int type);
 	//エフェクトの再生速度を設定する
 	void SetSpeed(int type, float speed);
-
-
 
 private:
 

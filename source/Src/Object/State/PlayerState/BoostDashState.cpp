@@ -15,9 +15,9 @@ BoostDashState::BoostDashState(Player& player) : player_(player)
 	//移動速度を設定
 	player_.SetMoveSpeed(player_.MOVE_SPEED_BOOST_DASH);
 	//バーニアエフェクトを起動
-	player_.PlayEffect(Player::EFFECT_TYPE::JET_BACK_LEFT);
+	player_.PlayEffect(Player::EFFECT_TYPE::JET_BACK_LEFT,true);
 	//バーニアエフェクトを起動
-	player_.PlayEffect(Player::EFFECT_TYPE::JET_BACK_RIGHT);
+	player_.PlayEffect(Player::EFFECT_TYPE::JET_BACK_RIGHT,true);
 }
 
 void BoostDashState::Update(void)

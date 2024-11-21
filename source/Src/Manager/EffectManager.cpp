@@ -29,7 +29,7 @@ void EffectManager::Add(int type, VECTOR scale,  VECTOR offset, VECTOR rot ,bool
 		//回転
 		efects_[type].rot_ = rot;
 		//トランスフォームの回転と同期させるか判定
-		efects_[type].isSync_ = isSync;
+		efects_[type].isRotSync_ = isSync;
 		//ループ再生フラグ
 		efects_[type].isLoop = loop;
 	}
@@ -48,7 +48,7 @@ void EffectManager::Update()
 		//同期させる座標
 		VECTOR pos = transform_.pos;
 
-		if (efects_[efect.first].isSync_)
+		if (efects_[efect.first].isRotSync_)
 		{
 			//座標を回転させる
 			const VECTOR lacalPos = transform_.quaRot.PosAxis(efects_[efect.first].offset_);
@@ -68,9 +68,13 @@ void EffectManager::Update()
 		//オイラー角に変換
 		VECTOR rot = Quaternion::ToEuler(eRot);
 
-		//位置を設定
-		SetPosPlayingEffekseer3DEffect(efects_[efect.first].playHandleId_,
-			pos.x, pos.y, pos.z);
+
+		if (efects_[efect.first].isPosSync_)
+		{
+			//位置を設定
+			SetPosPlayingEffekseer3DEffect(efects_[efect.first].playHandleId_,
+				pos.x, pos.y, pos.z);
+		}
 
 		//角度を設定
 		SetRotationPlayingEffekseer3DEffect(efects_[efect.first].playHandleId_,
@@ -80,14 +84,6 @@ void EffectManager::Update()
 		SetScalePlayingEffekseer3DEffect(efects_[efect.first].playHandleId_,
 			efects_[efect.first].scale_.x, efects_[efect.first].scale_.y, efects_[efect.first].scale_.z);
 
-		////エフェクトループ再生じゃなく、再生が終わっていたらエフェクトを止める
-		//if (!(efects_[efect.first].isLoop) &&IsEffekseer3DEffectPlaying(efects_[efect.first].playHandleId_)==-1)
-		//{
-		//	//エフェクトの再生をストップ
-		//	StopEffekseer3DEffect(efects_[efect.first].playHandleId_);
-		//	//再生中フラグをfalseにする
-		//	efects_[efect.first].isPlay_ = false;
-		//}
 
 		//エフェクト再生の1ループが終わったときに
 		if (IsEffekseer3DEffectPlaying(efects_[efect.first].playHandleId_) == -1)
@@ -109,7 +105,7 @@ void EffectManager::Update()
 	}
 }
 
-void EffectManager::Play(int type)
+void EffectManager::Play(int type, bool posSync)
 {
 	//すでに再生中のエフェクト出なければ再生する
 	if (!efects_[type].isPlay_)
@@ -120,10 +116,12 @@ void EffectManager::Play(int type)
 		//再生
 		efects_[type].playHandleId_=  PlayEffekseer3DEffect(efects_[type].resHandleId_);
 
+		efects_[type].isPosSync_ = posSync;
+
 		//同期させる座標
 		VECTOR pos = transform_.pos;
 
-		if (efects_[type].isSync_)
+		if (efects_[type].isRotSync_)
 		{
 			//座標を回転させる
 			const VECTOR lacalPos = transform_.quaRot.PosAxis(efects_[type].offset_);
@@ -158,6 +156,54 @@ void EffectManager::Play(int type)
 
 	}
 	
+}
+
+void EffectManager::PriorityPlay(int type, bool posSync )
+{
+	//再生中フラグをtrueにする
+	efects_[type].isPlay_ = true;
+
+	//再生
+	efects_[type].playHandleId_ = PlayEffekseer3DEffect(efects_[type].resHandleId_);
+
+	efects_[type].isPosSync_ = posSync;
+
+	//同期させる座標
+	VECTOR pos = transform_.pos;
+
+	if (efects_[type].isRotSync_)
+	{
+		//座標を回転させる
+		const VECTOR lacalPos = transform_.quaRot.PosAxis(efects_[type].offset_);
+		pos = VAdd(transform_.pos, lacalPos);
+	}
+	else
+	{
+		//座標のみ同期
+		pos = VAdd(transform_.pos, efects_[type].offset_);
+	}
+
+	//オイラー角からクォータニオンに変換
+	Quaternion eRot = Quaternion::Euler(efects_[type].rot_);
+
+	//エフェクトの回転を同期先の回転と合成
+	eRot = transform_.quaRot.Mult(eRot);
+
+	//オイラー角に変換
+	VECTOR rot = Quaternion::ToEuler(eRot);
+
+	//位置
+	SetPosPlayingEffekseer3DEffect(efects_[type].playHandleId_,
+		pos.x, pos.y, pos.z);
+
+	//角度
+	SetRotationPlayingEffekseer3DEffect(efects_[type].playHandleId_,
+		rot.x, rot.y, rot.z);
+
+	//大きさ
+	SetScalePlayingEffekseer3DEffect(efects_[type].playHandleId_,
+		efects_[type].scale_.x, efects_[type].scale_.y, efects_[type].scale_.z);
+
 }
 
 void EffectManager::Stop(int type)

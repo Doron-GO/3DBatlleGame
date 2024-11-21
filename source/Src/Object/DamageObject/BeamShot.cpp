@@ -9,7 +9,7 @@
 
 //弾の回転
 constexpr VECTOR DEFAULT_ROT = { 0.0f,180.0f,0.0f };
-//弾の大きさ
+//弾の大きさ 
 constexpr VECTOR DEFAULT_SCALE = { 1.0f,1.0f,1.0f };
 //弾の座標
 constexpr VECTOR DEFAULT_POS = { 0.0f,0.0f,0.0f };
@@ -155,7 +155,7 @@ void BeamShot::Activate(void)
 	//ビーム非有効化までの時間の設定
 	deathCount_ = LIMIT_DEATH_COUNT_;
 	//ビームエフェクトの再生
-	effectManager_->Play(static_cast<int>(BEAM_STATE::BEAM));
+	effectManager_->Play(static_cast<int>(BEAM_STATE::BEAM),true);
 	//敵へのホーミング処理
 	//Horming();
 	//ホーミング状態なら

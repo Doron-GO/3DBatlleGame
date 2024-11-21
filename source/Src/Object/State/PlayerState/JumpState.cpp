@@ -14,9 +14,9 @@ JumpState::JumpState(Player& player):player_(player)
 	//ブーストゲージを減らす
 	player_.ConsumeBoostGauge(Player::JUMP_FAST_RATE);	
 	//バーニアエフェクトを起動
-	player_.PlayEffect(Player::EFFECT_TYPE::JET_BACK_LEFT);
+	player_.PlayEffect(Player::EFFECT_TYPE::JET_BACK_LEFT,true);
 	//バーニアエフェクトを起動
-	player_.PlayEffect(Player::EFFECT_TYPE::JET_BACK_RIGHT);
+	player_.PlayEffect(Player::EFFECT_TYPE::JET_BACK_RIGHT,true);
 
 }
 

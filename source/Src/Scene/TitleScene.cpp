@@ -75,22 +75,25 @@ constexpr double TRIANGLE_SCALE = 1.2;
 const int EFFECT_TYPE_LIGHTNING = 0;
 const int EFFECT_TYPE_ATOMOSPHERE = 1;
 
+//手前ロボットサーベルエフェクト
+//スケール
 constexpr VECTOR EFFECT_LIGHTNING_FRONT_SCALE = { 5.0f,5.0f,10.0f };
-
+//オフセット値
 constexpr VECTOR EFFECT_LIGHTNING_FRONT_OFFSET = { 30.0f, 10.0f, 20.0f };
-
+//回転
 constexpr VECTOR EFFECT_LIGHTNING_FRONT_ROT = { 0.0f, 0.0f, 0.0f };
 
-
+//奥ロボットサーベルエフェクト
+//スケール
 constexpr VECTOR EFFECT_LIGHTNING_BACK_SCALE = { 10.0f,15.0f,10.0f };
-
+//オフセット値
 constexpr VECTOR EFFECT_LIGHTNING_BACK_OFFSET = { -50.0f, 50.0f, 0.0f };
-
+//回転
 constexpr VECTOR EFFECT_LIGHTNING_BACK_ROT = { 0.0f, 0.0f, 0.0f };
 
-
+//舞う破片エフェクト
 constexpr VECTOR EFFECT_ATOMOSPHERE_SCALE = { 280.0f,280.0f,280.0f };
-
+//
 constexpr VECTOR EFFECT_ATOMOSPHERE_OFFSET = { 0.0f, -100.0f, 100.0f };
 
 constexpr VECTOR EFFECT_ATOMOSPHERE_ROT = { 0.0f, 0.0f, 0.0f };
@@ -301,6 +304,8 @@ bool TitleScene::SelectDecide(void)
 	//決定ボタンが押されたら、ゲームシーンに移行
 	if (SelectCursor())
 	{
+		//霧のようなエフェクト
+		effectManagers_[TYPE_ROBOT_FRONT]->Stop(EFFECT_TYPE_ATOMOSPHERE);
 		ChangeGameScene();
 		return true;
 	}
@@ -399,8 +404,8 @@ void TitleScene::InitEffect(void)
 		resMng_.Load(ResourceManager::SRC::ATOMOSPHERE).handleId_
 	);
 
-	//雷エフェクト
-	effectManagers_[TYPE_ROBOT_FRONT]->Play(EFFECT_TYPE_LIGHTNING);
+	//サーベルのエフェクト
+	effectManagers_[TYPE_ROBOT_FRONT]->Play(EFFECT_TYPE_LIGHTNING,true);
 	//霧のようなエフェクト
 	effectManagers_[TYPE_ROBOT_FRONT]->Play(EFFECT_TYPE_ATOMOSPHERE);
 
@@ -418,7 +423,8 @@ void TitleScene::InitEffect(void)
 		false,
 		resMng_.Load(ResourceManager::SRC::LIGHTNING).handleId_
 	);
-	effectManagers_[TYPE_ROBOT_BACK]->Play(EFFECT_TYPE_LIGHTNING);
+	//サーベルのエフェクト
+	effectManagers_[TYPE_ROBOT_BACK]->Play(EFFECT_TYPE_LIGHTNING,true);
 
 
 }

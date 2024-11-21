@@ -36,10 +36,10 @@ BoostState::BoostState(Player& player):player_(player)
 	//重力を0にする
 	player_.GravityOne();
 	//バーニアエフェクトを起動
-	player_.PlayEffect(Player::EFFECT_TYPE::JET_BACK_LEFT);
+	player_.PlayEffect(Player::EFFECT_TYPE::JET_BACK_LEFT,true);
 	//バーニアエフェクトを起動
-	player_.PlayEffect(Player::EFFECT_TYPE::JET_BACK_RIGHT);
-	player_.PlayEffect(Player::EFFECT_TYPE::BOOST);
+	player_.PlayEffect(Player::EFFECT_TYPE::JET_BACK_RIGHT,true);
+	player_.PriorityPlayEffect(Player::EFFECT_TYPE::BOOST);
 
 }
 
@@ -48,7 +48,6 @@ void BoostState::Update(void)
 	//ブースト時間が終わっているか判定
 	if (boostTime_> MAX_BOOST_TIME)
 	{
-		player_.StopEffect(Player::EFFECT_TYPE::BOOST);
 		//ジャンプボタンを押していたらジャンプ状態に移行
 		if (player_.GetInput().IsPrassed("jump"))
 		{

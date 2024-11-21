@@ -56,14 +56,13 @@ private:
 	struct Info
 	{
 		VECTOR pos_;
-		float scale_;
+		double scale_;
 		int centerX_;
-		int centerY_;		
-		float offset_;		
-
-
+		int centerY_;
+		float offset_;
 	};
 
+	//画像のパラメータの配列
 	std::map<IMG_TYPE, Info> imgInfo_;
 
 	// シングルトン参照

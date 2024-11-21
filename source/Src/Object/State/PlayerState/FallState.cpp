@@ -33,7 +33,8 @@ void FallState::Update(void)
 	{	
 		//アニメーションをIDLEにする
 		player_.PlayAnim(static_cast<int>(Player::STATE::IDLE), false, false);
-		player_.PlayEffect(Player::EFFECT_TYPE::DUST_CLOUD);
+		//同じエフェクトが再生中でも同じエフェクトを新しく出す
+		player_.PriorityPlayEffect(Player::EFFECT_TYPE::DUST_CLOUD);
 		//アイドル状態に移行
 		player_.ChangeState(std::make_unique<IdleState>(player_));
 		return;

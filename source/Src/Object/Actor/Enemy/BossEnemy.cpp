@@ -169,7 +169,7 @@ void BossEnemy::ChangeDeathState(void)
 
 void BossEnemy::PlayEffect(BOSS_STATE state)
 {
-	effectManager_->Play(static_cast<int>(state));
+	effectManager_->Play(static_cast<int>(state),true);
 }
 
 const BossEnemy::STATE& BossEnemy::GetState(void)

@@ -253,20 +253,18 @@ void UserInterface::InitImage(void)
 			TRIANGLE_CENTER_Y,
 			TRIANGLE_OFFSET));
 
-	//HPゲージ画像の情報
+	//Aボタンを押してね画像の情報
 	imgInfo_.emplace(IMG_TYPE::PLEASE_A,
 		Info(PLEASE_A_BUTTON_POS,
 			PLEASE_CROSS_BUTTON_SCALE,
 			PLEASE_A_BUTTON_CENTER_X,
-			PLEASE_A_BUTTON_CENTER_Y,
-			PLEASE_A_BUTTON_SCALE));
-	
+			PLEASE_A_BUTTON_CENTER_Y));
+	//×ボタンを押してね画像の情報
 	imgInfo_.emplace(IMG_TYPE::PLEASE_CROSS,
 		Info(PLEASE_CROSS_BUTTON_POS,
 			PLEASE_CROSS_BUTTON_SCALE,
 			PLEASE_CROSS_BUTTON_CENTER_X,
-			PLEASE_CROSS_BUTTON_CENTER_Y,
-			PLEASE_CROSS_BUTTON_SCALE));
+			PLEASE_CROSS_BUTTON_CENTER_Y));
 
 	//シングルプレイモード時の初期化
 	if (playMode_ == PLAY_MODE)
@@ -290,14 +288,14 @@ void UserInterface::InitImage(void)
 				RIFLE_SCALE_SINGLE,
 				RIFLE_CENTER_X,
 				RIFLE_CENTER_Y));
-		//ブートゲージ画像情報
+		//ブーストゲージ画像情報
 		imgInfo_.emplace(IMG_TYPE::BOOST_GAUGE,
 			Info(BOOST_GAUGE_IMG_POS_SINGLE,
 				BOOST_GAUGE_CASE_SCALE_SINGLE,
 				BOOST_GAUGE_OFFSET_X_SINGLE,
 				BOOST_GAUGE_OFFSET_Y_SINGLE));
 
-		//ブートゲージ画像情報
+		//ブーストゲージ画像情報
 		imgInfo_.emplace(IMG_TYPE::WIN,
 			Info(SINGLEMODE_IMG_POS));
 
@@ -329,7 +327,7 @@ void UserInterface::InitImage(void)
 				RIFLE_SCALE_MULTI,
 				RIFLE_CENTER_X,
 				RIFLE_CENTER_Y));
-		//ブートゲージ画像情報
+		//ブーストゲージ画像情報
 		imgInfo_.emplace(IMG_TYPE::BOOST_GAUGE, Info(BOOST_GAUGE_IMG_POS_MULTI,
 			BOOST_GAUGE_CASE_SCALE_MULTI,
 			BOOST_GAUGE_OFFSET_X_MULTI,
@@ -530,7 +528,10 @@ void UserInterface::DrawUIGameSet(const bool& isGameSet, const int& rematchMode)
 	int titleY = static_cast<int>(imgInfo_[IMG_TYPE::BACK_TO_TITLE].pos_.y);
 	int fightX = static_cast<int>(imgInfo_[IMG_TYPE::ONE_MOR_FIGHT].pos_.x);
 	int fightY = static_cast<int>(imgInfo_[IMG_TYPE::ONE_MOR_FIGHT].pos_.y);
-
+	int triangleX = static_cast<int>(imgInfo_[IMG_TYPE::TRIANGLE].pos_.x);
+	int triangleY = static_cast<int>(imgInfo_[IMG_TYPE::TRIANGLE].pos_.y);
+	int buttonX = 0;
+	int buttonY = 0;
 
 	//タイトルへ戻る画像表示
 	DrawRotaGraph2(titleX, titleY,
@@ -546,18 +547,24 @@ void UserInterface::DrawUIGameSet(const bool& isGameSet, const int& rematchMode)
 	//接続されたコントローラがPsなら×ボタン表記
 	if (JOYPAD_TYPE:: DUAL_SHOCK_4 == joyPadType_ || JOYPAD_TYPE::DUAL_SENSE == joyPadType_)
 	{
+		buttonX = static_cast<int>(imgInfo_[IMG_TYPE::PLEASE_CROSS].pos_.x);
+		buttonY = static_cast<int>(imgInfo_[IMG_TYPE::PLEASE_CROSS].pos_.y);
 
-		DrawRotaGraph2(imgInfo_[IMG_TYPE::PLEASE_CROSS].pos_.x, imgInfo_[IMG_TYPE::PLEASE_CROSS].pos_.y,
+		DrawRotaGraph2(buttonX, buttonY,
 			imgInfo_[IMG_TYPE::PLEASE_CROSS].centerX_, imgInfo_[IMG_TYPE::PLEASE_CROSS].centerY_,
 			imgInfo_[IMG_TYPE::PLEASE_CROSS].scale_, 0.0, uiImgH_[IMG_TYPE::PLEASE_CROSS], true, false);
 	}//それ以外ならAボタン表記
 	else
 	{
-		DrawRotaGraph2(imgInfo_[IMG_TYPE::PLEASE_A].pos_.x, imgInfo_[IMG_TYPE::PLEASE_A].pos_.y,
+		buttonX = static_cast<int>(imgInfo_[IMG_TYPE::PLEASE_A].pos_.x);
+		buttonY = static_cast<int>(imgInfo_[IMG_TYPE::PLEASE_A].pos_.y);
+
+		DrawRotaGraph2(buttonX, buttonY,
 			imgInfo_[IMG_TYPE::PLEASE_A].centerX_, imgInfo_[IMG_TYPE::PLEASE_A].centerY_,
 			imgInfo_[IMG_TYPE::PLEASE_A].scale_, 0.0, uiImgH_[IMG_TYPE::PLEASE_A], true, false);
 	}
 	//カーソルの表示
-	DrawRotaGraph2(imgInfo_[IMG_TYPE::TRIANGLE].pos_.x, imgInfo_[IMG_TYPE::TRIANGLE].pos_.y + (imgInfo_[IMG_TYPE::TRIANGLE].offset_ * rematchMode),
+	DrawRotaGraph2(triangleX, triangleY + (imgInfo_[IMG_TYPE::TRIANGLE].offset_ * rematchMode),
 		imgInfo_[IMG_TYPE::TRIANGLE].centerX_, imgInfo_[IMG_TYPE::TRIANGLE].centerY_, imgInfo_[IMG_TYPE::TRIANGLE].scale_, 0.0, uiImgH_[IMG_TYPE::TRIANGLE], true, false);
 }
+

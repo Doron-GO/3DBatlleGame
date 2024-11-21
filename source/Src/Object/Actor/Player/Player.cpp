@@ -469,9 +469,14 @@ void Player::Draw(void)
 	beamSaber_->Draw();
 }
 
-void Player::PlayEffect(EFFECT_TYPE effectType)
+void Player::PlayEffect(EFFECT_TYPE effectType, bool posSync)
 {
-	effectManager_-> Play(static_cast<int>(effectType));
+	effectManager_-> Play(static_cast<int>(effectType), posSync);
+}
+
+void Player::PriorityPlayEffect(EFFECT_TYPE effectType, bool posSync)
+{
+	effectManager_->PriorityPlay(static_cast<int>(effectType), posSync);
 }
 
 void Player::StopEffect(EFFECT_TYPE effectType)
