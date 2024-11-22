@@ -19,6 +19,8 @@ DownState::DownState(Player& player):player_(player)
 	player_.GetBeamSaber().InActivate();
 	//ビームライフルを非有効化
 	player_.GetBeamRifle().Activate();
+	player_.StopEffect(Player::EFFECT_TYPE::JET_BACK_LEFT);
+	player_.StopEffect(Player::EFFECT_TYPE::JET_BACK_RIGHT);
 
 }
 

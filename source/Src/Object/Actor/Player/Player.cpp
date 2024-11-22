@@ -198,23 +198,29 @@ void Player::MakeObjects(void)
 
 void Player::InitTransform(void)
 {
-	//モデルの読み込み
-	transform_.SetModel(resMng_.LoadModelDuplicate(ResourceManager::SRC::PLAYER));
-	//大きさ
-	transform_.scl = AsoUtility::VECTOR_ONE;
-	//座標
-	transform_.pos = { DEFAULT_BOSS_POS.x, DEFAULT_BOSS_POS.y, DEFAULT_BOSS_POS.z  };
-	//回転
-	transform_.quaRot = Quaternion();
-	transform_.quaRotLocal = Quaternion::Euler(PLAYER_INIT_ROT);
 	//プレイヤータイプによって回転、座標を変える
 	if (playerType_ == static_cast<int>(PLAYER_TYPE::PLAYER_2))
 	{
+		//モデルの読み込み
+		transform_.SetModel(resMng_.LoadModelDuplicate(ResourceManager::SRC::ROBOT_CASVAL));
 		transform_.pos = { DEFAULT_PLAYER2_POS.x, DEFAULT_PLAYER2_POS.y, DEFAULT_PLAYER2_POS.z };
 		moveQua_ =Quaternion::Euler({ DEFAULT_PLAYER2_ROT.x,
 					 AsoUtility::Deg2RadF(DEFAULT_PLAYER2_ROT.y),
 					  DEFAULT_PLAYER2_ROT.z });
 	}
+	else
+	{
+		//モデルの読み込み
+		transform_.SetModel(resMng_.LoadModelDuplicate(ResourceManager::SRC::ROBOT));
+		//座標
+		transform_.pos = { DEFAULT_BOSS_POS.x, DEFAULT_BOSS_POS.y, DEFAULT_BOSS_POS.z  };
+	}	
+	//大きさ
+	transform_.scl = AsoUtility::VECTOR_ONE;
+	//回転
+	transform_.quaRot = Quaternion();
+	transform_.quaRotLocal = Quaternion::Euler(PLAYER_INIT_ROT);
+
 	movedPos_ = transform_.pos;
 	transform_.Update();
 }

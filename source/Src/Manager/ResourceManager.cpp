@@ -29,9 +29,13 @@ void ResourceManager::Init(void)
 	res = Resource(Resource::TYPE::MODEL,PATH_MODEL + "SkyDome/SkyDome.mv1");
 	resouceMap_.emplace(SRC::SKYDOME, res);
 
-	//プレイヤー
+	//ロボット
 	res = Resource(Resource::TYPE::MODEL, PATH_MODEL + "Player/78.mv1");
-	resouceMap_.emplace(SRC::PLAYER, res);
+	resouceMap_.emplace(SRC::ROBOT, res);
+
+	//ロボット(赤)
+	res = Resource(Resource::TYPE::MODEL, PATH_MODEL + "Player/78-Casval.mv1");
+	resouceMap_.emplace(SRC::ROBOT_CASVAL, res);
 
 	//Stage
 	res = Resource(Resource::TYPE::MODEL, PATH_MODEL + "Stage/Ground3.mv1");

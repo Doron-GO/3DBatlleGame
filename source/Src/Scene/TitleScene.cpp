@@ -327,7 +327,7 @@ void TitleScene::InitModel(void)
 {
 	//手前ロボットの初期設定
 	//モデルの読み込み
-	frontTransform_.SetModel(resMng_.LoadModelDuplicate(ResourceManager::SRC::PLAYER));
+	frontTransform_.SetModel(resMng_.LoadModelDuplicate(ResourceManager::SRC::ROBOT));
 	//モデルの大きさ
 	frontTransform_.scl = AsoUtility::VECTOR_ONE;
 	//モデルの座標
@@ -348,7 +348,7 @@ void TitleScene::InitModel(void)
 
 	//奥ロボットの初期設定
 	//モデルの読み込み
-	backTransform_.SetModel(resMng_.LoadModelDuplicate(ResourceManager::SRC::PLAYER));
+	backTransform_.SetModel(resMng_.LoadModelDuplicate(ResourceManager::SRC::ROBOT_CASVAL));
 	//モデルの大きさ
 	backTransform_.scl = AsoUtility::VECTOR_ONE;
 	//モデルの座標

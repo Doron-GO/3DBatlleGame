@@ -72,7 +72,7 @@ BossEnemy::BossEnemy(int playerType)
 	actorType_ = static_cast<ACTOR_TYPE>(playerType);
 
 	//ƒ‚ƒfƒ‹‚Ì“Ç‚İ‚İ
-	transform_.SetModel(resMng_.LoadModelDuplicate(ResourceManager::SRC::PLAYER));
+	transform_.SetModel(resMng_.LoadModelDuplicate(ResourceManager::SRC::ROBOT));
 	//‘å‚«‚³
 	transform_.scl = SCALE_BOSS_ENEMY;
 	//À•W
