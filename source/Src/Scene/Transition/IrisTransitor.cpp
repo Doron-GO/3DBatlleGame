@@ -5,6 +5,8 @@
 #include "../../Utility/AsoUtility.h"
 #include "IrisTransitor.h"
 
+int SCREEN_X = 1600;
+int SCREEN_Y = 1000;
 
 const float DELTATIME_RATE = 120.0f;
 
@@ -127,9 +129,8 @@ void IrisTransitor::Draw()
 			scaleRate);
 	}
 
-	VECTOR pos = { 1600.0f / 2.0f, 1000.0f / 2.0f };
 
-	DrawRotaGraph(pos.x, pos.y, xRate, angle_, imgMaskHandle_, true);
+	DrawRotaGraph(SCREEN_X/2, SCREEN_Y/2, xRate, angle_, imgMaskHandle_, true);
 
 	//隠し関数(現在のグラフィックハンドルをマスクスクリーンに転送)
 	SetMaskScreenGraph(handleForMaskScreen_);
@@ -143,6 +144,6 @@ void IrisTransitor::Draw()
 	DrawGraph(0, 0, maskedRT, true);
 	SetUseMaskScreenFlag(false);
 
-	DrawRotaGraph(pos.x, pos.y, xRate, angle_, imgFrameHandle_, true);
+	DrawRotaGraph(SCREEN_X/2, SCREEN_Y/2, xRate, angle_, imgFrameHandle_, true);
 
 }

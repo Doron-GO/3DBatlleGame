@@ -12,6 +12,8 @@
 #include"../../Config.h"
 #include "TitleScene.h"
 #include"GameScene.h"
+#include"TutorialScene.h"
+#include"Scene.h"
 #include<DxLib.h>
 
 #pragma region Parameter
@@ -63,14 +65,32 @@ constexpr int MULTI_PLAY_CENTER_X = 165;
 constexpr int MULTI_PLAY_CENTER_Y = 52;
 constexpr double MULTI_PLAY_SCALE = 2.0;
 
+//チュートリアル選択画像数値
+constexpr int TUTORIAL_MODE_POS_X = 775;
+constexpr int TUTORIAL_MODE_POS_Y = 600;
+constexpr int TUTORIAL_MODE_CENTER_X = 280;
+constexpr int TUTORIAL_MODE_CENTER_Y = 30;
+constexpr double TUTORIAL_MODE_SCALE = 2.0;
+
+//ゲームにすすむ選択画像数値
+constexpr int START_GAME_MODE_POS_X = 775;
+constexpr int START_GAME_MODE_POS_Y = 400;
+constexpr int START_GAME_MODE_CENTER_X = 230;
+constexpr int START_GAME_MODE_CENTER_Y = 30;
+constexpr double START_GAME_MODE_SCALE = 2.0;
+
+
+
 //選択カーソル画像の数値(座標、中心座標、大きさ)
 constexpr int TRIANGLE_POS_X = 1200;
 constexpr int TRIANGLE_POS_Y = 400;
 constexpr int TRIANGLE_CENTER_X = 280;
 constexpr int TRIANGLE_CENTER_Y = 63;
-constexpr int TRIANGLE_OFFSET = 200;
+constexpr int TRIANGLE_OFFSET_MODE_SELECT = 200;
+constexpr int TRIANGLE_OFFSET_MODE_TUTORIAL_X= 150;
+constexpr int TRIANGLE_OFFSET_MODE_TUTORIAL_Y= 150;
+constexpr int TRIANGLE_POS_TUTORIAL_Y = 420;
 constexpr double TRIANGLE_SCALE = 1.2;
-
 
 const int EFFECT_TYPE_LIGHTNING = 0;
 const int EFFECT_TYPE_ATOMOSPHERE = 1;
@@ -99,6 +119,7 @@ constexpr VECTOR EFFECT_ATOMOSPHERE_OFFSET = { 0.0f, -100.0f, 100.0f };
 constexpr VECTOR EFFECT_ATOMOSPHERE_ROT = { 0.0f, 0.0f, 0.0f };
 
 
+
 #pragma endregion
 
 TitleScene::TitleScene(SceneManager& manager, Transitor& transit, Input& input) :Scene(manager,  transit,input),
@@ -108,8 +129,20 @@ skyDome_(std::make_unique<SkyDome>())
 {
 	//モード選択の初期カーソル位置を一人用に設定
 	playMode_=0;
+	//チュートリアル選択カーソル
+	tutorialMode_ =0;
+	//チュートリアル選択が終わっているかを判定
+	isTutorialSelect_ =false;
+	//ゲームモード選択が終わっているかを判定
+	isGameModeSelect_ =false;
 	//ボタンを押してねの状態にする(押されたら選択画面へ)
-	startFlag_ = false;
+	isTitleStart_ = false;
+
+	//最初のアップデートを初期化
+	funcUpdate_ = std::bind(&TitleScene::TitleUpdate,this);
+
+	//最初の描画を初期化
+	funcDraw_ = std::bind(&TitleScene::DrawTitleLogo,this);
 	
 	//画像の読み込み
 	InitImage();
@@ -145,25 +178,26 @@ TitleScene::~TitleScene(void)
 void TitleScene::Update(void)
 {
 	input_.Update();
-	//選択画面でなくモード選択がされていなければ戻る
-	if (startFlag_&&SelectDecide())
+	//ゲームモードの選択がされていたら、中に入らない
+	if (isTutorialSelect_)
 	{
 		return;
 	}
-	//タイトル画面で特定のボタンが押されるとモード選択へ
-	if (!startFlag_ && ButtonPush())
+
+	funcUpdate_();
+
+	if (!isTutorialSelect_)
 	{
-		startFlag_ = true;
+		skyDome_->Update();
+		//エフェクトマネージャーの更新
+		for (auto& effectManager: effectManagers_)
+		{
+			effectManager.second->Update();
+		}
+		//エフェクシアのアップデート
+		UpdateEffekseer3D();
+		sceneTransitor_.Update();
 	}
-	skyDome_->Update();
-	//エフェクトマネージャーの更新
-	for (auto& effectManager: effectManagers_)
-	{
-		effectManager.second->Update();
-	}
-	//エフェクシアのアップデート
-	UpdateEffekseer3D();
-	sceneTransitor_.Update();
 }
 
 void TitleScene::Draw(void)
@@ -184,28 +218,30 @@ void TitleScene::Draw(void)
 	{
 		beamSaber->Draw();
 	}
+
 	//エフェクシアの描画
 	DrawEffekseer3D();
-
 	//ボタンを押してね画像描画
 	DrawPleaseButton();
-	//ボタンがなにも押されていなければ、タイトルロゴを描画
-	if (!startFlag_)
+
+	funcDraw_();
+
+	if (!isTutorialSelect_)
 	{
-		DrawRotaGraph2(TITLE_LOGO_POS_X, TITLE_LOGO_POS_Y,
-			TITLE_LOGO_CENTER_X, TITLE_LOGO_CENTER_Y, TITLE_LOGO_SCALE, 0.0, imgType_[IMG_TYPE::TITLE_LOGO], true, false);
+		sceneTransitor_.Draw();
 	}
-	else//ボタンが押されていればモードセレクト画像描画
-	{
-		DrawModeSelect();
-	}
-	sceneTransitor_.Draw();
 }
 
 void TitleScene::ChangeGameScene(void)
 {
 	//ゲームシーンへ移行
 	sceneManager_.ChangeScene(std::make_shared<GameScene>(sceneManager_, playMode_, sceneTransitor_, input_));
+}
+
+void TitleScene::ChangeTutorialScene(void)
+{
+	//ゲームシーンへ移行
+	sceneManager_.ChangeScene(std::make_shared<TutorialScene>(sceneManager_, playMode_, sceneTransitor_, input_));
 }
 
 void TitleScene::DrawPleaseButton(void)
@@ -224,27 +260,6 @@ void TitleScene::DrawPleaseButton(void)
 			PLEASE_A_BUTTON_CENTER_X, PLEASE_A_BUTTON_CENTER_Y,
 			PLEASE_A_BUTTON_SCALE, 0.0, imgType_[IMG_TYPE::PLEASE_A], true, false);
 	}
-}
-
-void TitleScene::DrawModeSelect(void)
-{
-	//現在接続されているコントローラの数
-	int joyPadNum = GetJoypadNum();
-
-	//シングルモード選択画像
-	DrawRotaGraph2(SINGLE_MODE_POS_X, SINGLE_MODE_POS_Y,
-		SINGLE_MODE_CENTER_X, SINGLE_MODE_CENTER_Y, SINGLE_MODE_SCALE, 0.0, imgType_[IMG_TYPE::SINGLE_MODE], true, false);
-
-	if (joyPadNum >= 2)
-	{
-		//対戦モード選択画像
-		DrawRotaGraph2(MULTI_PLAY_POS_X, MULTI_PLAY_POS_Y,
-			MULTI_PLAY_CENTER_X, MULTI_PLAY_CENTER_Y, MULTI_PLAY_SCALE, 0.0, imgType_[IMG_TYPE::MULTI_PLAY], true, false);
-	}
-	
-	//カーソル選択画像
-	DrawRotaGraph2(TRIANGLE_POS_X, TRIANGLE_POS_Y + (TRIANGLE_OFFSET * playMode_),
-		TRIANGLE_CENTER_X, TRIANGLE_CENTER_Y, TRIANGLE_SCALE, 0.0, imgType_[IMG_TYPE::TRIANGLE], true, false);
 }
 
 bool TitleScene::ButtonPush(void)
@@ -278,7 +293,7 @@ bool TitleScene::ButtonPush(void)
 
 }
 
-bool TitleScene::SelectCursor(void)
+bool TitleScene::SelectCursorGameMode(void)
 {
 	//現在接続されているコントローラの数
 	int joyPadNum = GetJoypadNum();
@@ -299,17 +314,47 @@ bool TitleScene::SelectCursor(void)
 	return ButtonPush();
 }
 
-bool TitleScene::SelectDecide(void)
+bool TitleScene::SelectCursorTutorialMode(void)
 {
-	//決定ボタンが押されたら、ゲームシーンに移行
-	if (SelectCursor())
+
+	//上ボタンか十字キー上を押したら、カーソルを上に動かす
+	if (input_.IsTriggerd("up") && 
+		tutorialMode_>static_cast<int>(TUTORIAL_MODE::NON))
 	{
-		//霧のようなエフェクト
-		effectManagers_[TYPE_ROBOT_FRONT]->Stop(EFFECT_TYPE_ATOMOSPHERE);
-		ChangeGameScene();
-		return true;
+		tutorialMode_--;
 	}
-	return false;
+	//下ボタンか十字キー下を押したら、カーソルを上に動かす
+	else if (	input_.IsTriggerd("down") && 
+		tutorialMode_<static_cast<int>(TUTORIAL_MODE::TUTORIAL)
+		)
+	{
+		tutorialMode_++;
+	}
+	return ButtonPush();
+
+}
+
+void TitleScene::SelectTutorialMode(void)
+{
+
+	//決定ボタンが押されたら選択済み状態にする
+	if (SelectCursorTutorialMode())
+	{
+		//チュートリアルを飛ばすが選択されていたらゲームシーンに移行
+		if (tutorialMode_ == static_cast<int>(TUTORIAL_MODE::NON))
+		{
+			effectManagers_[TYPE_ROBOT_FRONT]->Stop(EFFECT_TYPE_ATOMOSPHERE);
+			isTutorialSelect_ = true;
+			ChangeGameScene();
+		}
+		//チュートリアルを見るが選択されていたらチュートリアルシーンに移行
+		else if(tutorialMode_ == static_cast<int>(TUTORIAL_MODE::TUTORIAL))
+		{
+			effectManagers_[TYPE_ROBOT_FRONT]->Stop(EFFECT_TYPE_ATOMOSPHERE);
+			isTutorialSelect_ = true;
+			ChangeTutorialScene();
+		}
+	}
 }
 
 void TitleScene::InitImage(void)
@@ -321,6 +366,8 @@ void TitleScene::InitImage(void)
 	imgType_.emplace(IMG_TYPE::SINGLE_MODE, resMng_.Load(ResourceManager::SRC::SINGLE_PLAY_LOGO).handleId_);
 	imgType_.emplace(IMG_TYPE::MULTI_PLAY, resMng_.Load(ResourceManager::SRC::MULTI_PLAY_LOGO).handleId_);
 	imgType_.emplace(IMG_TYPE::TRIANGLE, resMng_.Load(ResourceManager::SRC::TRIANGLE).handleId_);
+	imgType_.emplace(IMG_TYPE::GAME_START, resMng_.Load(ResourceManager::SRC::GAME_START).handleId_);
+	imgType_.emplace(IMG_TYPE::TUTORIAL, resMng_.Load(ResourceManager::SRC::WATCH_TUTORIAL).handleId_);
 }
 
 void TitleScene::InitModel(void)
@@ -429,3 +476,85 @@ void TitleScene::InitEffect(void)
 
 }
 
+void TitleScene::TitleUpdate(void)
+{
+	//ボタンが押されたらタイトル画面からゲームモードセレクト画面に変える
+	if (ButtonPush() && !isTitleStart_)
+	{
+		funcUpdate_ = std::bind(&TitleScene::SelectGameMode, this);
+		funcDraw_ = std::bind(&TitleScene::DrawSelectGameMode, this);
+
+		isTitleStart_ = true;
+	}
+}
+
+void TitleScene::UpdateSelectGameMode(void)
+{
+	SelectGameMode();
+}
+
+void TitleScene::UpdateSelectTutorial(void)
+{
+	SelectTutorialMode();
+}
+
+void TitleScene::DrawTitleLogo(void)
+{
+	DrawRotaGraph2(TITLE_LOGO_POS_X, TITLE_LOGO_POS_Y,
+		TITLE_LOGO_CENTER_X, TITLE_LOGO_CENTER_Y,
+		TITLE_LOGO_SCALE, 0.0, imgType_[IMG_TYPE::TITLE_LOGO], true, false);
+
+}
+
+void TitleScene::DrawSelectGameMode(void)
+{
+	//現在接続されているコントローラの数
+	int joyPadNum = GetJoypadNum();
+
+	//シングルモード選択画像
+	DrawRotaGraph2(SINGLE_MODE_POS_X, SINGLE_MODE_POS_Y,
+		SINGLE_MODE_CENTER_X, SINGLE_MODE_CENTER_Y, SINGLE_MODE_SCALE, 0.0, imgType_[IMG_TYPE::SINGLE_MODE], true, false);
+
+	if (joyPadNum >= 2)
+	{
+		//対戦モード選択画像
+		DrawRotaGraph2(MULTI_PLAY_POS_X, MULTI_PLAY_POS_Y,
+			MULTI_PLAY_CENTER_X, MULTI_PLAY_CENTER_Y, MULTI_PLAY_SCALE, 0.0, imgType_[IMG_TYPE::MULTI_PLAY], true, false);
+	}
+
+	//カーソル選択画像
+	DrawRotaGraph2(TRIANGLE_POS_X, TRIANGLE_POS_Y + (TRIANGLE_OFFSET_MODE_SELECT * playMode_),
+		TRIANGLE_CENTER_X, TRIANGLE_CENTER_Y, TRIANGLE_SCALE, 0.0, imgType_[IMG_TYPE::TRIANGLE], true, false);
+}
+
+void TitleScene::DrawSelectTutorial(void)
+{
+	int SCX = static_cast<int>(SCREEN_SIZE.x);
+	int SCY = static_cast<int>(SCREEN_SIZE.y);
+
+	//シングルモード選択画像
+	DrawRotaGraph2(START_GAME_MODE_POS_X, START_GAME_MODE_POS_Y,
+		START_GAME_MODE_CENTER_X,START_GAME_MODE_CENTER_Y ,
+		START_GAME_MODE_SCALE, 0.0, imgType_[IMG_TYPE::GAME_START], true, false);
+
+	//対戦モード選択画像
+	DrawRotaGraph2(TUTORIAL_MODE_POS_X, TUTORIAL_MODE_POS_Y,
+		TUTORIAL_MODE_CENTER_X, TUTORIAL_MODE_CENTER_Y,
+		TUTORIAL_MODE_SCALE, 0.0, imgType_[IMG_TYPE::TUTORIAL], true, false);
+
+	//カーソル選択画像
+	DrawRotaGraph2(TRIANGLE_POS_X + TRIANGLE_OFFSET_MODE_TUTORIAL_X, TRIANGLE_POS_TUTORIAL_Y + (TRIANGLE_OFFSET_MODE_SELECT * tutorialMode_),
+		TRIANGLE_CENTER_X, TRIANGLE_CENTER_Y, TRIANGLE_SCALE, 0.0, imgType_[IMG_TYPE::TRIANGLE], true, false);
+
+}
+
+void TitleScene::SelectGameMode(void)
+{
+	//決定ボタンが押されたら選択済み状態にする
+	if (SelectCursorGameMode())
+	{
+		isGameModeSelect_ = true;
+		funcUpdate_ = std::bind(&TitleScene::UpdateSelectTutorial, this);
+		funcDraw_ = std::bind(&TitleScene::DrawSelectTutorial, this);
+	}
+}

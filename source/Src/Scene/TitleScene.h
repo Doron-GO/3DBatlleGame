@@ -3,6 +3,7 @@
 #include<memory>
 #include<vector>
 #include<map>
+#include<functional>
 #include "Scene.h"
 
 class ResourceManager;
@@ -34,7 +35,9 @@ private:
         PLEASE_CROSS,
         SINGLE_MODE,
         MULTI_PLAY,
-        TRIANGLE
+        TRIANGLE,
+        GAME_START,
+        TUTORIAL,
     };
 
     //ゲームモード
@@ -44,14 +47,39 @@ private:
         MULTI
     };
 
-    //モードセレクト
+    //ゲームモード
+    enum class TUTORIAL_MODE
+    {
+        NON,
+        TUTORIAL
+    };
+
+    //ゲームモードセレクト
     int playMode_;
 
-    //タイトル画面から選択画面に行く下かを判定
-    bool startFlag_;
+    //チュートリアルモードセレクト
+    int tutorialMode_;
+
+    //タイトル画面から選択画面に行くかを判定
+    bool isTitleStart_;
+
+    //ゲームモードが選択されているかを判定
+    bool isGameModeSelect_;
+
+    //チュートリアルを見るかどうかを判定
+    bool isTutorialSelect_;
     
     // シングルトン参照
     ResourceManager& resMng_;
+
+    //アップデート
+    std::function<void(void)>funcUpdate_;
+
+    //描画
+    std::function<void(void)>funcDraw_;
+
+    //フォントハンドル
+    int fontHandle_;
 
     //カメラ
     const std::unique_ptr<Camera> camera_;
@@ -80,20 +108,26 @@ private:
     //ゲームシーンに移行
     void ChangeGameScene(void);
 
+    //チュートリアルシーンに移行
+    void ChangeTutorialScene(void);
+
     //「ボタンを押して」表示
     void DrawPleaseButton(void);
-
-    //モードセレクト画像描画
-    void DrawModeSelect(void);
 
     //決定ボタン処理(XBOXコンでもPSコンでも同じ場所のボタンにするため)
     bool ButtonPush(void);
 
     //モード選択用のカーソル
-    bool SelectCursor(void);
+    bool SelectCursorGameMode(void);
 
-    //モードを選択してゲームシーンに移行する
-    bool SelectDecide(void);
+    //モード選択用のカーソル
+    bool SelectCursorTutorialMode(void);
+
+    //ゲームモードを選択して、選択済み状態にする
+    void SelectGameMode(void);
+
+    //チュートリアルを見るかを選択して、シーン遷移を行う
+    void SelectTutorialMode(void);
 
     //画像の読み込み
     void InitImage(void);
@@ -106,6 +140,24 @@ private:
 
     //エフェクトの初期設定
     void InitEffect(void);
+
+    //
+    void TitleUpdate(void);
+
+    //ゲームモード選択アップデート
+    void UpdateSelectGameMode(void);
+
+    //チュートリアル選択アップデート
+    void UpdateSelectTutorial(void);
+
+    //タイトル描画
+    void DrawTitleLogo(void);
+
+    //ゲームモード選択描画
+    void DrawSelectGameMode(void);
+
+    //チュートリアル選択描画
+    void DrawSelectTutorial(void);
 
 };
 

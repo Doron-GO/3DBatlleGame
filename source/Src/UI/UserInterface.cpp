@@ -104,7 +104,7 @@ constexpr int  TRIANGLE_POS_X = 1200;
 constexpr int  TRIANGLE_POS_Y = 500;
 constexpr int  TRIANGLE_CENTER_X = 280;
 constexpr int  TRIANGLE_CENTER_Y = 63;
-constexpr int  TRIANGLE_OFFSET = 200;
+constexpr int  TRIANGLE_OFFSET_MODE_SELECT = 200;
 constexpr double TRIANGLE_SCALE = 1.2;
 
  //ゲーム開始時に出るREADYの画像の数値
@@ -251,7 +251,7 @@ void UserInterface::InitImage(void)
 			TRIANGLE_SCALE,
 			TRIANGLE_CENTER_X,
 			TRIANGLE_CENTER_Y,
-			TRIANGLE_OFFSET));
+			TRIANGLE_OFFSET_MODE_SELECT));
 
 	//Aボタンを押してね画像の情報
 	imgInfo_.emplace(IMG_TYPE::PLEASE_A,

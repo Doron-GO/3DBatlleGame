@@ -55,7 +55,7 @@ constexpr int TRIANGLE_POS_X = 1200;
 constexpr int TRIANGLE_POS_Y = 500;
 constexpr int TRIANGLE_CENTER_X = 280;
 constexpr int TRIANGLE_CENTER_Y = 63;
-constexpr int TRIANGLE_OFFSET = 200;
+constexpr int TRIANGLE_OFFSET_MODE_SELECT = 200;
 constexpr double TRIANGLE_SCALE = 1.2;
 
 //ゲーム開始時に出るREADYの画像の数値

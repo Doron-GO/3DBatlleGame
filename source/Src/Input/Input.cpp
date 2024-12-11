@@ -168,7 +168,7 @@ keyLx_(joyDInState_.X), keyLy_(joyDInState_.Y)
 							{INPUT_TYPE::GAMEPAD,PAD_INPUT_C} //padのX プレステの〇
 							};
 
-	//スライディング
+	//格闘
 	inputTable_["combat"] = {
 							{ INPUT_TYPE::KEYBORD, KEY_INPUT_C} ,
 							{INPUT_TYPE::GAMEPAD,PAD_INPUT_X} //padのY　プレステの△

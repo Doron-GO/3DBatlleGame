@@ -185,6 +185,18 @@ void ResourceManager::Init(void)
 	res = Resource(Resource::TYPE::IMG, PATH_IMAGE + "Ui/Hp_Back.png");
 	resouceMap_.emplace(SRC::HP_BACK, res);
 
+	//残弾数字画像
+	res = Resource(Resource::TYPE::IMG, PATH_IMAGE + "Ui/Hp_Back.png");
+	resouceMap_.emplace(SRC::HP_BACK, res);
+
+	//ゲームスタート画像
+	res = Resource(Resource::TYPE::IMG, PATH_IMAGE + "Title/StartGame.png");
+	resouceMap_.emplace(SRC::GAME_START, res);
+
+	//チュートリアルを見る画像
+	res = Resource(Resource::TYPE::IMG, PATH_IMAGE + "Title/GoToTutorial.png");
+	resouceMap_.emplace(SRC::WATCH_TUTORIAL, res);
+
 }
 
 void ResourceManager::Release(void)

@@ -46,6 +46,12 @@ CombatTransitionState::CombatTransitionState(Player& player,VECTOR & playerPos, 
 
 	//相手との距離をとる
 	Distance();
+
+	//バーニアエフェクトを起動
+	player_.PlayEffect(Player::EFFECT_TYPE::JET_BACK_LEFT, true);
+	//バーニアエフェクトを起動
+	player_.PlayEffect(Player::EFFECT_TYPE::JET_BACK_RIGHT, true);
+
 }
 
 void CombatTransitionState::Update(void)
@@ -57,6 +63,9 @@ void CombatTransitionState::Update(void)
 	//距離が一定以下なら
 	if (distance_<=200.0f)
 	{
+		//バーニアエフェクトを止める
+		player_.StopEffect(Player::EFFECT_TYPE::JET_BACK_LEFT);
+		player_.StopEffect(Player::EFFECT_TYPE::JET_BACK_RIGHT);
 		//近接格闘状態に移行
 		player_.ChangeState(std::make_unique<CombatState>(player_));
 		return;
@@ -64,6 +73,9 @@ void CombatTransitionState::Update(void)
 	//近接攻撃ボタンが押されていたら
 	if(player_.GetInput().IsTriggerd("combat"))
 	{
+		//バーニアエフェクトを止める
+		player_.StopEffect(Player::EFFECT_TYPE::JET_BACK_LEFT);
+		player_.StopEffect(Player::EFFECT_TYPE::JET_BACK_RIGHT);
 		//近接格闘状態に移行
 		player_.ChangeState(std::make_unique<CombatState>(player_));
 		return;
@@ -71,6 +83,9 @@ void CombatTransitionState::Update(void)
 	//ジャンプボタンが二回押されて、ブーストゲージが一定以上あったら
 	else if(player_.GetInput().IsDoublePrassed("jump") && player_.IsBoostGaugeSufficient(player_.MIN_BOOST_COST))
 	{
+		//バーニアエフェクトを止める
+		player_.StopEffect(Player::EFFECT_TYPE::JET_BACK_LEFT);
+		player_.StopEffect(Player::EFFECT_TYPE::JET_BACK_RIGHT);
 		//ビームサーベルを非有効化
 		player_.GetBeamSaber().InActivate();
 		player_.GetBeamRifle().Activate();
